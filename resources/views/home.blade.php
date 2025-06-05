@@ -131,8 +131,8 @@
         <div class="flex items-center gap-x-4 mt-auto">
           <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="" class="w-10 h-10 rounded-full bg-gray-50">
           <div>
-            <p class="font-semibold text-gray-900">Janpaul Bustillo</p>
-            <p class="text-gray-600 text-sm">Backend Developer</p>
+            <p class="font-semibold text-gray-900">Grama Juldur</p>
+            <p class="text-gray-600 text-sm">Inmate</p>
           </div>
         </div>
       </article>
