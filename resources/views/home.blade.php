@@ -11,45 +11,46 @@
   </div>
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     <div class="mx-auto max-w-2xl lg:mx-0">
-      <h2 class="text-5xl font-semibold tracking-tight text-white sm:text-7xl">Work with us</h2>
-      <p class="mt-8 text-lg font-medium text-pretty text-gray-300 sm:text-xl/8">Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat.</p>
+      <h2 class="text-5xl font-semibold tracking-tight text-white sm:text-7xl">Welcome to the Official LGU Portal</h2>
+      <p class="mt-8 text-lg font-medium text-pretty text-gray-300 sm:text-xl/8">
+        The Local Government Unit (LGU) of the Philippines is committed to providing transparent governance, quality public service, and community-driven development. Stay informed about local initiatives, public advisories, and opportunities to participate in building a better community.
+      </p>
     </div>
     <div class="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
       <div class="grid grid-cols-1 gap-x-8 gap-y-6 text-base/7 font-semibold text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-        <a href="#">Open roles <span aria-hidden="true">&rarr;</span></a>
-        <a href="#">Internship program <span aria-hidden="true">&rarr;</span></a>
-        <a href="#">Our values <span aria-hidden="true">&rarr;</span></a>
-        <a href="#">Meet our leadership <span aria-hidden="true">&rarr;</span></a>
+        <a href="#">Citizen Services <span aria-hidden="true">&rarr;</span></a>
+        <a href="#">Barangay Programs <span aria-hidden="true">&rarr;</span></a>
+        <a href="#">Transparency & Governance <span aria-hidden="true">&rarr;</span></a>
+        <a href="#">Meet Your Officials <span aria-hidden="true">&rarr;</span></a>
       </div>
       <dl class="mt-16 grid grid-cols-1 gap-8 sm:mt-20 sm:grid-cols-2 lg:grid-cols-4">
         <div class="flex flex-col-reverse gap-1">
-          <dt class="text-base/7 text-gray-300">Offices worldwide</dt>
-          <dd class="text-4xl font-semibold tracking-tight text-white">12</dd>
+          <dt class="text-base/7 text-gray-300">Barangays</dt>
+          <dd class="text-4xl font-semibold tracking-tight text-white">24</dd>
         </div>
         <div class="flex flex-col-reverse gap-1">
-          <dt class="text-base/7 text-gray-300">Full-time colleagues</dt>
-          <dd class="text-4xl font-semibold tracking-tight text-white">300+</dd>
+          <dt class="text-base/7 text-gray-300">Population Served</dt>
+          <dd class="text-4xl font-semibold tracking-tight text-white">150,000+</dd>
         </div>
         <div class="flex flex-col-reverse gap-1">
-          <dt class="text-base/7 text-gray-300">Hours per week</dt>
-          <dd class="text-4xl font-semibold tracking-tight text-white">40</dd>
+          <dt class="text-base/7 text-gray-300">Public Projects</dt>
+          <dd class="text-4xl font-semibold tracking-tight text-white">120+</dd>
         </div>
         <div class="flex flex-col-reverse gap-1">
-          <dt class="text-base/7 text-gray-300">Paid time off</dt>
-          <dd class="text-4xl font-semibold tracking-tight text-white">Unlimited</dd>
+          <dt class="text-base/7 text-gray-300">Years of Service</dt>
+          <dd class="text-4xl font-semibold tracking-tight text-white">75</dd>
         </div>
       </dl>
     </div>
   </div>
-
 
   <!-- This is the blog section -->
   <!-- Place this where you want the blog section to appear -->
 <div class="bg-white py-24 sm:py-32">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     <div class="mx-auto max-w-2xl lg:mx-0 text-center lg:text-left">
-      <h2 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-2">From the blog</h2>
-      <p class="text-lg text-gray-600">Learn how to grow your business with our expert advice.</p>
+      <h2 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-2">LGU News & Announcements</h2>
+      <p class="text-lg text-gray-600">Get the latest updates on local ordinances, community events, and government advisories from your LGU.</p>
     </div>
     <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
       <!-- Card 1 -->
@@ -119,10 +120,9 @@
   <div class="bg-white py-24 sm:py-32">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Our team</h2>
+      <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Meet Your LGU Team</h2>
       <p class="mt-6 text-lg leading-8 text-gray-600">
-        We're a dynamic group of individuals who are passionate about what we do<br>
-        and dedicated to delivering the best results for our clients.
+        Our dedicated LGU officials and staff are committed to serving the people of our municipality. Together, we strive for progress, transparency, and inclusive growth for every Filipino family.
       </p>
     </div>
     <ul role="list" class="mx-auto mt-20 grid max-w-4xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
@@ -130,10 +130,10 @@
         <img class="w-full h-56 object-cover rounded-2xl" src="https://scontent.fceb3-1.fna.fbcdn.net/v/t39.30808-6/495261489_2871703749669777_6522045126610493016_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH_g-w0RLHevJk6nfqaTj4pEnxHZJBTAqYSfEdkkFMCppz2lmIJQ3s0EMvtQhooCb6O1IQT2q_rZbXHGSIHM9Wm&_nc_ohc=NFu2vwgFPDcQ7kNvwHRFEjQ&_nc_oc=AdmOrviEPCDPSsRtjQ5NB-zh6E6CLHKr_MBtBaR_9Ay0N0BtFK5UenG3Rh9yomxoBQA&_nc_zt=23&_nc_ht=scontent.fceb3-1.fna&_nc_gid=5d6tl63VW7VJ55wETsu5Cg&oh=00_AfOIyd3h88CVkmyXqiOtb1lvvGMY9y1o5nXEq-Ww0Vqk-Q&oe=68472B40" alt="">
         <div class="mt-6 text-center">
           <h3 class="text-lg font-semibold text-gray-900">Janpaul Bustillo</h3>
-          <p class="text-gray-600">Backend Developer & Database</p>
+          <p class="text-gray-600">Municipal Administrator</p>
           <div class="mt-4 flex justify-center gap-x-4">
             <a href="#" class="text-gray-400 hover:text-gray-500">
-              <span class="sr-only">X</span>
+              <span class="sr-only">Facebook</span>
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
             </a>
             <a href="#" class="text-gray-400 hover:text-gray-500">
@@ -147,10 +147,10 @@
         <img class="w-full h-56 object-cover rounded-2xl" src="https://scontent.fceb3-1.fna.fbcdn.net/v/t39.30808-6/439979555_8425004204192885_23963868889279716_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH0U-Pj3hxQAzBvEnJgxIruFNYu4MGlHV4U1i7gwaUdXvUeN7T4iLdxMiU0_Zh9qgjKDCgCiQmkRE8jFOZ0t4oj&_nc_ohc=v27J0bsB-uUQ7kNvwFo1Am2&_nc_oc=AdlK77MB2TJUtnLVPRfMHQY2yH2Q9iBeObcXQeqSvmvXnjmZWqYcSu3idPuad0CgVbs&_nc_zt=23&_nc_ht=scontent.fceb3-1.fna&_nc_gid=nQPDVOqq6q_Ac-767_ZV4A&oh=00_AfMqpYbhDNI3YHVb2DI-Lc2BbzqK_oYnAPpfEkP95wseag&oe=68473B0E" alt="">
         <div class="mt-6 text-center">
           <h3 class="text-lg font-semibold text-gray-900">Kerstan Zam Davide</h3>
-          <p class="text-gray-600">Backend Developer / Support</p>
+          <p class="text-gray-600">Public Information Officer</p>
           <div class="mt-4 flex justify-center gap-x-4">
             <a href="#" class="text-gray-400 hover:text-gray-500">
-              <span class="sr-only">X</span>
+              <span class="sr-only">Facebook</span>
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
             </a>
             <a href="#" class="text-gray-400 hover:text-gray-500">
@@ -164,10 +164,10 @@
         <img class="w-full h-56 object-cover rounded-2xl" src="https://scontent.fceb3-1.fna.fbcdn.net/v/t39.30808-6/432407394_1645695422631958_4371129882617179964_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGZfkfQnY1M1Fgs01fgbasTG1J3clYceBIbUndyVhx4EgqI4qUwzsmAjH33ssUXAUgc6a4UOxAyME4pYGoPhRit&_nc_ohc=3ZIJimNdEPsQ7kNvwFvuAYK&_nc_oc=Adm24XhLhdi6XdXje7oDX80AKlfefXNalvEwAeH1FDkp-_IefMKELRBYB5OSiQ5OUdU&_nc_zt=23&_nc_ht=scontent.fceb3-1.fna&_nc_gid=DENrHTPYSJU_ZM8gCie36A&oh=00_AfNa1sibCwsI6taPkRlHv998Yy6XEUR8wdIujLaIS537Mg&oe=68472D4A" alt="">
         <div class="mt-6 text-center">
           <h3 class="text-lg font-semibold text-gray-900">Jaspher Lawrence Siloy</h3>
-          <p class="text-gray-600">UI/UX Designer & Front End Developer</p>
+          <p class="text-gray-600">LGU Web Administrator</p>
           <div class="mt-4 flex justify-center gap-x-4">
             <a href="#" class="text-gray-400 hover:text-gray-500">
-              <span class="sr-only">X</span>
+              <span class="sr-only">Facebook</span>
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
             </a>
             <a href="#" class="text-gray-400 hover:text-gray-500">
