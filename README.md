@@ -1,6 +1,8 @@
 # INFO-WEB-APP
 INTERNSHIP TASK
 
-    REQUIRED Composer to Install
+    REQUIRED to Install after Cloning
 1. cp .env.example .env
-2. composer require fakerphp/faker --dev
+
+    REQUIRED to install during production/coding
+1. composer require fakerphp/faker --dev
