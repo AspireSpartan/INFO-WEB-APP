@@ -2,4 +2,5 @@
 INTERNSHIP TASK
 
     REQUIRED Composer to Install
-1. composer require fakerphp/faker --dev
+1. cp .env.example .env
+2. composer require fakerphp/faker --dev
