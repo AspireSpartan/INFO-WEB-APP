@@ -12,3 +12,4 @@ RUN
 
     REQUIRED to install during production/coding
 1. composer require fakerphp/faker --dev
+2. php artisan storage:link
