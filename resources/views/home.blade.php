@@ -7,5 +7,7 @@
 
   <x-3goals></x-3goals>
 
+  <x-completeproj></x-completeproj>
+
 
 </x-header>
