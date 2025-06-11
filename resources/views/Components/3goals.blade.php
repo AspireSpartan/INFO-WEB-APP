@@ -1,6 +1,6 @@
 <div class="relative w-full overflow-hidden" id="visionMissionGoalSection">
     {{-- Background Image (Philippine Flag) with fade-in animation --}}
-    <img src="{{ asset('storage/flag.svg') }}" class="absolute inset-0 w-full h-full object-cover opacity-90 transition-opacity duration-1500 ease-in-out lazy-animate" data-animation-class="opacity-90">
+    <img src="{{ asset('storage/Ph_flag.svg') }}" class="absolute inset-0 w-full h-full object-cover opacity-90 transition-opacity duration-1500 ease-in-out lazy-animate" data-animation-class="opacity-90">
 
     {{-- Sun Emblem with scale-in animation --}}
     <img src="{{ asset('storage/miniflag.svg') }}" class="absolute top-[-30px] right-[50px] w-[300px] h-auto transition-all duration-1000 ease-in-out lazy-animate" style="z-index: 0;" data-animation-class="opacity-80 translate-x-0 scale-100" data-initial-class="opacity-0 translate-x-10 scale-80" data-delay="300">

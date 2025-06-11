@@ -1,5 +1,5 @@
 <!-- HERO SECTION: Background image, gradients, and intro -->
-<div class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ asset('storage/lgu_bg.svg') }}');">
+<div class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ asset('storage/LGU_bg.png') }}');">
     <!-- Background Overlay with subtle fade-in animation -->
     <div class="absolute inset-0 bg-gray-700/50 animate-bg-overlay"></div>
 
@@ -14,7 +14,7 @@
         <div class="fixed inset-y-0 right-0 w-3/4 max-w-sm bg-gray-900 p-6 shadow-lg">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-2">
-                    <img src="{{ asset('images/coredev-logo.png') }}" alt="COREDEV Logo" class="h-10 w-auto animate-logo-slide">
+                    <img src="{{ asset('coredev-logo.png') }}" alt="COREDEV Logo" class="h-10 w-auto animate-logo-slide">
                 </div>
                 <button type="button" class="text-gray-400 hover:text-white" @click="mobileMenuOpen = false">
                     <span class="sr-only">Close menu</span>
