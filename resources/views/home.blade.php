@@ -1,129 +1,133 @@
 <x-layout>
-    <body>
     <!-- HERO SECTION: Background image, gradients, and intro -->
-    <div class="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
-      <!-- Background Image -->
-      <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&crop=focalpoint&fp-y=.8&w=2830&h=1500&q=80&blend=111827&sat=-100&exp=15&blend-mode=multiply" alt="" class="absolute inset-0 -z-10 size-full object-cover object-right md:object-center">
-      <!-- Top Gradient Shape -->
-      <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
-        <div class="aspect-1097/845 w-274.25 bg-linear-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-      </div>
-      <!-- Bottom Gradient Shape -->
-      <div class="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu" aria-hidden="true">
-        <div class="aspect-1097/845 w-274.25 bg-linear-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-      </div>
-      <!-- MAIN HERO CONTENT -->
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl lg:mx-0">
-          <h2 class="text-5xl font-semibold tracking-tight text-white sm:text-7xl">Welcome to the Official LGU Portal</h2>
-          <p class="mt-8 text-lg font-medium text-pretty text-gray-300 sm:text-xl/8">
-            The Local Government Unit (LGU) of the Philippines is committed to providing transparent governance, quality public service, and community-driven development. Stay informed about local initiatives, public advisories, and opportunities to participate in building a better community.
-          </p>
-        </div>
-        <!-- QUICK LINKS SECTION -->
-        <div class="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
-          <div class="grid grid-cols-1 gap-x-8 gap-y-6 text-base/7 font-semibold text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-            <a href="#">Citizen Services <span aria-hidden="true">&rarr;</span></a>
-            <a href="#">Barangay Programs <span aria-hidden="true">&rarr;</span></a>
-            <a href="#">Transparency & Governance <span aria-hidden="true">&rarr;</span></a>
-            <a href="#">Meet Your Officials <span aria-hidden="true">&rarr;</span></a>
-          </div>
-          <!-- STATISTICS SECTION -->
-          <dl class="mt-16 grid grid-cols-1 gap-8 sm:mt-20 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="flex flex-col-reverse gap-1">
-              <dt class="text-base/7 text-gray-300">Barangays</dt>
-              <dd class="text-4xl font-semibold tracking-tight text-white">24</dd>
-            </div>
-            <div class="flex flex-col-reverse gap-1">
-              <dt class="text-base/7 text-gray-300">Population Served</dt>
-              <dd class="text-4xl font-semibold tracking-tight text-white">150,000+</dd>
-            </div>
-            <div class="flex flex-col-reverse gap-1">
-              <dt class="text-base/7 text-gray-300">Public Projects</dt>
-              <dd class="text-4xl font-semibold tracking-tight text-white">120+</dd>
-            </div>
-            <div class="flex flex-col-reverse gap-1">
-              <dt class="text-base/7 text-gray-300">Years of Service</dt>
-              <dd class="text-4xl font-semibold tracking-tight text-white">75</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
+<div class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ asset('storage/lgu_bg.svg') }}');">
+    {{-- Background Overlay --}} 
+    <div class="absolute inset-0 bg-gray-700/50"></div>
 
-      <!-- BLOG/NEWSFEED SECTION -->
-      <div class="bg-white py-24 sm:py-32">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
-          <div class="mx-auto max-w-2xl lg:mx-0 text-center lg:text-left">
-            <h2 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-2">LGU News & Announcements</h2>
-            <p class="text-lg text-gray-600">Get the latest updates on local ordinances, community events, and government advisories from your LGU.</p>
-          </div>
-          <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-            <!-- Newsfeed Cards (Dynamic) -->
-            @if($newsfeeds->count())
-                @foreach ($newsfeeds as $newsfeed)
-                <article x-data="{ editMode: false }" class="flex flex-col items-start rounded-2xl bg-white shadow-none" id="newsfeed-{{ $newsfeed->id }}">
-                    <!-- Newsfeed Card View Mode -->
-                    <template x-if="!editMode">
-                        <div>
-                            <img src="{{ asset('storage/' . $newsfeed->image_path) }}" alt="" class="mb-6 w-full h-64 object-cover rounded-xl">
-                            <div class="flex items-center gap-x-4 text-xs mb-2">
-                                <time datetime="{{ $newsfeed->published_at }}" class="text-gray-500">{{ $newsfeed->published_at }}</time>
-                            </div>
-                            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ $newsfeed->title }}</h3>
-                            <p class="text-gray-600 mb-6">{{ $newsfeed->content }}</p>
-                            <div class="flex items-center gap-x-4 mt-auto">
-                                <img src="{{ asset('storage/' . $newsfeed->icon_path) }}" alt="" class="w-10 h-10 rounded-full bg-gray-50">
-                                <div>
-                                    <p class="font-semibold text-gray-900">{{ $newsfeed->author }}</p>
-                                    <p class="text-gray-600 text-sm">{{ $newsfeed->authortitle }}</p>
-                                </div>
-                            </div>
-                            <button @click="editMode = true"
-                                class="mt-4 inline-block rounded bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500 transition">
-                                Edit
-                            </button>
-                        </div>
-                    </template>
-                    <!-- Newsfeed Card Edit Mode -->
-                    <template x-if="editMode">
-                        <form action="{{ route('newsfeeds.update', $newsfeed->id) }}" method="POST" enctype="multipart/form-data" class="w-full">
-                            @csrf
-                            @method('PUT')
-                            <!-- Preview image -->
-                            <img src="{{ asset('storage/' . $newsfeed->image_path) }}" alt="" class="mb-6 w-full h-64 object-cover rounded-xl">
-                            <div class="flex items-center gap-x-4 text-xs mb-2">
-                                <input type="date" name="published_at" value="{{ old('published_at', $newsfeed->published_at ? \Illuminate\Support\Carbon::parse($newsfeed->published_at)->format('Y-m-d') : '') }}" required class="text-gray-500 border rounded px-2 py-1">
-                            </div>
-                            <input type="text" name="title" value="{{ old('title', $newsfeed->title) }}" required class="mb-2 w-full border rounded px-2 py-1 text-xl font-semibold text-gray-900" placeholder="Title">
-                            <textarea name="content" required class="mb-2 w-full border rounded px-2 py-1 text-gray-600" placeholder="Content">{{ old('content', $newsfeed->content) }}</textarea>
-                            <div class="flex items-center gap-x-4 mt-auto mb-4">
-                                <img src="{{ asset('storage/' . $newsfeed->icon_path) }}" alt="" class="w-10 h-10 rounded-full bg-gray-50">
-                                <div>
-                                    <input type="text" name="author" value="{{ old('author', $newsfeed->author) }}" required class="font-semibold text-gray-900 border rounded px-2 py-1 mb-1" placeholder="Author">
-                                    <input type="text" name="authortitle" value="{{ old('authortitle', $newsfeed->authortitle) }}" required class="text-gray-600 text-sm border rounded px-2 py-1" placeholder="Author Title">
-                                </div>
-                            </div>
-                            <label class="block mb-2 text-sm font-medium text-gray-700" for="image_upload_{{ $newsfeed->id }}">Change Image</label>
-                            <input type="file" name="image_upload" id="image_upload_{{ $newsfeed->id }}" class="mb-2 w-full border rounded px-2 py-1">
-                            <label class="block mb-2 text-sm font-medium text-gray-700" for="icon_upload_{{ $newsfeed->id }}">Change Icon</label>
-                            <input type="file" name="icon_upload" id="icon_upload_{{ $newsfeed->id }}" class="mb-2 w-full border rounded px-2 py-1">
-                            <div class="flex gap-2">
-                                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Update</button>
-                                <button type="button" @click="editMode = false" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
-                            </div>
-                        </form>
-                    </template>
-                </article>
-                @endforeach
-            @endif
-          </div>
+    {{-- Mobile Menu (Hidden by default, shown with Alpine.js) --}}
+    <div class="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-75" x-cloak x-show="mobileMenuOpen"
+         x-transition:enter="transition ease-in-out duration-300 transform"
+         x-transition:enter-start="translate-x-full"
+         x-transition:enter-end="translate-x-0"
+         x-transition:leave="transition ease-in-out duration-300 transform"
+         x-transition:leave-start="translate-x-0"
+         x-transition:leave-end="translate-x-full">
+        <div class="fixed inset-y-0 right-0 w-3/4 max-w-sm bg-gray-900 p-6 shadow-lg">
+            <div class="flex justify-between items-center mb-6">
+                {{-- Logo for mobile menu --}}
+                <div class="flex items-center gap-2">
+                    <img src="{{ asset('images/coredev-logo.png') }}" alt="COREDEV Logo" class="h-10 w-auto">
+                </div>
+                <button type="button" class="text-gray-400 hover:text-white" @click="mobileMenuOpen = false">
+                    <span class="sr-only">Close menu</span>
+                    <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <nav class="flex flex-col gap-4">
+                <a href="#" class="block text-white text-lg font-normal font-['Questrial'] hover:text-amber-400 py-2">Home</a>
+
+                {{-- Mobile Services Dropdown --}}
+                <div x-data="{ mobileServicesOpen: false }">
+                    <button type="button" class="flex items-center justify-between w-full text-white text-lg font-normal font-['Questrial'] hover:text-amber-400 py-2"
+                            @click="mobileServicesOpen = !mobileServicesOpen">
+                        Services
+                        <svg class="size-5 transition-transform duration-200"
+                             :class="{ 'rotate-180': mobileServicesOpen }" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div x-show="mobileServicesOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1"
+                         class="pl-4 mt-2 space-y-2">
+                        <a href="#" class="block text-gray-300 text-base hover:text-amber-400">Service 1</a>
+                        <a href="#" class="block text-gray-300 text-base hover:text-amber-400">Service 2</a>
+                        <a href="#" class="block text-gray-300 text-base hover:text-amber-400">Service 3</a>
+                    </div>
+                </div>
+
+                {{-- Mobile Blog Dropdown --}}
+                <div x-data="{ mobileBlogOpen: false }">
+                    <button type="button" class="flex items-center justify-between w-full text-white text-lg font-normal font-['Questrial'] hover:text-amber-400 py-2"
+                            @click="mobileBlogOpen = !mobileBlogOpen">
+                        Blog
+                        <svg class="size-5 transition-transform duration-200"
+                             :class="{ 'rotate-180': mobileBlogOpen }" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div x-show="mobileBlogOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1"
+                         class="pl-4 mt-2 space-y-2">
+                        <a href="#" class="block text-gray-300 text-base hover:text-amber-400">Article 1</a>
+                        <a href="#" class="block text-gray-300 text-base hover:text-amber-400">Article 2</a>
+                        <a href="#" class="block text-gray-300 text-base hover:text-amber-400">Article 3</a>
+                    </div>
+                </div>
+
+                <a href="#" class="block text-white text-lg font-normal font-['Questrial'] hover:text-amber-400 py-2">Contact Us</a>
+                <a href="#" class="block bg-amber-400 text-white text-lg font-normal font-['Segoe_UI'] py-2 px-8 rounded-[30px] text-center hover:bg-amber-500 transition-colors mt-4">Sign In</a>
+            </nav>
         </div>
-      </div>
+    </div>
+
+    {{-- Hero Content --}}
+    <div class="relative z-10 flex flex-col items-center justify-center h-[calc(100vh-theme(spacing.24))] text-center px-4">
+        <div class="max-w-3xl space-y-4 md:space-y-6 lg:space-y-8">
+            <p class="text-white text-lg md:text-xl font-normal font-['Noto_Sans']">“DRIVEN BY INNOVATION</p>
+            <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-bold font-['Merriweather'] leading-tight">Local Government Unit</h1>
+            <p class="text-white text-xl md:text-2xl lg:text-3xl font-normal font-['Roboto']">
+                Serving the community with <span class="text-amber-400">transparency</span>,
+                <span class="text-amber-400">Integrity</span>, <br class="hidden sm:inline"/>and <span class="text-amber-400">commitment</span>.
+            </p>
+            <p class="text-white text-base md:text-lg font-normal font-['Source_Sans_Pro']">
+                <span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1">/</span>BREAKING BOUNDARIES
+            </p>
+        </div>
+    </div>
+
+    {{-- Bottom Bar with Statistics --}}
+    <div class="relative z-10 w-full bg-zinc-500/20 shadow-md py-4 md:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 mt-auto">
+        <div class="flex flex-col sm:flex-row justify-around items-center gap-6 md:gap-12 lg:gap-24">
+            <div class="text-center">
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Montserrat']">24</div>
+                <div class="text-white text-sm md:text-lg font-light font-['Source_Sans_Pro']">barangay</div>
+            </div>
+            <div class="text-center">
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Montserrat']">1500+</div>
+                <div class="text-white text-sm md:text-lg font-light font-['Source_Sans_Pro']">Residents</div> {{-- Changed from barangay based on common website stats --}}
+            </div>
+            <div class="text-center">
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Montserrat']">120+</div>
+                <div class="text-white text-sm md:text-lg font-light font-['Source_Sans_Pro']">Public Projects</div>
+            </div>
+            <div class="text-center">
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Montserrat']">75</div>
+                <div class="text-white text-sm md:text-lg font-light font-['Source_Sans_Pro']">Years of Service</div>
+            </div>
+        </div>
+        {{-- Horizontal Line above the bottom text --}}
+        <div class="w-full h-px bg-white/50 my-6"></div>
+        {{-- Bottom Description --}}
+        <p class="relative z-10 text-center text-white text-xs md:text-sm lg:text-base font-light font-['Montserrat'] max-w-5xl mx-auto px-4 md:px-0">
+            Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.
+        </p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('mobileMenuState', () => ({
+            mobileMenuOpen: false,
+        }))
+    })
+</script>
+
+      
 
       {{-- 
-        TEAM SECTION: Static team members, not dynamic
-      --}}
-      <div class="bg-white py-24 sm:py-32">
+    TEAM SECTION: Static team members, not dynamic
+    --}}
+<div class="bg-white py-24 sm:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
           <div class="mx-auto max-w-2xl text-center">
             <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Meet Your LGU Team</h2>
@@ -194,5 +198,4 @@
       </div>
 
     </div>
-    </body>
 </x-layout>
