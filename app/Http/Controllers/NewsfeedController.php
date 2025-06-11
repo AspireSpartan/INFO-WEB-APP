@@ -84,7 +84,7 @@ class NewsfeedController extends Controller
         $newsfeed->save();
 
         // 5. Redirect back or to a specific route
-        return redirect()->route('newsfeeds.index')->with('success', 'Newsfeed updated successfully!');
+        return redirect()->route('home')->with('success', 'Newsfeed updated successfully!');
         // Or redirect back to the edit page: return back()->with('success', 'Newsfeed updated successfully!');
     }
 
