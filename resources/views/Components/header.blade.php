@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Welcome</title>
+    <title>Web Info App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="//unpkg.com/alpinejs" defer></script>
@@ -19,7 +19,7 @@
     {{-- Desktop Navigation --}}
     <nav class="hidden lg:flex items-center gap-x-12">
         {{-- Home --}}
-        <a href="#" class="text-white text-base font-normal font-['Questrial'] hover:text-amber-400">Home</a>
+        <a href="/home" class="text-white text-base font-normal font-['Questrial'] hover:text-amber-400">Home</a>
 
         {{-- Services Dropdown (assuming dropdown functionality here) --}}
         {{-- The 'relative' class on the parent div is CRUCIAL for absolute positioning of its children --}}
