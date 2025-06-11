@@ -1,6 +1,5 @@
 <x-layout>
-    <body>
-    <div class="bg-white">
+    <div class="bg-white pt-24"> {{-- Added pt-24 for header spacing --}}
   <div class="relative isolate px-6 pt-14 lg:px-8">
     {{-- Top Background Gradient Shape --}}
     <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
@@ -29,6 +28,4 @@
     </div>
   </div>
 </div>
-
-</body>
 </x-layout>
