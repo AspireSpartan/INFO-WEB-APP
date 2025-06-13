@@ -1,6 +1,6 @@
-<x-header> </x-header>
-  <x-banner></x-banner>
-<x-blog :newsfeeds="$newsfeeds"></x-blog>
+<x-User.header.header> </x-User.header.header>
+  <x-User.banner.banner></x-User.banner.banner>
+<x-User.blog.blog :newsfeeds="$newsfeeds"></x-User.blog.blog>
 
 <footer>
     <div class="w-full min-h-[579px] h-auto bg-black flex justify-center items-start py-24 px-8 md:px-16 lg:px-32 relative overflow-x-hidden">
