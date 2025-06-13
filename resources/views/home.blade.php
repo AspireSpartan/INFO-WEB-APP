@@ -1,15 +1,16 @@
-<x-header> 
+<x-User.header.header>
+    
+  <x-User.banner.banner></x-User.banner.banner>
+  
+  <x-User.latestnews.latestnews></x-User.latestnews.latestnews>
+
+  <x-User.3goals.3goals></x-User.3goals.3goals>
+
+  <x-User.completeproj.completeproj></x-User.completeproj.completeproj>
+
+  <x-User.teamdev.teamdev></x-User.teamdev.teamdev>
 
 
-  <x-banner></x-banner>
-
-  <x-latestnews></x-latestnews>
-
-  <x-3goals></x-3goals>
-
-  <x-completeproj></x-completeproj>
-
-  <x-teamdev></x-teamdev>
 
 <footer>
     <div class="w-full min-h-[579px] h-auto bg-black flex justify-center items-start py-24 px-8 md:px-16 lg:px-32 relative overflow-x-hidden">
@@ -80,4 +81,4 @@
 </footer>
 
 
-</x-header>
+</x-User.header.header>
