@@ -13,9 +13,9 @@ INTERNSHIP TASK
 2. php -i | findstr post_max_size
 
 (Paste these implementation on the .ini file - this is to set the max file size for the uploadn and post including memory limit)
-upload_max_filesize = 50M
-post_max_size = 50M
-memory_limit = 128M
+1. upload_max_filesize = 50M
+2. post_max_size = 50M
+3. memory_limit = 128M
 
 RUN
 1. php artisan serve
