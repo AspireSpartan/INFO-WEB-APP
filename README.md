@@ -8,7 +8,10 @@ INTERNSHIP TASK
 4. then  last php artisan migrate
 
 *Configuring the ini file*
-(Use these command to the CMD - this is to identify the upload and post max file size)
+(Use this command on the CMD to find your .ini file)
+1. php --ini
+
+(Use these command on the CMD - this is to identify the upload and post max file size)
 1. php -i | findstr upload_max_filesize
 2. php -i | findstr post_max_size
 
