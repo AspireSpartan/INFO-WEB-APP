@@ -106,21 +106,22 @@
             <div class="col-span-2">Title</div>
             <div class="col-span-1">Sponsored</div>
             <div class="col-span-1">Views</div>
+            <div class="col-span-1">URL</div>
             <div class="col-span-2 text-right">Actions</div>
         </div>
 
 
                 <!-- Table Body Rows (Dynamic Data) -->
-        @foreach ($newsItems as $news)
-            @include('Components.Admin.newss.news_row', [
-                'picture' => asset($news['picture']), // Use the accessor for the picture URL
-                'author' => $news->author,
-                'date' => $news->date->format('d/m/Y'), // Format the date as needed
-                'title' => $news->title,
-                'sponsored' => $news->sponsored,
-                'views' => number_format($news->views) // Format views with commas
-            ])
-        @endforeach
-
+                @foreach ($newsItems as $news)
+                    @include('Components.Admin.newss.news_row', [
+                        'picture' => asset('storage/' . $news->picture), // Use the accessor for the picture URL
+                        'author' => $news->author,
+                        'date' => $news->date->format('d/m/Y'), // Format the date as needed
+                        'title' => $news->title,
+                        'sponsored' => $news->sponsored,
+                        'views' => number_format($news->views), // Format views with commas
+                        'url' => $news->url // Add the URL attribute
+                    ])
+                @endforeach
     </div>
 </main>
