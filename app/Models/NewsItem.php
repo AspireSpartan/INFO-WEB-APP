@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsItem extends Model
 {
-    protected $fillable = ['picture', 'author', 'date', 'title', 'sponsored', 'views'];
+    protected $fillable = ['picture', 'author', 'date', 'title', 'url', 'sponsored', 'views'];
 
     protected $casts = [
         'sponsored' => 'boolean',
