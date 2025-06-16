@@ -25,4 +25,8 @@ Route::get('/blog', function () {
     return view('blog', compact('newsfeeds')); 
 })->name('blog');
 
+Route::get('/contact-us', function () {
+    return view('contact-us'); 
+})->name('contact-us');
+
 Route::resource('newsfeeds', NewsfeedController::class);
