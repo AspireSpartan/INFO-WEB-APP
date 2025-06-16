@@ -31,6 +31,14 @@ Route::get('/blog', function () {
     return view('blog', compact('newsfeeds')); 
 })->name('blog');
 
+Route::get('/admin', function () {
+    return view('layouts.adminlayout');
+})->name('admin');
+
+Route::get('/logout', function () {
+    return redirect('/sign-in')->with('status', 'You have been logged out.');
+})->name('logout');
+
 Route::get('/contact-us', function () {
     return view('contact-us'); 
 })->name('contact-us'); 
