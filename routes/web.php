@@ -29,4 +29,9 @@ Route::get('/admin', function () {
     return view('Components.Admin.signIn.news'); 
 })->name('admin'); 
 
+Route::get('/contact-us', function () {
+    $newsfeeds = Newsfeed::all(); 
+    return view('contact-us'); 
+})->name('contact-us');
+
 Route::resource('newsfeeds', NewsfeedController::class);

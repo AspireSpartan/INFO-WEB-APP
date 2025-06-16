@@ -1,4 +1,4 @@
-<header class="fixed top-0 left-0 w-full bg-black/50 z-50" x-data="{ mobileMenuOpen: false }">
+<header style="font-family: 'Merriweather', questrial;" class="fixed top-0 left-0 w-full bg-black/50 z-50" x-data="{ mobileMenuOpen: false }">
     <nav class="container mx-auto px-4 h-20 flex items-center justify-between">
         {{-- Logo --}}
         <div class="flex items-center">
