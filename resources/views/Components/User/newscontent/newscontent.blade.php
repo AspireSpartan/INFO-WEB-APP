@@ -22,10 +22,12 @@
                     </div>
                 </div>
 
-                <!--News Box Contents-->
                 <div class="max-w-[1600px] mx-auto mt-20 px-4 pb-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 bg-white">
                     @foreach($newsItems as $news)
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden relative news-item" data-id="{{ $news->id }}">
+                        <a href="{{ $news->url }}" class="block bg-white rounded-lg shadow-md overflow-hidden relative news-item transition-transform transform hover:scale-105 hover:shadow-lg"
+                        data-id="{{ $news->id }}"
+                        data-url="{{ $news->url }}"
+                        onclick="incrementViewsAndRedirect(event, this)">
                             <img class="w-full h-48 object-cover" src="{{ Str::startsWith($news->picture, ['http://', 'https://']) ? $news->picture : asset('storage/' . $news->picture) }}" alt="{{ $news->title }}">
                             <div class="p-4 text-black">
                                 <div class="flex items-center mb-2">
@@ -43,7 +45,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     @endforeach
                 </div>
             </div>
@@ -51,20 +53,40 @@
     </div>
 </div>
 
-<!--<script>
-    document.querySelectorAll('.news-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const newsId = item.getAttribute('data-id');
-            fetch('/news/view/' + newsId, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        const viewsSpan = item.querySelector('.views-count');
-                        if(viewsSpan) {
-                            viewsSpan.textContent = data.views;
-                        }
-                    }
-                });
+<script>
+    // Define a JavaScript function to handle the click and AJAX request
+    function incrementViewsAndRedirect(event, element) {
+        event.preventDefault(); // Prevent the default navigation of the <a> tag
+
+        const newsId = element.getAttribute('data-id');
+        const newsUrl = element.getAttribute('data-url');
+        const viewsSpan = element.querySelector('.views-count');
+
+        fetch(`/news/${newsId}/increment-views`, { // Use the defined route URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel's CSRF token for security
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (viewsSpan) {
+                    viewsSpan.textContent = data.views; // Update the displayed count
+                }
+                // Now that the view is counted, navigate to the news URL
+                window.location.href = newsUrl;
+            } else {
+                console.error('Failed to increment view count:', data.message);
+                // Even if view count fails, you might still want to navigate
+                window.location.href = newsUrl;
+            }
+        })
+        .catch(error => {
+            console.error('Error incrementing view count:', error);
+            // Handle network errors, etc. Still navigate to ensure user experience
+            window.location.href = newsUrl;
         });
-    });
-</script>-->
+    }
+</script>
