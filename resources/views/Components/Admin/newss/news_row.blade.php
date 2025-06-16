@@ -1,28 +1,35 @@
 {{-- resources/views/Components/Admin/news_row.blade.php --}}
 @props([
-    'imageSrc',
-    'datePosted',
+    'picture',    // Changed from imageSrc
+    'author',     // New variable
+    'date',       // Changed from datePosted
     'title',
-    'description',
-    'linkHref'
+    'sponsored',  // New variable (boolean)
+    'views'       // New variable
 ])
 
-<div class="px-6 py-4 grid grid-cols-8 gap-4 items-center border-b border-neutral-300">
-    <div class="col-span-1 flex items-center gap-12"> {{-- Adjusted gap from 12 to 2 for better alignment based on previous requests --}}
+<div class="px-6 py-4 grid grid-cols-9 gap-4 items-center border-b border-neutral-300">
+    {{-- Checkbox and Picture --}}
+    <div class="col-span-1 flex items-center gap-12">
         <input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 cursor-pointer">
-        <img class="w-10 h-10 rounded-full object-cover" src="{{ $imageSrc }}" alt="User Image">
+        <img class="w-10 h-10 rounded-full object-cover" src="{{ $picture }}" alt="News Image">
     </div>
-    <div class="col-span-1 text-black text-base font-normal font-source-sans-pro">{{ $datePosted }}</div>
+    {{-- Author --}}
+    <div class="col-span-1 text-black text-base font-normal font-source-sans-pro">{{ $author }}</div>
+    {{-- Date --}}
+    <div class="col-span-1 text-black text-base font-normal font-source-sans-pro">{{ $date }}</div>
+    {{-- Title --}}
     <div class="col-span-2 text-black text-base font-normal font-source-sans-pro">{{ $title }}</div>
-    <div class="col-span-2 text-black text-base font-light font-source-sans-pro">{{ $description }}</div>
-    <div class="col-span-1">
-        <a href="{{ $linkHref }}" target="_blank" class="text-blue-600 hover:underline text-sm font-source-sans-pro truncate block">
-            Link
-        </a>
+    {{-- Sponsored --}}
+    <div class="col-span-1 text-black text-base font-normal font-source-sans-pro">
+        {{ $sponsored ? 'Yes' : 'No' }}
     </div>
-    <div class="col-span-1 flex justify-end items-center relative" x-data="{ open: false }" @click.away="open = false">
+    {{-- Views --}}
+    <div class="col-span-1 text-black text-base font-normal font-source-sans-pro">{{ $views }}</div>
+    {{-- Actions Dropdown --}}
+    <div class="col-span-2 flex justify-end items-center relative" x-data="{ open: false }" @click.away="open = false">
         <button class="p-2 rounded-full hover:bg-gray-200" @click="open = !open">
-            <img src='storage/three_doted.svg' alt="Actions" class="w-5 h-5 text-gray-500">
+            <img src='{{ asset('storage/three_doted.svg') }}' alt="Actions" class="w-5 h-5 text-gray-500">
         </button>
         <!-- Dropdown Content -->
         <div x-show="open"

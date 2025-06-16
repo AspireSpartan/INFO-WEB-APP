@@ -26,8 +26,12 @@ Route::get('/blog', function () {
 })->name('blog');
 
 Route::get('/admin', function () {
-    return view('Components.Admin.signIn.news'); 
-})->name('admin'); 
+    return view('layouts.adminlayout');
+})->name('admin');
+
+Route::get('/logout', function () {
+    return redirect('/sign-in')->with('status', 'You have been logged out.');
+})->name('logout');
 
 
 Route::resource('newsfeeds', NewsfeedController::class);
