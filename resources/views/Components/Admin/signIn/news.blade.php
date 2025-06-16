@@ -74,7 +74,7 @@
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Profile</a>
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Settings</a>
                     <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" role="menuitem" tabindex="-1"
-                       @click.prevent="window.location.href = '/logout';">Logout</a>
+                       @click.prevent="window.location.href = '/home';">Logout</a>
                 </div>
             </div>
         </div>
