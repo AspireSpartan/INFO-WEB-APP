@@ -33,5 +33,4 @@ Route::get('/logout', function () {
     return redirect('/sign-in')->with('status', 'You have been logged out.');
 })->name('logout');
 
-
 Route::resource('newsfeeds', NewsfeedController::class);

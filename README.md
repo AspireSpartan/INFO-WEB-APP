@@ -1,11 +1,16 @@
 # INFO-WEB-APP
 INTERNSHIP TASK
 
-    REQUIRED to Install after Cloning
+    REQUIRED to Install after Cloning (REQUIRED to install during production/coding)
 1. cp .env.example .env
 2. php artisan key:generate
 3. change the DB properties in the .env file
 4. then  last php artisan migrate
+5. mkdir -p public/storage/news
+6. composer require fakerphp/faker --dev
+7. php artisan db:seed --class=NewsfeedSeeder
+8. php artisan storage:link
+
 
 *Configuring the ini file*
 (Use this command on the CMD to find your .ini file)
@@ -22,8 +27,3 @@ INTERNSHIP TASK
 
 RUN
 1. php artisan serve
-
-    REQUIRED to install during production/coding
-1. composer require fakerphp/faker --dev
-2. php artisan db:seed --class=NewsfeedSeeder
-3. php artisan storage:link
