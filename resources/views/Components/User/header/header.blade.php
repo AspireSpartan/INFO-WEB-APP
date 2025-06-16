@@ -87,7 +87,7 @@
                      class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
                      role="menu" aria-orientation="vertical" aria-labelledby="blog-menu-button" tabindex="-1">
                     <div class="py-1" role="none">
-                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Latest Articles</a>
+                        <a href="/blog" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Latest Articles</a>
                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Tech News</a>
                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Case Studies</a>
                     </div>
@@ -169,8 +169,6 @@
                 <a href="#" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Categories</a>
             </div>
         </div>
-
-        <a href="/contact-us" class="text-white text-2xl font-normal font-['Questrial'] hover:text-amber-400" @click="mobileMenuOpen = false">Contact Us</a>
         <a href="/sign-in" class="bg-amber-400 text-white text-2xl font-normal font-['Segoe_UI'] py-3 px-10 rounded-[30px] hover:bg-amber-500 transition-colors" @click="mobileMenuOpen = false">Sign In</a>
     </div>
 </header>
