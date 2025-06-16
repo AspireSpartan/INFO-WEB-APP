@@ -29,5 +29,4 @@ Route::get('/admin', function () {
     return view('Components.Admin.signIn.news'); 
 })->name('admin'); 
 
-
 Route::resource('newsfeeds', NewsfeedController::class);
