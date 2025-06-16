@@ -1,4 +1,4 @@
-
+{{-- resources/views/Components/Admin/signin/news_content.blade.php --}}
 <main class="flex-grow p-4 md:p-8 lg:p-12">
     <!-- Changed text color to D4AF37 -->
     <h1 class="text-[#D4AF37] text-3xl font-semibold font-montserrat mb-8 mt-4 md:ml-8">News</h1>
@@ -109,16 +109,77 @@
             <div class="col-span-2 text-right">Actions</div>
         </div>
 
+        <!-- Table Body Rows (Static Data) -->
+        {{-- Static news data to pass to the component --}}
+        @php
+            $newsItems = [
+                [
+                    'picture' => asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg'),
+                    'author' => 'Maria Santos',
+                    'date' => '15/06/2025',
+                    'title' => 'Youth Leader Launches Park Clean-Up Drive in Cebu City',
+                    'sponsored' => false,
+                    'views' => '1,230',
+                ],
+                [
+                    'picture' => asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg'),
+                    'author' => 'Juan Dela Cruz',
+                    'date' => '14/06/2025',
+                    'title' => 'Local Government Approves New Infrastructure Projects',
+                    'sponsored' => true,
+                    'views' => '5,876',
+                ],
+                [
+                    'picture' => asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg'),
+                    'author' => 'Ana Reyes',
+                    'date' => '13/06/2025',
+                    'title' => 'Community Workshop on Sustainable Farming Practices',
+                    'sponsored' => false,
+                    'views' => '987',
+                ],
+                [
+                    'picture' => asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg'),
+                    'author' => 'Pedro Lim',
+                    'date' => '12/06/2025',
+                    'title' => 'Health Awareness Campaign Kicks Off in Local Schools',
+                    'sponsored' => true,
+                    'views' => '2,450',
+                ],
+                [
+                    'picture' => asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg'),
+                    'author' => 'Sofia Tan',
+                    'date' => '11/06/2025',
+                    'title' => 'Art Festival Showcases Local Talents',
+                    'sponsored' => false,
+                    'views' => '789',
+                ],
+                [
+                    'picture' => asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg'),
+                    'author' => 'Carlos Gomez',
+                    'date' => '10/06/2025',
+                    'title' => 'Emergency Preparedness Drill Conducted for Residents',
+                    'sponsored' => false,
+                    'views' => '1,012',
+                ],
+                [
+                    'picture' => asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg'),
+                    'author' => 'Jessica Yu',
+                    'date' => '09/06/2025',
+                    'title' => 'New Public Library Opens its Doors to the Community',
+                    'sponsored' => true,
+                    'views' => '3,200',
+                ],
+            ];
+        @endphp
 
-                <!-- Table Body Rows (Dynamic Data) -->
         @foreach ($newsItems as $news)
             @include('Components.Admin.newss.news_row', [
-                'picture' => asset($news['picture']), // Use the accessor for the picture URL
-                'author' => $news->author,
-                'date' => $news->date->format('d/m/Y'), // Format the date as needed
-                'title' => $news->title,
-                'sponsored' => $news->sponsored,
-                'views' => number_format($news->views) // Format views with commas
+                'picture' => asset($news['picture']), // Use asset() helper for images
+                'author' => $news['author'],
+                'date' => $news['date'],
+                'title' => $news['title'],
+                'sponsored' => $news['sponsored'],
+                'views' => $news['views']
             ])
         @endforeach
 
