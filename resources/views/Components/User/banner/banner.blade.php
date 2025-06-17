@@ -1,3 +1,4 @@
+
 <!-- HERO SECTION: Background image, gradients, and intro -->
 <div class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ asset('storage/LGU_bg.png') }}');">
     <!-- Background Overlay with subtle fade-in animation -->

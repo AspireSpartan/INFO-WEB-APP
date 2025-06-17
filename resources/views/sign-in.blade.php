@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.auth')
 
-@section('title', 'Admin Sign In')
+@section('title', 'Sign In')
 
 @section('content')
     <x-Admin.signIn.signIn></x-Admin.signIn.signIn>

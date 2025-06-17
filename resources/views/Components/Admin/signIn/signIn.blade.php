@@ -1,32 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sign In / Sign Up</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Alpine.js once and with defer -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <!-- Optional: Configure Tailwind to use Inter font if not already globally configured -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Custom styles for checkbox appearance if needed beyond Tailwind's default form styling */
-        input[type="checkbox"]:checked {
-            background-color: #3b82f6; /* Blue-500 for checked state, matching the SVG color */
-            border-color: #3b82f6;
-        }
-        input[type="checkbox"]:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5); /* Blue-200 with transparency */
-        }
-    </style>
-</head>
-<body class="font-inter">
+
+
+<div class="font-inter">
     <!-- Main container for the full page, ensuring it takes full viewport height -->
     <!-- Flexbox is used to center the content both horizontally and vertically -->
     <div class="relative w-screen h-screen flex items-center justify-center overflow-hidden">
@@ -87,7 +61,7 @@
                         Use a Sign-In Code
                     </button>
 
-                    <a href="#" class="text-neutral-600 hover:text-blue-600 text-base font-normal underline mb-4 font-['Segoe_UI'] transition-all duration-200 ease-out transform hover:translate-x-1">
+                    <a href="/adminv2" class="text-neutral-600 hover:text-blue-600 text-base font-normal underline mb-4 font-['Segoe_UI'] transition-all duration-200 ease-out transform hover:translate-x-1">
                         Forgot password?
                     </a>
 
@@ -175,5 +149,5 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+
