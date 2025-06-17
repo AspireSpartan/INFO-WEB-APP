@@ -268,6 +268,7 @@ class NewsController extends Controller
     public function incrementViews(NewsItem  $newsItem)
     {
         // Increment the views column
+        //$newsItem = NewsItem::findOrFail($id);
         $newsItem->increment('views');
 
         // You can return the updated views count or just a success message

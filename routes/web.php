@@ -39,12 +39,13 @@ Route::get('/contact-us', function () {
 // Resource route for NewsfeedController
 Route::resource('newsfeeds', NewsfeedController::class);
 
+Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
+->name('news.incrementViews');
+
 // Admin Routes (Grouped for clarity and potential middleware)
 Route::prefix('admin')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('admin.dashboard');
     Route::resource('news', NewsController::class);
-
-    Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])->name('news.incrementViews');
     // New route for bulk delete
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
 });
