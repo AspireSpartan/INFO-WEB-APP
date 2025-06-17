@@ -1,5 +1,6 @@
 {{-- resources/views/Components/Admin/news_row.blade.php --}}
 @props([
+    'newsItem',
     'picture',
     'author',
     'date',
@@ -13,65 +14,79 @@
      x-data="{ showImageModal: false, modalImageUrl: '' }">
 
     {{-- Checkbox and Picture --}}
-    <div class="col-span-1 flex items-center gap-12"> {{-- Removed justify-center to align left --}}
-        <input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 cursor-pointer">
+    <div class="col-span-1 flex items-center gap-12">
+    {{-- This is the checkbox you need to verify --}}
+        <input type="checkbox"
+            name="selected_news_items[]"  
+            value="{{ $newsItem->id }}"   
+            class="h-4 w-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 cursor-pointer">
+    
         <img class="w-10 h-10 object-cover rounded-md transition-transform duration-300 hover:scale-[1.5] cursor-pointer"
-             src="{{ $picture }}"
-             alt="News Image"
-             @click="showImageModal = true; modalImageUrl = '{{ $picture }}'">
+            src="{{ asset('storage/' . $newsItem->picture) }}"
+            alt="News Image"
+            @click="showImageModal = true; modalImageUrl = '{{ asset('storage/' . $newsItem->picture) }}'">
     </div>
 
     {{-- Author --}}
     <div class="col-span-1 flex justify-center items-center text-black text-base font-normal font-source-sans-pro truncate">
-        {{ $author }}
+        {{ $newsItem->author }}
     </div>
 
     {{-- Date --}}
     <div class="col-span-1 flex justify-center items-center text-black text-base font-normal font-source-sans-pro whitespace-nowrap">
-        {{ $date }}
+        {{ $newsItem->date->format('d/m/Y') }}
     </div>
 
     {{-- Title --}}
     <div class="col-span-2 flex justify-center items-center text-black text-base font-normal font-source-sans-pro truncate">
-        {{ $title }}
+        {{ $newsItem->title }}
     </div>
 
     {{-- Sponsored --}}
     <div class="col-span-1 flex justify-center items-center text-black text-base font-normal font-source-sans-pro whitespace-nowrap">
-        {{ $sponsored ? 'Yes' : 'No' }}
+        {{ $newsItem->sponsored ? 'Yes' : 'No'}}
     </div>
 
     {{-- Views --}}
     <div class="col-span-1 flex justify-center items-center text-black text-base font-normal font-source-sans-pro whitespace-nowrap">
-        {{ $views }}
+        {{ number_format($newsItem->views) }}
     </div>
 
     {{-- URL --}}
     <div class="col-span-1 flex justify-center items-center">
-        <a href="{{ $url }}" target="_blank" class="text-blue-500 hover:underline text-sm px-3 py-1 rounded-md bg-blue-50 border border-blue-200 transition-colors">View URL</a>
+        <a href="{{ $newsItem->url }}" target="_blank" class="text-blue-500 hover:underline text-sm px-3 py-1 rounded-md bg-blue-50 border border-blue-200 transition-colors">View URL</a>
     </div>
 
-    {{-- Actions Dropdown --}}
-    <div class="col-span-1 flex justify-center items-center relative" x-data="{ open: false }" @click.away="open = false">
-        <button class="p-2 rounded-full hover:bg-gray-200" @click="open = !open">
-            <img src='{{ asset('storage/three_doted.svg') }}' alt="Actions" class="w-5 h-5 text-gray-500">
-        </button>
-        <div x-show="open"
-             x-transition:enter="transition ease-out duration-100"
-             x-transition:enter-start="transform opacity-0 scale-95"
-             x-transition:enter-end="transform opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-75"
-             x-transition:leave-start="transform opacity-100 scale-100"
-             x-transition:leave-end="transform opacity-0 scale-95"
-             class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
-             role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-            <div class="py-1" role="none">
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update</a>
-                <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" role="menuitem">Delete</a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View Details</a>
+        {{-- Actions Dropdown --}}
+        <div class="col-span-1 flex justify-center items-center relative" x-data="{ open: false }" @click.away="open = false">
+            <button class="p-2 rounded-full hover:bg-gray-200" @click="open = !open">
+                <img src='{{ asset('storage/three_doted.svg') }}' alt="Actions" class="w-5 h-5 text-gray-500">
+            </button>
+            <div x-show="open"
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="transform opacity-0 scale-95"
+                x-transition:enter-end="transform opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-75"
+                x-transition:leave-start="transform opacity-100 scale-100"
+                x-transition:leave-end="transform opacity-0 scale-95"
+                class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                <div class="py-1" role="none">
+                    {{-- Update Link --}}
+                    <a href="{{ route('news.edit', $newsItem->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update</a>
+
+                    {{-- Delete Form (using a form for DELETE request) --}}
+                    <form action="{{ route('news.destroy', $newsItem->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this news item?');" role="none">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" role="menuitem">Delete</button>
+                    </form>
+
+                    {{-- View Details Link (assuming you want to use the show method) --}}
+                    <a href="{{ route('news.show', $newsItem->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View Details</a>
+                </div>
             </div>
         </div>
-    </div>
 
     {{-- Image Modal --}}
     <div x-show="showImageModal"
@@ -95,3 +110,4 @@
     </div>
 
 </div>
+

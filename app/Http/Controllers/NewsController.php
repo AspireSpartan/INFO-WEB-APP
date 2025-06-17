@@ -14,11 +14,98 @@ class NewsController extends Controller
      * Display a listing of the news items (for admin dashboard).
      * This function now serves as the index for news items in the admin area.
      */
-    public function index()
+
+    /*public function index()
     {
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems'));
+    }*/
+
+    /* this area is the filtering, search, sorting, checkboxes, and the delete all button. */
+        public function index(Request $request)
+    {
+        
+        $query = NewsItem::query();
+
+        // --- Search Functionality ---
+        if ($request->has('search') && $request->input('search') != '') {
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('author', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('url', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        // --- Filter by Sponsored Functionality ---
+        if ($request->has('sponsored_filter') && $request->input('sponsored_filter') != 'all') {
+            if ($request->input('sponsored_filter') == 'sponsored') {
+                $query->where('sponsored', true);
+            } elseif ($request->input('sponsored_filter') == 'non-sponsored') {
+                $query->where('sponsored', false);
+            }
+        }
+
+        // --- Sort By Functionality ---
+        $sortBy = $request->input('sort_by', 'date_desc'); // Default sort: date (newest)
+        switch ($sortBy) {
+            case 'date_asc':
+                $query->orderBy('date', 'asc');
+                break;
+            case 'views_desc':
+                $query->orderBy('views', 'desc');
+                break;
+            case 'views_asc':
+                $query->orderBy('views', 'asc');
+                break;
+            case 'date_desc': // Default case
+            default:
+                $query->orderBy('date', 'desc');
+                break;
+        }
+
+        $newsItems = $query->get();
+
+        // Pass the current filter/sort/search values back to the view to persist selection
+        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request'));
     }
+
+
+            /**
+         * Remove multiple specified news items from storage.
+         */
+    public function bulkDestroy(Request $request)
+    {
+        // The JavaScript sends 'ids[]', so validate and get 'ids'
+        $request->validate([
+            'ids' => 'required|array', // Expect 'ids'
+            'ids.*' => 'exists:news_items,id',
+        ]);
+
+        $newsItemIds = $request->input('ids'); // Get 'ids'
+
+        if (empty($newsItemIds)) {
+            // This case should be caught by the client-side alert or validation,
+            // but as a fallback, ensure we don't proceed with an empty array.
+            return redirect()->route('admin.dashboard')->with('error', 'No news items selected for deletion.');
+        }
+
+        foreach ($newsItemIds as $id) {
+            $newsItem = NewsItem::find($id);
+            if ($newsItem) {
+                // Delete associated image from storage
+                if ($newsItem->picture && Storage::disk('public')->exists($newsItem->picture)) {
+                    Storage::disk('public')->delete($newsItem->picture);
+                    Log::info('Image deleted during bulk news item destruction: ' . $newsItem->picture);
+                }
+                $newsItem->delete();
+                Log::info('News item deleted during bulk operation: ' . $id);
+            }
+        }
+
+        return redirect()->route('admin.dashboard')->with('success', 'Selected news items deleted successfully!');
+    }
+        
 
     /**
      * Show the form for creating a new news item.
@@ -96,7 +183,7 @@ class NewsController extends Controller
     public function edit($id)
     {
         $newsItem = NewsItem::findOrFail($id);
-        return view('news.edit', compact('newsItem')); // Assuming you have a news.edit view
+        return view('Components.Admin.edit.edit', compact('newsItem')); // Assuming you have a news.edit view
     }
 
     /**
@@ -181,6 +268,7 @@ class NewsController extends Controller
     public function incrementViews(NewsItem  $newsItem)
     {
         // Increment the views column
+        //$newsItem = NewsItem::findOrFail($id);
         $newsItem->increment('views');
 
         // You can return the updated views count or just a success message
