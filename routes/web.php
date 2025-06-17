@@ -49,7 +49,9 @@ Route::resource('newsfeeds', NewsfeedController::class);
 Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
     ->name('news.incrementViews');
 
+
 // Removed the old individual routes for news-items and admin
 // Route::get('/admin', [NewsController::class, 'showNews'])->name('admin'); // Replaced by admin.dashboard and news.index
 // Route::get('/news', [NewsController::class, 'showNews'])->name('news.show'); // Replaced by news.index or news.show
 // Route::post('/news-items', [NewsController::class, 'store'])->name('news-items.store'); // Replaced by news.store
+

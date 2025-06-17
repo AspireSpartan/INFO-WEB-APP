@@ -19,7 +19,7 @@
         <!-- Left Content: Latest News Title and Description -->
         <div class="w-full lg:w-1/3 flex flex-col items-start gap-6">
             <div class="space-y-4">
-                <h2 class="text-indigo-900 text-3xl md:text-4xl font-bold font-serif animate-title-slide">Latest News</h2>
+                <h2 class="text-indigo-900 text-3xl md:text-4xl font-bold font-['Merriweather'] font-size: 18px !important animate-title-slide">Latest News</h2>
                 <p class="text-gray-700 text-sm md:text-base font-light leading-relaxed animate-text-fade" style="--delay: 0.2s">
                     This page is made to show the latest local news happening here in the Philippines. It provides updates on important events, community stories, government announcements, and other news that matters to Filipinos. Stay informed and connected with what’s going on around the country through this page.
                 </p>

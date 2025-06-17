@@ -8,7 +8,7 @@
               <div class="flex flex-col justify-start items-start gap-16 flex-shrink-0 w-auto md:w-2/1">
                   <div class="flex flex-col justify-start items-start gap-6">
                       <div class="text-white text-xl font-normal font-['Microsoft_Sans_Serif']">KEEP IN TOUCH</div>
-                      <div class="text-stone-300 text-xl font-normal font-['Source_Sans_Pro']">Be up to date with our happenings <br/>and events. We Love Gumaca!</div>
+                      <div class="text-stone-300 text-xl font-italic font-['Source_Sans_Pro']">Be up to date with our happenings <br/>and events. We Love Gumaca!</div>
                       <div class="flex justify-start items-center gap-8 mt-4">
                           <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
                               <svg class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
