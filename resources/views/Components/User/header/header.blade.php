@@ -11,7 +11,7 @@
         <div class="hidden lg:flex items-center space-x-8 lg:space-x-12">
             {{-- Home Dropdown (assuming it needs one based on previous discussions) --}}
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                <button type="button" class="flex items-center gap-x-1 text-white text-base font-normal font-['Questrial'] hover:text-amber-400 cursor-pointer"
+                <button type="button" class="flex items-center gap-x-1 text-white text-base font-normal font-['Questrial'] hover:text-amber-400 cursor-pointer"style="font-size: 15px !important;"
                         @click="open = !open" aria-expanded="false" :aria-expanded="open.toString()">
                     Home
                     <svg class="size-4 flex-none text-white transition-transform duration-200"
@@ -41,7 +41,7 @@
 
             {{-- Services Dropdown --}}
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                <button type="button" class="flex items-center gap-x-1 text-white text-base font-normal font-['Questrial'] hover:text-amber-400 cursor-pointer"
+                <button type="button" class="flex items-center gap-x-1 text-white text-base font-normal font-['Questrial'] hover:text-amber-400 cursor-pointer"style="font-size: 15px !important;"
                         @click="open = !open" aria-expanded="false" :aria-expanded="open.toString()">
                     Services
                     <svg class="size-4 flex-none text-white transition-transform duration-200"
@@ -69,7 +69,7 @@
 
             {{-- Blog Dropdown --}}
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                <button type="button" class="flex items-center gap-x-1 text-white text-base font-normal font-['Questrial'] hover:text-amber-400 cursor-pointer"
+                <button type="button" class="flex items-center gap-x-1 text-white text-base font-normal font-['Questrial'] hover:text-amber-400 cursor-pointer"style="font-size: 15px !important;"
                         @click="open = !open" aria-expanded="false" :aria-expanded="open.toString()">
                     Blog
                     <svg class="size-4 flex-none text-white transition-transform duration-200"
@@ -95,14 +95,14 @@
             </div>
 
             {{-- Contact Us (No Dropdown) --}}
-            <a href="/contact-us" class="text-white text-base font-normal font-['Questrial'] hover:text-amber-400">Contact Us</a>
+            <a href="/contact-us" class="text-white text-base font-normal font-['Questrial'] hover:text-amber-400"style="font-size: 15px !important;">Contact Us</a>
         </div>
 
         {{-- Sign In Button (Desktop) --}}
-        <a href="/sign-in" class="hidden lg:block bg-amber-400 text-white text-lg font-normal font-['Segoe_UI'] py-1 px-6 rounded-[30px] hover:bg-amber-500 transition-colors">Sign In</a>
+        <a href="/sign-in" class="hidden lg:block bg-amber-400 text-white text-lg font-normal font-['Segoe_UI'] py-1 px-6 rounded-[30px] hover:bg-amber-500 transition-colors"style="font-size: 15px !important;">Sign In</a>
 
         {{-- Mobile Menu Button --}}
-        <button type="button" class="lg:hidden text-white focus:outline-none" @click="mobileMenuOpen = true">
+        <button type="button" style="font-size: 15px !important;"class="lg:hidden text-white focus:outline-none" @click="mobileMenuOpen = true">
             <span class="sr-only">Open main menu</span>
             <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
