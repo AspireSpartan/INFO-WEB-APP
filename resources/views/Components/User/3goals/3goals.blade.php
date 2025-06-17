@@ -15,7 +15,7 @@
             <div class="w-[15px] h-[100px] bg-white mr-[30px] shadow-[5px_3px_5px_-2px_rgba(0,0,0,0.3)] transition-transform duration-800 ease-in-out lazy-animate" data-animation-class="scale-y-100" data-initial-class="scale-y-0 origin-bottom" data-delay="600"></div>
             <div>
                 <h2 class="text-white text-3xl md:text-4xl font-bold font-serif transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="700">Vision</h2>
-                <p class="text-white text-sm md:text-base font-light leading-relaxed transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="800">
+                <p class="text-white text-sm md:text-base font-light leading-relaxed transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="800"style="font-size: 15px !important;">
                     A digitally connected and responsive local government that ensures inclusive participation, promotes transparency, and delivers high-quality public services for a better, sustainable community.
                 </p>
             </div>
@@ -29,7 +29,7 @@
             <div class="w-[15px] h-[100px] bg-[#37474F] mr-[30px] shadow-[5px_5px_5px_-2px_rgba(0,0,0,0.3)] transition-transform duration-800 ease-in-out lazy-animate" data-animation-class="scale-y-100" data-initial-class="scale-y-0 origin-bottom" data-delay="900"></div>
             <div>
                 <h2 class="text-white text-3xl md:text-4xl font-bold font-serif transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="1000">Mission</h2>
-                <p class="text-white text-sm md:text-base font-light leading-relaxed transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="1100">
+                <p class="text-white text-sm md:text-base font-light leading-relaxed transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="1100"style="font-size: 15px !important;">
                     To provide transparent, accessible, and efficient digital services that empower citizens, support local development, and strengthen public trust through innovative governance and community engagement.
                 </p>
             </div>
@@ -43,7 +43,7 @@
             <div class="w-[15px] h-[100px] bg-[#D4AF37] mr-[30px] shadow-[5px_5px_5px_-2px_rgba(0,0,0,0.3)] transition-transform duration-800 ease-in-out lazy-animate" data-animation-class="scale-y-100" data-initial-class="scale-y-0 origin-bottom" data-delay="1200"></div>
             <div>
                 <h2 class="text-white text-3xl md:text-4xl font-bold font-serif transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="1300">Goal</h2>
-                <p class="text-white text-sm md:text-base font-light leading-relaxed transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="1400">
+                <p class="text-white text-sm md:text-base font-light leading-relaxed transition-all duration-800 ease-in-out lazy-animate" data-animation-class="opacity-100 translate-x-0" data-initial-class="opacity-0 translate-x-5" data-delay="1400"style="font-size: 15px !important;">
                     To create a centralized digital platform that enhances public service delivery, promotes transparency, and fosters active citizen participation in local governance.
                 </p>
             </div>
