@@ -11,6 +11,10 @@ INTERNSHIP TASK
 7. php artisan db:seed --class=NewsfeedSeeder
 8. php artisan storage:link
 
+(if images are not rendering or loaded try this command)
+1. rmdir public\storage
+2. php artisan storage:link
+
 
 *Configuring the ini file*
 (Use this command on the CMD to find your .ini file)
