@@ -83,24 +83,24 @@
     <div class="relative z-10 w-full bg-zinc-500/20 shadow-md py-4 md:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 mt-auto">
         <div class="flex flex-col sm:flex-row justify-around items-center gap-6 md:gap-12 lg:gap-24">
             <div class="text-center animate-stat-item" style="--delay: 0.2s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Montserrat']">24</div>
-                <div class="text-white text-sm md:text-lg font-light font-['Source_Sans_Pro']">barangay</div>
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">24</div>
+                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Barangay</div>
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.4s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Montserrat']">1500+</div>
-                <div class="text-white text-sm md:text-lg font-light font-['Source_Sans_Pro']">Residents</div>
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">1500+</div>
+                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Residents</div>
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.6s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Montserrat']">120+</div>
-                <div class="text-white text-sm md:text-lg font-light font-['Source_Sans_Pro']">Public Projects</div>
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">120+</div>
+                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Public Projects</div>
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.8s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Montserrat']">75</div>
-                <div class="text-white text-sm md:text-lg font-light font-['Source_Sans_Pro']">Years of Service</div>
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">75</div>
+                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Years of Service</div>
             </div>
         </div>
         <div class="w-full h-px bg-white/50 my-6"></div>
-        <p class="relative z-10 text-center text-white text-xs md:text-sm lg:text-base font-light font-['Montserrat'] max-w-5xl mx-auto px-4 md:px-0 animate-footer-text">
+        <p class="relative z-10 text-center text-white text-xs md:text-sm lg:text-base font-normal font-['Questrial'] max-w-5xl mx-auto px-4 md:px-0 animate-footer-text">
             Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.
         </p>
     </div>
