@@ -1,4 +1,4 @@
-
+{{-- resources/views/Components/Admin/signin/news_content.blade.php --}}
 <main class="flex-grow p-4 md:p-8 lg:p-12">
     <!-- Changed text color to D4AF37 -->
     <h1 class="text-[#D4AF37] text-3xl font-semibold font-montserrat mb-8 mt-4 md:ml-8">News</h1>
@@ -67,19 +67,10 @@
                 </div>
             </div>
 
-            
-
             <!-- Upload News Button -->
             <button class="flex items-center gap-2 px-6 py-2 bg-amber-400 hover:bg-amber-500 text-white text-lg font-normal rounded-lg transition-colors shadow-md"
-                    @click="showUploadModal = true;
-                            $nextTick(() => {
-                                const today = new Date();
-                                const USAF = today.getFullYear();
-                                const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
-                                const dd = String(today.getDate()).padStart(2, '0');
-                                document.getElementById('newsDatePosted').value = `${USAF}-${mm}-${dd}`;
-                            });">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    @click="showUploadModal = true; setupNewsDateInput()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                 </svg>
                 Upload News
@@ -101,27 +92,26 @@
                 <input type="checkbox" id="selectAll" class="h-4 w-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 cursor-pointer">
                 <label for="selectAll" class="text-black text-base font-light font-source-sans-pro">All</label>
             </div>
-            <div class="col-span-1">Author</div>
-            <div class="col-span-1">Date</div>
-            <div class="col-span-2">Title</div>
-            <div class="col-span-1">Sponsored</div>
-            <div class="col-span-1">Views</div>
-            <div class="col-span-1">URL</div>
-            <div class="col-span-2 text-right">Actions</div>
+            <div class="col-span-1 text-center">Author</div>
+            <div class="col-span-1 text-center">Date</div>
+            <div class="col-span-2 text-center">Title</div>
+            <div class="col-span-1 text-center">Sponsored</div>
+            <div class="col-span-1 text-center">Views</div>
+            <div class="col-span-1 text-center">Link</div> {{-- Changed from URL to Link to match the button in news_row --}}
+            <div class="col-span-1 text-center">Actions</div> {{-- Changed col-span from 2 to 1 and added text-center --}}
         </div>
 
-
-                <!-- Table Body Rows (Dynamic Data) -->
-                @foreach ($newsItems as $news)
-                    @include('Components.Admin.newss.news_row', [
-                        'picture' => asset('storage/' . $news->picture), // Use the accessor for the picture URL
-                        'author' => $news->author,
-                        'date' => $news->date->format('d/m/Y'), // Format the date as needed
-                        'title' => $news->title,
-                        'sponsored' => $news->sponsored,
-                        'views' => number_format($news->views), // Format views with commas
-                        'url' => $news->url // Add the URL attribute
-                    ])
-                @endforeach
+        <!-- Table Body Rows (Dynamic Data) -->
+        @foreach ($newsItems as $news)
+            @include('Components.Admin.newss.news_row', [
+                'picture' => asset('storage/' . $news->picture), // Use the accessor for the picture URL
+                'author' => $news->author,
+                'date' => $news->date->format('d/m/Y'), // Format the date as needed
+                'title' => $news->title,
+                'sponsored' => $news->sponsored,
+                'views' => number_format($news->views), // Format views with commas
+                'url' => $news->url // Add the URL attribute
+            ])
+        @endforeach
     </div>
 </main>
