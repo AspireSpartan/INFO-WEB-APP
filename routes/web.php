@@ -28,13 +28,6 @@ Route::get('/blog', function () {
     return view('/User_Side_Screen.blog', compact('newsfeeds'));
 })->name('blog');
 
-// Admin Routes (Grouped for clarity and potential middleware)
-Route::prefix('admin')->group(function () {
-    // This route will show the admin dashboard and list news items
-    Route::get('/', [NewsController::class, 'index'])->name('admin.dashboard');
-    Route::resource('news', NewsController::class);
-});
-
 Route::get('/logout', function () {
     return redirect('/home')->with('status', 'You have been logged out.');
 })->name('logout');
@@ -46,8 +39,15 @@ Route::get('/contact-us', function () {
 // Resource route for NewsfeedController
 Route::resource('newsfeeds', NewsfeedController::class);
 
-Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
-    ->name('news.incrementViews');
+// Admin Routes (Grouped for clarity and potential middleware)
+Route::prefix('admin')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('admin.dashboard');
+    Route::resource('news', NewsController::class);
+
+    Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])->name('news.incrementViews');
+    // New route for bulk delete
+    Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
+});
 
 
 // Removed the old individual routes for news-items and admin

@@ -5,69 +5,70 @@
 
     <!-- Search & Upload Bar with Filtering -->
     <div class="flex flex-col md:flex-row justify-between items-center bg-transparent gap-4 mb-8">
-        <div class="relative w-full md:w-auto flex-grow max-w-xl">
-            <input type="text" placeholder="Search news"
-                   class="w-full pl-12 pr-4 py-2 border border-amber-400 rounded-[30px] bg-white focus:outline-none focus:ring-1 focus:ring-amber-500 text-gray-700 placeholder-zinc-400 font-montserrat">
-            <!-- Search Icon (SVG) -->
-            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-            </svg>
-        </div>
+        {{-- We'll use a form for search, filter, and sort for proper GET requests --}}
+        <form action="{{ route('admin.dashboard') }}" method="GET" class="relative w-full md:w-auto flex-grow max-w-xl flex items-center">
+            {{-- Search Input --}}
+            <input type="text" name="search" placeholder="Search news"
+                class="w-full pl-12 pr-4 py-2 border border-amber-400 rounded-[30px] bg-white focus:outline-none focus:ring-1 focus:ring-amber-500 text-gray-700 placeholder-zinc-400 font-montserrat"
+                value="{{ request('search') }}" {{-- Retain search term --}}
+                onkeydown="if(event.keyCode == 13) this.form.submit();"> {{-- Submit on Enter --}}
+            <button type="submit" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400">
+                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </form>
 
-        <!-- Filtering and Upload Buttons -->
         <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto justify-end">
-            <!-- Filter by Sponsored Dropdown -->
             <div class="relative" x-data="{ sponsoredFilterOpen: false }" @click.away="sponsoredFilterOpen = false">
                 <button @click="sponsoredFilterOpen = !sponsoredFilterOpen" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg shadow-sm hover:bg-gray-100 transition-colors">
-                    <span>Sponsored</span>
+                    <span>{{ match(request('sponsored_filter')) { 'sponsored' => 'Sponsored', 'non-sponsored' => 'Non-Sponsored', default => 'All' } }}</span> {{-- Display current selection --}}
                     <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" :class="{'rotate-180': sponsoredFilterOpen}">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
                 <div x-show="sponsoredFilterOpen"
-                     x-transition:enter="transition ease-out duration-100"
-                     x-transition:enter-start="transform opacity-0 scale-95"
-                     x-transition:enter-end="transform opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-75"
-                     x-transition:leave-start="transform opacity-100 scale-100"
-                     x-transition:leave-end="transform opacity-0 scale-95"
-                     class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
-                     role="menu">
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                    role="menu">
                     <div class="py-1">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">All</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sponsored</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Non-Sponsored</a>
+                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sponsored_filter'), ['sponsored_filter' => 'all'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter', 'all') == 'all' ? 'bg-gray-100 font-semibold' : '' }}">All</a>
+                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sponsored_filter'), ['sponsored_filter' => 'sponsored'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Sponsored</a>
+                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sponsored_filter'), ['sponsored_filter' => 'non-sponsored'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'non-sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Non-Sponsored</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Sort By Dropdown -->
             <div class="relative" x-data="{ sortByOpen: false }" @click.away="sortByOpen = false">
                 <button @click="sortByOpen = !sortByOpen" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg shadow-sm hover:bg-gray-100 transition-colors">
-                    <span>Sort by</span>
+                    <span>{{ match(request('sort_by')) { 'date_asc' => 'Date (Oldest)', 'views_desc' => 'Views (Most)', 'views_asc' => 'Views (Least)', default => 'Date (Newest)' } }}</span> {{-- Display current selection --}}
                     <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" :class="{'rotate-180': sortByOpen}">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
                 <div x-show="sortByOpen"
-                     x-transition:enter="transition ease-out duration-100"
-                     x-transition:enter-start="transform opacity-0 scale-95"
-                     x-transition:enter-end="transform opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-75"
-                     x-transition:leave-start="transform opacity-100 scale-100"
-                     x-transition:leave-end="transform opacity-0 scale-95"
-                     class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
-                     role="menu">
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                    role="menu">
                     <div class="py-1">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Date (Newest)</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Date (Oldest)</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Views (Most)</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Views (Least)</a>
+                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sort_by'), ['sort_by' => 'date_desc'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by', 'date_desc') == 'date_desc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Newest)</a>
+                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sort_by'), ['sort_by' => 'date_asc'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'date_asc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Oldest)</a>
+                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sort_by'), ['sort_by' => 'views_desc'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_desc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Most)</a>
+                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sort_by'), ['sort_by' => 'views_asc'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_asc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Least)</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Upload News Button -->
             <button class="flex items-center gap-2 px-6 py-2 bg-amber-400 hover:bg-amber-500 text-white text-lg font-normal rounded-lg transition-colors shadow-md"
                     @click="showUploadModal = true; setupNewsDateInput()">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -75,8 +76,7 @@
                 </svg>
                 Upload News
             </button>
-            <!-- Trash/Delete Button -->
-            <button class="p-2 bg-white rounded-lg shadow-md hover:bg-gray-100 transition-colors">
+            <button id="bulk-delete-button" class="p-2 bg-white rounded-lg shadow-md hover:bg-gray-100 transition-colors" onclick="confirmBulkDelete()">
                 <svg class="w-6 h-6 text-amber-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm2 3a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                 </svg>
@@ -104,6 +104,7 @@
         <!-- Table Body Rows (Dynamic Data) -->
         @foreach ($newsItems as $news)
             @include('Components.Admin.newss.news_row', [
+                'newsItem' => $news,
                 'picture' => asset('storage/' . $news->picture), // Use the accessor for the picture URL
                 'author' => $news->author,
                 'date' => $news->date->format('d/m/Y'), // Format the date as needed
@@ -115,3 +116,5 @@
         @endforeach
     </div>
 </main>
+
+
