@@ -2,9 +2,12 @@
 
 use App\Models\Newsfeed;
 use App\Models\NewsItem;
+use App\Models\ContactMessage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsfeedController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NotificationController; // Make sure to import
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,15 +31,8 @@ Route::get('/blog', function () {
     return view('/User_Side_Screen.blog', compact('newsfeeds'));
 })->name('blog');
 
-// Admin Routes (Grouped for clarity and potential middleware)
-Route::prefix('admin')->group(function () {
-    // This route will show the admin dashboard and list news items
-    Route::get('/', [NewsController::class, 'index'])->name('admin.dashboard');
-    Route::resource('news', NewsController::class);
-});
-
 Route::get('/logout', function () {
-    return redirect('/sign-in')->with('status', 'You have been logged out.');
+    return redirect('/home')->with('status', 'You have been logged out.');
 })->name('logout');
 
 Route::get('/contact-us', function () {
@@ -47,7 +43,28 @@ Route::get('/contact-us', function () {
 Route::resource('newsfeeds', NewsfeedController::class);
 
 Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
-    ->name('news.incrementViews');
+->name('news.incrementViews');
+
+// Admin Routes (Grouped for clarity and potential middleware)
+Route::prefix('admin')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('admin.dashboard');
+    Route::resource('news', NewsController::class);
+    // New route for bulk delete
+    Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
+});
+
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
+// Route for displaying all messages (the inbox screen)
+Route::get('/admin/notifications', [NotificationController::class, 'index'])->name('admin.notifications');
+
+
+// Routes for Notification Actions (AJAX endpoints)
+Route::post('/admin/notifications/{message}/mark-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.mark_read');
+Route::delete('/admin/notifications/{message}', [NotificationController::class, 'destroy'])->name('admin.notifications.destroy');
+Route::get('/admin/notifications/{message}/show', [NotificationController::class, 'show'])->name('admin.notifications.show');
+
+
 
 
 // Removed the old individual routes for news-items and admin
