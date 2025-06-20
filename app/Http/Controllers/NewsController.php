@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use App\Models\NewsItem;
+use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log; // Added for logging
@@ -24,7 +25,6 @@ class NewsController extends Controller
     /* this area is the filtering, search, sorting, checkboxes, and the delete all button. */
         public function index(Request $request)
     {
-        
         $query = NewsItem::query();
 
         // --- Search Functionality ---
@@ -32,8 +32,8 @@ class NewsController extends Controller
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('author', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('url', 'like', '%' . $searchTerm . '%');
+                ->orWhere('author', 'like', '%' . $searchTerm . '%')
+                ->orWhere('url', 'like', '%' . $searchTerm . '%');
             });
         }
 
@@ -66,8 +66,11 @@ class NewsController extends Controller
 
         $newsItems = $query->get();
 
-        // Pass the current filter/sort/search values back to the view to persist selection
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request'));
+        // <--- IMPORTANT ADDITION/MODIFICATION HERE ---
+        $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
+
+        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages')); // Pass them to the view
+        // <--- END IMPORTANT ADDITION/MODIFICATION ---
     }
 
 

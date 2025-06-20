@@ -50,4 +50,46 @@ class ContactController extends Controller
             return back()->with('error', 'There was an error sending your message. Please try again later.');
         }
     }
+
+        // Displays all messages in the admin view
+    public function showNotifications()
+    {
+        $contactMessages = ContactMessage::latest()->get();
+        return view('Components.Admin.notification.notification', compact('contactMessages'));
+    }
+
+    // Fetch a specific message for the modal via AJAX
+    public function fetchMessage($id)
+    {
+        $message = ContactMessage::findOrFail($id);
+        return response()->json(['message' => $message]);
+    }
+
+    // Mark a specific message as read
+    public function markAsRead($id)
+    {
+        $message = ContactMessage::findOrFail($id);
+        if (!$message->is_read) {
+            $message->is_read = true;
+            $message->save();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Message marked as read.'
+        ]);
+    }
+
+    // Delete a specific message
+    public function delete($id)
+    {
+        $message = ContactMessage::findOrFail($id);
+        $message->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Message deleted successfully.'
+        ]);
+    }
+
 }
