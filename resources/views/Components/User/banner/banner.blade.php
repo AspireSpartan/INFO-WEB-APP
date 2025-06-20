@@ -65,19 +65,23 @@
     </div>
 
     <!-- Hero Content with staggered animations -->
-    <div class="relative z-10 flex flex-col items-center justify-center h-[calc(100vh-theme(spacing.24))] text-center px-4">
-        <div class="max-w-3xl space-y-4 md:space-y-6 lg:space-y-8">
-            <p class="text-white text-lg md:text-xl font-normal font-['Noto_Sans'] animate-hero-text" style="--delay: 0.2s">“DRIVEN BY INNOVATION</p>
-            <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-bold font-['Merriweather'] leading-tight animate-hero-text" style="--delay: 0.4s">Local Government Unit</h1>
-            <p class="text-white text-xl md:text-2xl lg:text-3xl font-normal font-['Roboto'] animate-hero-text" style="--delay: 0.6s">
-                Serving the community with <span class="text-amber-400">transparency</span>,
-                <span class="text-amber-400">Integrity</span>, <br class="hidden sm:inline"/>and <span class="text-amber-400">commitment</span>.
-            </p>
-            <p class="text-white text-base md:text-lg font-normal font-['Source_Sans_Pro'] animate-hero-text" style="--delay: 0.8s">
-                <span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1">/</span>BREAKING BOUNDARIES
-            </p>
-        </div>
+    <div class="relative z-10 flex flex-col items-end justify-center h-[calc(100vh-theme(spacing.24))] text-left px-4">
+    <div class="w-full max-w-4xl space-y-6 md:space-y-8 lg:space-y-10 pr-2 md:pr-8 lg:pr-16">
+        <p class="text-white text-2xl md:text-3xl lg:text-4xl font-normal font-['Noto_Sans'] animate-hero-text" style="--delay: 0.2s">
+            “DRIVEN BY INNOVATION
+        </p>
+        <h1 class="text-white text-6xl md:text-7xl lg:text-7xl font-bold font-['Merriweather'] leading-tight animate-hero-text" style="--delay: 0.4s">
+            Local Government Unit
+        </h1>
+        <p class="text-white text-2xl md:text-3xl lg:text-4xl font-normal font-['Roboto'] animate-hero-text" style="--delay: 0.6s">
+            Serving the community with <span class="text-amber-400">transparency</span>,
+            <span class="text-amber-400">Integrity</span>, <br class="hidden sm:inline"/>and <span class="text-amber-400">commitment</span>.
+        </p>
+        <p class="text-white text-lg md:text-xl lg:text-2xl font-normal font-['Source_Sans_Pro'] animate-hero-text" style="--delay: 0.8s">
+            <span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1">/</span>BREAKING BOUNDARIES
+        </p>
     </div>
+</div>
 
     <!-- Bottom Bar with Statistics and staggered animations -->
     <div class="relative z-10 w-full bg-zinc-500/20 shadow-md py-4 md:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 mt-auto">
@@ -100,9 +104,9 @@
             </div>
         </div>
         <div class="w-full h-px bg-white/50 my-6"></div>
-        <p class="relative z-10 text-center text-white text-xs md:text-sm lg:text-base font-normal font-['Questrial'] max-w-5xl mx-auto px-4 md:px-0 animate-footer-text">
-            Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.
-        </p>
+        <p class="relative z-10 w-full text-center text-white text-xs md:text-sm lg:text-base font-normal font-['Questrial'] px-4 md:px-8 lg:px-16 animate-footer-text">
+    Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.
+</p>
     </div>
 </div>
 
