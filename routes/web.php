@@ -2,9 +2,12 @@
 
 use App\Models\Newsfeed;
 use App\Models\NewsItem;
+use App\Models\ContactMessage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsfeedController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NotificationController; // Make sure to import
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,6 +52,19 @@ Route::prefix('admin')->group(function () {
     // New route for bulk delete
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
 });
+
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
+// Route for displaying all messages (the inbox screen)
+Route::get('/admin/notifications', [NotificationController::class, 'index'])->name('admin.notifications');
+
+
+// Routes for Notification Actions (AJAX endpoints)
+Route::post('/admin/notifications/{message}/mark-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.mark_read');
+Route::delete('/admin/notifications/{message}', [NotificationController::class, 'destroy'])->name('admin.notifications.destroy');
+Route::get('/admin/notifications/{message}/show', [NotificationController::class, 'show'])->name('admin.notifications.show');
+
+
 
 
 // Removed the old individual routes for news-items and admin
