@@ -1,5 +1,5 @@
 # INFO-WEB-APP
-INTERNSHIP TASK
+Setup Commands
 
     REQUIRED to Install after Cloning (REQUIRED to install during production/coding)
 1. cp .env.example .env
