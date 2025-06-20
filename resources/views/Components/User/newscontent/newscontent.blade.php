@@ -24,7 +24,7 @@
 
                 <div class="max-w-[1600px] mx-auto mt-20 px-4 pb-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 bg-white">
                     @foreach($newsItems as $news)
-                        <a href="{{ $news->url }}" class="block bg-white rounded-lg shadow-md overflow-hidden relative news-item transition-transform transform hover:scale-105 hover:shadow-lg"
+                        <a href="{{ $news->url }}" target="_blank" class="block bg-white rounded-lg shadow-md overflow-hidden relative news-item transition-transform transform hover:scale-105 hover:shadow-lg"
                         data-id="{{ $news->id }}"
                         data-url="{{ $news->url }}"
                         onclick="incrementViewsAndRedirect(event, this)">
@@ -76,17 +76,17 @@
                     viewsSpan.textContent = data.views; // Update the displayed count
                 }
                 // Now that the view is counted, navigate to the news URL
-                window.location.href = newsUrl;
+                window.open(newsUrl, '_blank');
             } else {
                 console.error('Failed to increment view count:', data.message);
                 // Even if view count fails, you might still want to navigate
-                window.location.href = newsUrl;
+                window.open(newsUrl, '_blank');
             }
         })
         .catch(error => {
             console.error('Error incrementing view count:', error);
             // Handle network errors, etc. Still navigate to ensure user experience
-            window.location.href = newsUrl;
+            window.open(newsUrl, '_blank');
         });
     }
 </script>

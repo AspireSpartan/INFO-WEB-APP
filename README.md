@@ -1,5 +1,5 @@
 # INFO-WEB-APP
-INTERNSHIP TASK
+Setup Commands
 
     REQUIRED to Install after Cloning (REQUIRED to install during production/coding)
 1. cp .env.example .env
@@ -10,6 +10,10 @@ INTERNSHIP TASK
 6. composer require fakerphp/faker --dev
 7. php artisan db:seed --class=NewsfeedSeeder
 8. php artisan storage:link
+
+(if images are not rendering or loaded try this command)
+1. rmdir public\storage
+2. php artisan storage:link
 
 
 *Configuring the ini file*
