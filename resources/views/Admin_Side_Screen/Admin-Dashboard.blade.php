@@ -4,7 +4,7 @@
 @section('title', 'Admin View')
 
 @section('content')
-<x-Admin.Ad-Header.Ad-Header :newsItems="$newsItems" :contactMessages="$contactMessages"></x-Admin.Ad-Header.Ad-Header>
+<x-Admin.Ad-Header.Ad-Header :newsItems="$newsItems" :contactMessages="$contactMessages" :blogfeeds="$blogfeeds"></x-Admin.Ad-Header.Ad-Header>
 
     <script>
         function confirmBulkDelete() {
