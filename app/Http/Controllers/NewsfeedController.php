@@ -39,7 +39,7 @@ class NewsfeedController extends Controller
             'published_at' => 'required|date',
             'author' => 'required|string|max:255',
             'authortitle' => 'nullable|string|max:255', // Uncomment if you add authortitle to DB schema
-            'image_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg', // Allow images, max 2MB
+            'image_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:40960',  // Allow images, max 40MB
             'icon_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',  // Allow images, max 500KB
         ]);
 
@@ -84,7 +84,7 @@ class NewsfeedController extends Controller
         $newsfeed->save();
 
         // 5. Redirect back or to a specific route
-        return redirect()->route('newsfeeds.index')->with('success', 'Newsfeed updated successfully!');
+        return redirect()->route('blog')->with('success', 'Newsfeed updated successfully!');
         // Or redirect back to the edit page: return back()->with('success', 'Newsfeed updated successfully!');
     }
 
@@ -96,6 +96,6 @@ class NewsfeedController extends Controller
     public function index()
     {
         $newsfeeds = Newsfeed::all();
-        return view('home', compact('newsfeeds'));
+        return view('blog', compact('newsfeeds'));
     }
 }
