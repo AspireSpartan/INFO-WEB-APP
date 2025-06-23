@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\Blogfeed;
 use App\Models\NewsItem;
-use App\Models\ContactMessage;
 use Illuminate\Http\Request;
+use App\Models\ContactMessage;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log; // Added for logging
 
@@ -68,8 +69,10 @@ class NewsController extends Controller
 
         // <--- IMPORTANT ADDITION/MODIFICATION HERE ---
         $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
+        
+        $blogfeeds = Blogfeed::all();
 
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages')); // Pass them to the view
+        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages', 'blogfeeds')); // Pass them to the view
         // <--- END IMPORTANT ADDITION/MODIFICATION ---
     }
 

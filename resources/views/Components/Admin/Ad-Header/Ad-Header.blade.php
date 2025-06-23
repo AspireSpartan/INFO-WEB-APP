@@ -1,3 +1,5 @@
+@props(['newsItems', 'contactMessages', 'blogfeeds'])
+
 <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
          activeScreen: 'dashboard', // Default active screen
@@ -152,7 +154,7 @@
                     <div>@include('Components.Admin.newss.news_content', ['newsItems' => $newsItems ?? []])</div>
                 </template>
                 <template x-if="screen === 'blog'">
-                    <div>@include('Components.Admin.blog.blog_content')</div>
+                    <div>@include('Components.Admin.blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
                 </template>
                 <template x-if="screen === 'contact'">
                     <div>@include('Components.User.contact-us.contact-us')</div>
