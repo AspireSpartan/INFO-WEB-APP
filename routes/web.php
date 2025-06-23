@@ -1,12 +1,14 @@
 <?php
 
+use App\Models\Blogfeed;
 use App\Models\Newsfeed;
 use App\Models\NewsItem;
 use App\Models\ContactMessage;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\NewsController;
-use App\Http\Controllers\NewsfeedController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NewsfeedController;
 use App\Http\Controllers\NotificationController; // Make sure to import
 
 Route::get('/', function () {
@@ -26,10 +28,16 @@ Route::get('/sign-in', function () {
     return view('sign-in');
 })->name('sign-in');
 
+//Route::get('/blog', function () {
+//    $newsfeeds = Newsfeed::all();
+//    return view('/User_Side_Screen.blog', compact('newsfeeds'));
+//})->name('blog');
+
 Route::get('/blog', function () {
-    $newsfeeds = Newsfeed::all();
-    return view('/User_Side_Screen.blog', compact('newsfeeds'));
+    $blogfeeds = Blogfeed::all();
+    return view('/User_Side_Screen.blog', compact('blogfeeds'));
 })->name('blog');
+
 
 Route::get('/logout', function () {
     return redirect('/home')->with('status', 'You have been logged out.');
@@ -40,7 +48,8 @@ Route::get('/contact-us', function () {
 })->name('contact-us');
 
 // Resource route for NewsfeedController
-Route::resource('newsfeeds', NewsfeedController::class);
+//Route::resource('newsfeeds', NewsfeedController::class);
+
 
 Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
 ->name('news.incrementViews');
@@ -51,6 +60,11 @@ Route::prefix('admin')->group(function () {
     Route::resource('news', NewsController::class);
     // New route for bulk delete
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
+
+    Route::resource('blogs', BlogController::class)->parameters([
+        'blogs' => 'blogfeed' // This tells Laravel to use 'blogfeed' instead of default 'blog'
+    ]);
+
 });
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
