@@ -7,8 +7,6 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
-// If NewsfeedController is truly deprecated, you can remove this:
-// use App\Http\Controllers\NewsfeedController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SectionBannerController; // IMPORTANT: Add this import!
 
@@ -41,9 +39,6 @@ Route::get('/contact-us', function () {
     return view('/User_Side_Screen.contact-us');
 })->name('contact-us');
 
-// This was commented out - confirm if NewsfeedController is no longer used.
-// Route::resource('newsfeeds', NewsfeedController::class);
-
 Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
 ->name('news.incrementViews');
 
@@ -58,10 +53,9 @@ Route::prefix('admin')->group(function () {
         'blogs' => 'blogfeed'
     ]);
 
-    // NEW: Add the Section Banners Resource Route here!
-    Route::resource('section-banners', SectionBannerController::class)->parameters([
-        'section-banners' => 'section_banner'
-    ]);
+    Route::put('section-banners/{section_banner}', [SectionBannerController::class, 'update'])->name('admin.section_banners.update');
+
+
 });
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
@@ -74,10 +68,5 @@ Route::get('/admin/notifications', [NotificationController::class, 'index'])->na
 Route::post('/admin/notifications/{message}/mark-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.mark_read');
 Route::delete('/admin/notifications/{message}', [NotificationController::class, 'destroy'])->name('admin.notifications.destroy');
 Route::get('/admin/notifications/{message}/show', [NotificationController::class, 'show'])->name('admin.notifications.show');
-
-
-// Removed the old individual routes for news-items and admin
-// Route::get('/admin', [NewsController::class, 'showNews'])->name('admin'); // Replaced by admin.dashboard and news.index
-// Route::get('/news', [NewsController::class, 'showNews'])->name('news.show'); // Replaced by news.index or news.show
-// Route::post('/news-items', [NewsController::class, 'store'])->name('news-items.store'); // Replaced by news.store
+Route::put('/section-banners/{section_banner}', [SectionBannerController::class, 'update'])->name('admin.section_banners.update');
 

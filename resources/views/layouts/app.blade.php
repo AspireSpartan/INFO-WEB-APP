@@ -16,7 +16,7 @@
     <!-- Add other global stylesheets and scripts here -->
 </head>
 <body>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <x-User.header.header></x-User.header.header>
 
         <script>
@@ -96,5 +96,6 @@
     <footer>
         <x-User.footer.footer></x-User.footer.footer>
     </footer>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ContactMessage;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log; // Added for logging
+use App\Models\SectionBanner;
 
 class NewsController extends Controller
 {
@@ -24,7 +25,7 @@ class NewsController extends Controller
     }*/
 
     /* this area is the filtering, search, sorting, checkboxes, and the delete all button. */
-        public function index(Request $request)
+    public function index(Request $request)
     {
         $query = NewsItem::query();
 
@@ -71,9 +72,11 @@ class NewsController extends Controller
         $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
         
         $blogfeeds = Blogfeed::all();
+        $sectionBanner = SectionBanner::first();
 
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages', 'blogfeeds')); // Pass them to the view
-        // <--- END IMPORTANT ADDITION/MODIFICATION ---
+
+        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'sectionBanner'));
+       
     }
 
 
