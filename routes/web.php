@@ -29,10 +29,7 @@ Route::get('/sign-in', function () {
     return view('sign-in');
 })->name('sign-in');
 
-Route::get('/blog', function () {
-    $blogfeeds = Blogfeed::all();
-    return view('/User_Side_Screen.blog', compact('blogfeeds'));
-})->name('blog');
+Route::get('/blog', [HomeController::class, 'blogIndex'])->name('blog');
 
 // Recommendation: Change this to a POST route for security reasons
 Route::get('/logout', function () {
