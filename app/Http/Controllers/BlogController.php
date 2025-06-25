@@ -121,7 +121,7 @@ class BlogController extends Controller
 
         //return response()->json($blogfeed);             // This line will NEVER execute
         //return view('User_Side_Screen.blog_detail', ['blogfeed' => $blogfeed]); // This line will NEVER execute
-
+        //return view('User_Side_Screen', ['blogfeed' => $blogfeed]); 
     }
 
     /**
