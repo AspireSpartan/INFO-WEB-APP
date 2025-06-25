@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editable LGU Homepage</title>
     
+    <!-- CSRF Token for Laravel API calls -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -284,48 +287,95 @@
 
             let currentTargetElement = null;
             
-            const loadContent = () => {
-                editTriggers.forEach(trigger => {
-                    const targetId = trigger.dataset.targetId;
-                    const element = document.getElementById(targetId);
-                    const savedValue = localStorage.getItem(targetId);
+            // Base URL for your Laravel API
+            const API_BASE_URL = 'http://localhost:8000/api'; // IMPORTANT: Change this to your actual Laravel API URL
 
-                    if (savedValue && element) {
-                        const editType = trigger.dataset.editType;
-                        switch(editType) {
-                            case 'text':
-                            case 'button':
-                                element.innerHTML = savedValue; // Use innerHTML to preserve spans
-                                break;
-                            case 'image':
-                                if (targetId === 'main-container') {
-                                    element.style.backgroundImage = `url('${savedValue}')`;
-                                } else {
-                                    element.src = savedValue;
-                                }
-                                break;
-                            // The stat-item and all-stats cases don't directly load from a single localStorage item in this way,
-                            // but their children elements (number and label) will handle their own loading.
-                            // We explicitly fetch and set them in openModal and saveChanges.
+            // Function to fetch data from your Laravel API
+            async function fetchData(endpoint) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/${endpoint}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Error fetching data from ${endpoint}:`, error);
+                    // Provide fallback data in case of API error
+                    if (endpoint === 'settings') {
+                        return {
+                            'hero-subtitle-1': '“DRIVEN BY INNOVATION',
+                            'hero-main-title': 'Local Government Unit',
+                            'hero-paragraph': 'Serving the community with <span class="text-amber-400">transparency</span>, <span class="text-amber-400">Integrity</span>, <br class="hidden sm:inline"/>and <span class="text-amber-400">commitment</span>.',
+                            'hero-subtitle-2': '<span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1">/</span>BREAKING BOUNDARIES',
+                            'signin-button': 'Sign In',
+                            'footer-paragraph': 'Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.',
+                            'main-container-bg': 'https://images.unsplash.com/photo-1598993169346-638c53a73c1d?q=80&w=2070&auto=format&fit=crop',
+                            'logo-image-src': 'https://placehold.co/100x100/ffffff/333333?text=Logo'
+                        };
+                    } else if (endpoint === 'statistics') {
+                        return [
+                            { id: 1, number: '24', label: 'Barangay' },
+                            { id: 2, number: '1500+', label: 'Residents' },
+                            { id: 3, number: '120+', label: 'Public Projects' },
+                            { id: 4, number: '75', label: 'Years of Service' }
+                        ];
+                    }
+                    return null;
+                }
+            }
+
+            // Function to send data to your Laravel API
+            async function postData(endpoint, data) {
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
+                        method: 'POST', // Use POST for new creations, PUT/PATCH for updates
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken // Laravel CSRF protection
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${JSON.stringify(errorData)}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Error sending data to ${endpoint}:`, error);
+                    alert(`Failed to save changes: ${error.message}`); // Use alert for critical errors to inform user
+                    return null;
+                }
+            }
+
+            const loadContent = async () => {
+                // Load general settings
+                const settings = await fetchData('settings');
+                if (settings) {
+                    for (const key in settings) {
+                        const elementId = key.endsWith('-bg') ? 'main-container' : (key.endsWith('-src') ? 'logo-image' : key);
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            if (key === 'main-container-bg') {
+                                element.style.backgroundImage = `url('${settings[key]}')`;
+                            } else if (key === 'logo-image-src') {
+                                element.src = settings[key];
+                            } else {
+                                element.innerHTML = settings[key];
+                            }
                         }
                     }
-                });
-                // Load saved values for individual number and label elements for stats
-                for (let i = 1; i <= 4; i++) {
-                    const numberId = `stat-${i}-number`;
-                    const labelId = `stat-${i}-label`;
-                    const numberElement = document.getElementById(numberId);
-                    const labelElement = document.getElementById(labelId);
+                }
 
-                    const savedNumber = localStorage.getItem(numberId);
-                    const savedLabel = localStorage.getItem(labelId);
-
-                    if (savedNumber && numberElement) {
-                        numberElement.textContent = savedNumber;
-                    }
-                    if (savedLabel && labelElement) {
-                        labelElement.textContent = savedLabel;
-                    }
+                // Load statistics
+                const stats = await fetchData('statistics');
+                if (stats) {
+                    stats.forEach((stat) => {
+                        const numberElement = document.getElementById(`stat-${stat.id}-number`);
+                        const labelElement = document.getElementById(`stat-${stat.id}-label`);
+                        if (numberElement) numberElement.textContent = stat.number;
+                        if (labelElement) labelElement.textContent = stat.label;
+                    });
                 }
             };
 
@@ -344,12 +394,12 @@
                     case 'text':
                     case 'button':
                         modalTitle.textContent = 'Edit Text';
-                        // Use innerHTML to correctly handle text with HTML tags like <span>
-                        modalBody.innerHTML = `<label for="text-input" class="block text-sm font-medium text-gray-700">Content</label><textarea id="text-input" rows="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">${currentTargetElement.innerHTML}</textarea>`;
+                        const currentTextValue = currentTargetElement.innerHTML;
+                        modalBody.innerHTML = `<label for="text-input" class="block text-sm font-medium text-gray-700">Content</label><textarea id="text-input" rows="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">${currentTextValue}</textarea>`;
                         break;
                     case 'image':
                         modalTitle.textContent = 'Change Image';
-                        const imgSrc = currentTargetElement.id === 'main-container' ? '' : currentTargetElement.src;
+                        const imgSrc = currentTargetElement.id === 'main-container' ? currentTargetElement.style.backgroundImage.slice(5, -2).replace(/['"]+/g, '') : currentTargetElement.src;
                         modalBody.innerHTML = `<label for="image-input" class="block text-sm font-medium text-gray-700">Upload new image</label><input type="file" id="image-input" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/><img id="image-preview" src="${imgSrc}" class="mt-4 rounded-lg max-h-48 w-auto ${!imgSrc || currentTargetElement.id === 'main-container' ? 'hidden' : ''}" />`;
                         document.getElementById('image-input').addEventListener('change', (event) => {
                             const reader = new FileReader();
@@ -364,6 +414,7 @@
                     case 'all-stats':
                         modalTitle.textContent = 'Edit All Statistics';
                         let statInputsHtml = '';
+                        // Read current values directly from DOM for immediate display in modal
                         for (let i = 1; i <= 4; i++) {
                             const numberElement = document.getElementById(`stat-${i}-number`);
                             const labelElement = document.getElementById(`stat-${i}-label`);
@@ -395,7 +446,7 @@
                 setTimeout(() => modal.classList.add('hidden'), 300);
             };
 
-            const saveChanges = () => {
+            const saveChanges = async () => {
                 if (!currentTargetElement) return;
 
                 const editType = document.querySelector(`[data-target-id="${currentTargetElement.id}"]`).dataset.editType;
@@ -403,27 +454,38 @@
                 switch(editType) {
                     case 'text':
                     case 'button':
-                        const newValue = document.getElementById('text-input').value;
-                        currentTargetElement.innerHTML = newValue; // Use innerHTML
-                        localStorage.setItem(currentTargetElement.id, newValue);
+                        const newTextValue = document.getElementById('text-input').value;
+                        currentTargetElement.innerHTML = newTextValue;
+                        // Send update to Laravel API for settings
+                        await postData('settings', { key: currentTargetElement.id, value: newTextValue });
                         break;
                     case 'image':
                         const fileInput = document.getElementById('image-input');
                         if (fileInput.files && fileInput.files[0]) {
                             const reader = new FileReader();
-                            reader.onload = (e) => {
+                            reader.onload = async (e) => {
                                 const newImageSrc = e.target.result;
                                 if (currentTargetElement.id === 'main-container') {
                                     currentTargetElement.style.backgroundImage = `url('${newImageSrc}')`;
+                                    await postData('settings', { key: 'main-container-bg', value: newImageSrc });
                                 } else {
                                     currentTargetElement.src = newImageSrc;
+                                    await postData('settings', { key: 'logo-image-src', value: newImageSrc });
                                 }
-                                localStorage.setItem(currentTargetElement.id, newImageSrc);
                             };
                             reader.readAsDataURL(fileInput.files[0]);
+                        } else {
+                            // If no new file, but saving an existing URL (e.g., if user opens and saves without changing image)
+                            const currentSrc = currentTargetElement.id === 'main-container' ? currentTargetElement.style.backgroundImage.slice(5, -2).replace(/['"]+/g, '') : currentTargetElement.src;
+                            if (currentTargetElement.id === 'main-container') {
+                                await postData('settings', { key: 'main-container-bg', value: currentSrc });
+                            } else {
+                                await postData('settings', { key: 'logo-image-src', value: currentSrc });
+                            }
                         }
                         break;
                     case 'all-stats':
+                        const updatedStats = [];
                         for (let i = 1; i <= 4; i++) {
                             const newNumber = document.getElementById(`stat-${i}-number-input`).value;
                             const newLabel = document.getElementById(`stat-${i}-label-input`).value;
@@ -433,20 +495,22 @@
 
                             if (targetNumberElement) {
                                 targetNumberElement.textContent = newNumber;
-                                localStorage.setItem(targetNumberElement.id, newNumber);
                             }
                             if (targetLabelElement) {
                                 targetLabelElement.textContent = newLabel;
-                                localStorage.setItem(targetLabelElement.id, newLabel);
                             }
+                            updatedStats.push({ id: i, number: newNumber, label: newLabel });
                         }
+                        // Send all stats update to Laravel API
+                        await postData('statistics', updatedStats);
                         break;
                 }
                 closeModal();
+                loadContent(); // Re-load content to ensure freshness after saving
             };
 
             // --- EVENT LISTENERS ---
-            loadContent();
+            loadContent(); // Load content from backend on page load
             editTriggers.forEach(button => button.addEventListener('click', openModal));
             closeModalButton.addEventListener('click', closeModal);
             cancelButton.addEventListener('click', closeModal);
