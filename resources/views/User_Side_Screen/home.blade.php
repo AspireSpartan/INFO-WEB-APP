@@ -7,7 +7,7 @@
     {{-- Corrected path to the user-side banner component --}}
     {{-- It should be 'Components.User.banner.banner' based on your provided file structure --}}
     @include('Components.User.banner.banner', ['pageContent' => $pageContent]) 
-    <x-User.latestnews.latestnews></x-User.latestnews.latestnews>
+    <x-User.latestnews.latestnews :newsItems="$newsItems"></x-User.latestnews.latestnews>
     <x-User.3goals.3goals></x-User.3goals.3goals>
     <x-User.completeproj.completeproj></x-User.completeproj.completeproj>
     <x-User.teamdev.teamdev></x-User.teamdev.teamdev>
