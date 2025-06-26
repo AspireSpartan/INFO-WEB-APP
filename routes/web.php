@@ -41,6 +41,9 @@ Route::get('/contact-us', function () {
     return view('/User_Side_Screen.contact-us');
 })->name('contact-us');
 
+Route::get('/showallproject', function () {
+    return view('/User_Side_Screen.showallproject');
+})->name('showallproject');
 // This was commented out - confirm if NewsfeedController is no longer used.
 // Route::resource('newsfeeds', NewsfeedController::class);
 
