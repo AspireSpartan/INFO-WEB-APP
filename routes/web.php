@@ -34,7 +34,6 @@ Route::get('/morenews', function () {
     $newsItems = NewsItem::orderBy('date', 'desc')->get();
     return view('/User_Side_Screen.morenews', compact('newsItems'));
 })->name('morenews');
-})->name('morenews');
 
 Route::get('/sign-in', function () {
     return view('sign-in');
@@ -78,7 +77,6 @@ Route::prefix('admin')->group(function () {
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
 
     Route::resource('blogs', BlogController::class)->parameters([
-        'blogs' => 'blogfeed'
         'blogs' => 'blogfeed'
     ]);
 });
