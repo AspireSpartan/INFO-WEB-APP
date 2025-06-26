@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <div class="relative w-80 h-12 mb-20 rounded-[50px] border-2 border-amber-400 flex justify-center items-center cursor-pointer">
+    <a href="/showallproject" class="relative w-80 h-12 mb-20 rounded-[50px] border-2 border-amber-400 flex justify-center items-center cursor-pointer hover:bg-amber-50 transition">
         <div class="text-amber-400 text-lg font-normal font-['Sans_Serif_Collection']">SHOW ALL PROJECTS</div>
-    </div>
+    </a>
 </div>
