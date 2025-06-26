@@ -1,4 +1,4 @@
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'sectionBanner'])
+@props(['newsItems', 'contactMessages', 'blogfeeds'])
 
 <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
@@ -159,7 +159,7 @@
                     <div>@include('Components.Admin.blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
                 </template>
                 <template x-if="screen === 'banner'">
-                    <div>@include('Components.Admin.Content-Manager.banner.index', ['sectionBanner' => $sectionBanner ?? []] )</div>
+                    <div>@include('Components.Admin.Content-Manager.banner.banner')</div>
                 </template>
                 <template x-if="screen === 'latest news'">
                     <div><h1>Latest News Content</h1></div>

@@ -11,7 +11,6 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsfeedController;
 use App\Http\Controllers\NotificationController; 
-use App\Http\Controllers\SectionBannerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,11 +31,10 @@ Route::get('/sign-in', function () {
     return view('sign-in');
 })->name('sign-in');
 
-//Route::get('/blog', function () {
-//    $blogfeeds = Blogfeed::all();
-//    return view('/User_Side_Screen.blog', compact('blogfeeds'));
-//})->name('blog');
-Route::get('/blog', [HomeController::class, 'blogIndex'])->name('blog');
+Route::get('/blog', function () {
+    $blogfeeds = Blogfeed::all();
+    return view('/User_Side_Screen.blog', compact('blogfeeds'));
+})->name('blog');
 
 Route::get('/logout', function () {
     return redirect('/home')->with('status', 'You have been logged out.');
@@ -56,15 +54,11 @@ Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'increme
 Route::prefix('admin')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('admin.dashboard');
     Route::resource('news', NewsController::class);
+    // New route for bulk delete
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
 
     Route::resource('blogs', BlogController::class)->parameters([
         'blogs' => 'blogfeed' // This tells Laravel to use 'blogfeed' instead of default 'blog'
-    
-    ]);
-
-    Route::resource('blogs', BlogController::class)->parameters([
-    'blogs' => 'blogfeed' // This tells Laravel to use 'blogfeed' instead of default 'blog'
     
     ]);
 
@@ -80,7 +74,7 @@ Route::get('/admin/notifications', [NotificationController::class, 'index'])->na
 Route::post('/admin/notifications/{message}/mark-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.mark_read');
 Route::delete('/admin/notifications/{message}', [NotificationController::class, 'destroy'])->name('admin.notifications.destroy');
 Route::get('/admin/notifications/{message}/show', [NotificationController::class, 'show'])->name('admin.notifications.show');
-Route::put('/section-banners/{section_banner}', [SectionBannerController::class, 'update'])->name('admin.section_banners.update');
+
 
 
 
