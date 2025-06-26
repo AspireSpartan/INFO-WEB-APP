@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon; 
-use App\Models\SectionBanner; 
+use Carbon\Carbon; // For handling dates
+use App\Models\SectionBanner; // Don't forget to import the SectionBanner model
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log; // For logging
 use Illuminate\Support\Facades\Storage; // For file storage operations
 use Illuminate\Support\Facades\Validator; // For manual validation in store/update
 
@@ -17,23 +16,16 @@ class SectionBannerController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    // app/Http/Controllers/SectionBannerController.php
-
     public function index()
     {
-        // Retrieve the single latest (or the one you want to edit by default) section banner.
-        // If you only ever have ONE main banner to edit, `first()` is sufficient.
-        // orderBy('created_at', 'desc') ensures you get the newest if there are multiple.
-        $sectionBanner = SectionBanner::orderBy('created_at', 'desc')->first();
+        // Retrieve all section banner records from the database, ordered by creation date
+        $sectionBanners = SectionBanner::orderBy('created_at', 'desc')->get();
 
-        // IMPORTANT: If no banner exists yet, create a new empty SectionBanner model.
-        // This prevents errors when the form tries to access properties on a null object.
-        if (!$sectionBanner) {
-            $sectionBanner = new SectionBanner(); // Create an empty model instance
-        }
-
-        // Now, pass this single SectionBanner model object to your view.
-        return view('admin.section_banners.index', compact('sectionBanner'));
+        // You'll likely want to integrate this into your admin dashboard.
+        // For demonstration, we'll return a basic view.
+        // You might need to pass other dashboard data here (e.g., newsItems, contactMessages)
+        // if this view is part of your main admin layout.
+        return view('admin.section_banners.index', compact('sectionBanners'));
     }
 
     /**
@@ -140,103 +132,48 @@ class SectionBannerController extends Controller
      * @param  \App\Models\SectionBanner  $sectionBanner
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, SectionBanner $section_banner) // Using $section_banner for route model binding
+    public function update(Request $request, SectionBanner $sectionBanner)
     {
-        // Check if it's an in-place edit request from the banner component
-        if ($request->has('field_name')) { // Only check for field_name, as 'value' might be a file
-            $fieldName = $request->input('field_name');
-
-            // Validate the field name to prevent mass assignment vulnerabilities
-            $allowedFields = [
-                'background_image', // Add background_image to allowed fields
-                'header1', 'header2', 'header3', 'header4', 'description',
-                'barangay', 'residents', 'projects', 'yrs_service'
-            ];
-
-            if (!in_array($fieldName, $allowedFields)) {
-                Log::warning("Attempted to update disallowed field: {$fieldName}", ['user_id' => auth()->id() ?? 'guest']);
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['success' => false, 'message' => 'Invalid field for update.'], 400);
-                }
-                abort(400, 'Invalid field for update.');
-            }
-
-            try {
-                if ($fieldName === 'background_image') {
-                    // Handle image upload specifically
-                    if ($request->hasFile('value')) { // 'value' is the name of the file input
-                        // Delete old image if it exists
-                        if ($section_banner->background_image) {
-                            Storage::disk('public')->delete($section_banner->background_image);
-                        }
-                        $imagePath = $request->file('value')->store('banner_images', 'public'); // Store under 'banner_images'
-                        $section_banner->background_image = $imagePath;
-                    } else {
-                        // If no file uploaded but 'background_image' was the field, allow clearing if desired
-                        // For now, if no new file is selected, old one remains.
-                        // To allow clearing, you'd need a checkbox in the modal.
-                    }
-                } else {
-                    // Handle non-file fields
-                    $newValue = $request->input('value');
-
-                    // Specific validation for number fields if not handled by Alpine for some reason
-                    if (in_array($fieldName, ['barangay', 'residents', 'projects', 'yrs_service'])) {
-                        $request->validate([
-                            'value' => 'nullable|integer|min:0',
-                        ]);
-                    } else {
-                        $request->validate([
-                            'value' => 'nullable|string|max:255',
-                        ]);
-                    }
-                    $section_banner->{$fieldName} = $newValue;
-                }
-
-                $section_banner->save();
-
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['success' => true, 'message' => 'Banner field updated successfully.', 'newValue' => $section_banner->{$fieldName}]);
-                }
-                return redirect()->back()->with('success', 'Banner field updated successfully.');
-
-            } catch (\Exception $e) {
-                Log::error("Error updating banner field '{$fieldName}': " . $e->getMessage(), ['exception' => $e]);
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['success' => false, 'message' => 'Failed to update banner field. ' . $e->getMessage()], 500);
-                }
-                return redirect()->back()->with('error', 'Failed to update banner field.');
-            }
-        }
-
-        // --- Original form submission handling (if you still have a full edit form) ---
-        // Keep this if you have a separate full edit form that submits to this method
-        // Otherwise, you can remove this entire block if all edits are in-place.
-        $request->validate([
-            'header1' => 'nullable|string|max:255',
-            'header2' => 'nullable|string|max:255',
-            'header3' => 'nullable|string|max:255',
-            'header4' => 'nullable|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'barangay' => 'nullable|integer|min:0',
-            'residents' => 'nullable|integer|min:0',
-            'projects' => 'nullable|integer|min:0',
-            'yrs_service' => 'nullable|integer|min:0',
-            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8192',
+        // 1. Validate the incoming request data
+        $validator = Validator::make($request->all(), [
+            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8049', // Max 8MB
+            'header1'          => 'nullable|string|max:255',
+            'header2'          => 'nullable|string|max:255',
+            'header3'          => 'nullable|string|max:255',
+            'header4'          => 'nullable|string|max:255',
+            'description'      => 'nullable|string',
+            'barangay'         => 'nullable|integer',
+            'residents'        => 'nullable|integer',
+            'projects'         => 'nullable|integer',
+            'yrs_service'      => 'nullable|integer',
         ]);
 
-        if ($request->hasFile('background_image')) {
-            if ($section_banner->background_image) {
-                Storage::disk('public')->delete($section_banner->background_image);
-            }
-            $imagePath = $request->file('background_image')->store('section_banners', 'public');
-            $section_banner->background_image = $imagePath;
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $section_banner->update($request->except(['_token', '_method', 'background_image']));
-        $section_banner->save();
+        $validatedData = $validator->validated();
 
-        return redirect()->route('admin.section-banners.index')->with('success', 'Section Banner updated successfully.');
+        // 2. Handle background image update
+        if ($request->hasFile('background_image')) {
+            // Delete old image if it exists before uploading new one
+            if ($sectionBanner->background_image) {
+                Storage::disk('public')->delete($sectionBanner->background_image);
+            }
+            // Store the new image
+            $sectionBanner->background_image = $request->file('background_image')->store('banner_images', 'public');
+        }
+        // If no new image is uploaded, the old one remains.
+        // If you want to allow clearing an image, you'd add a checkbox and check for it.
+
+        // 3. Update other fields. Use fill to update all validated data at once.
+        $sectionBanner->fill($validatedData);
+
+        // Save the changes to the database
+        $sectionBanner->save();
+
+        // 4. Redirect with a success message to the index page
+        return redirect()->route('section_banners.index')->with('success', 'Section Banner updated successfully!');
     }
 
     /**
@@ -260,31 +197,4 @@ class SectionBannerController extends Controller
         // 3. Redirect with a success message to the index page
         return redirect()->route('section_banners.index')->with('success', 'Section Banner deleted successfully!');
     }
-
-    public function showAdminDashboard()
-    {
-        // Fetch the latest banner here, similar to your SectionBannerController@index
-        $sectionBanner = SectionBanner::orderBy('created_at', 'desc')->first();
-
-        if (!$sectionBanner) {
-            $sectionBanner = new SectionBanner();
-        }
-
-        // Pass the single $sectionBanner to your dashboard view
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('sectionBanner'));
-    }
-
-    public function updateBackgroundImage(Request $request, $id)
-{
-    $sectionBanner = SectionBanner::findOrFail($id);
-
-    if ($request->hasFile('background_image')) {
-        $path = $request->file('background_image')->store('section_banners', 'public');
-        $sectionBanner->background_image = $path;
-        $sectionBanner->save();
-    }
-
-    return redirect()->back()->with('success', 'Background image updated.');
-}
-
 }

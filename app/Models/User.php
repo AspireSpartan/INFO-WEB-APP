@@ -46,13 +46,4 @@ class User extends Authenticatable
         ];
     }
 
-    public function isAdmin()
-    {
-        // Example: If you have a 'role' column in your users table
-        return $this->role === 'admin';
-
-        // Or if you're using Spatie/Permission
-        // return $this->hasRole('admin');
-    }
-
 }
