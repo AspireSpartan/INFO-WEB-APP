@@ -1,4 +1,4 @@
-@extends('layouts.admin') {{-- Or your main admin layout --}}
+@extends('layouts.admin') {{-- Or your main admin layout --}} {{-- INFO-WEB-APP\resources\views\Components\Admin\edit\edit.blade.php --}}
 
 @section('content')
 
@@ -65,7 +65,8 @@
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Update News
             </button>
-            <a href="{{ route('admin.dashboard') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+            {{-- Updated Cancel button to redirect to news.index with the 'screen' parameter --}}
+            <a href="{{ route('news.index', ['screen' => 'news']) }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
                 Cancel
             </a>
         </div>

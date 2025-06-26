@@ -1,5 +1,5 @@
 <div class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50"
-    x-show="showUploadModal"
+    x-show="showUploadModal" {{-- Changed to showUploadModal --}}
     x-transition:enter="transition ease-out duration-300"
     x-transition:enter-start="opacity-0"
     x-transition:enter-end="opacity-100"
@@ -7,7 +7,7 @@
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0">
     <div class="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full mx-4"
-        @click.away="showUploadModal = false" {{-- Consider if you want to close the modal on click away when there are validation errors --}}
+        @click.away="showUploadModal = false" {{-- Changed to showUploadModal --}}
         x-transition:enter="transition ease-out duration-300 transform"
         x-transition:enter-start="opacity-0 scale-95"
         x-transition:enter-end="opacity-100 scale-100"
@@ -90,8 +90,8 @@
                 <label for="date" class="block text-gray-700 text-sm font-bold mb-2">Date Posted <span class="text-red-500">*</span></label>
                 {{-- Added 'required' attribute here --}}
                 <input type="date" id="date" name="date" class="shadow border rounded w-full py-2 px-3 bg-gray-100 @error('date') border-red-500 @enderror"
-                       x-init="document.getElementById('date').value = '{{ old('date', date('Y-m-d')) }}'" {{-- Preserves old input or sets current date --}}
-                       required />
+                        x-init="document.getElementById('date').value = '{{ old('date', date('Y-m-d')) }}'" {{-- Preserves old input or sets current date --}}
+                        required />
                 @error('date')
                     <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
                 @enderror
@@ -133,7 +133,7 @@
 
             {{-- Action Buttons --}}
             <div class="flex justify-end gap-4">
-                <button type="button" @click="showUploadModal = false" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded">Cancel</button>
+                <button type="button" @click="showUploadModal = false" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded">Cancel</button> {{-- Changed to showUploadModal --}}
                 <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-white py-2 px-4 rounded">Submit</button>
             </div>
         </form>
