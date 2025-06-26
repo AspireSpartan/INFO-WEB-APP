@@ -1,9 +1,9 @@
 @props(['sectionBanner']) {{-- Accept the sectionBanner model as a prop --}}
 
 @php
-    $bgImagePath = $sectionBanner->background_image
-                    ? asset('storage/' . $sectionBanner->background_image)
-                    : asset('storage/LGU_bg.png'); // Fallback to your default image
+    $bgImagePath = ($sectionBanner && $sectionBanner->background_image)
+        ? asset('storage/' . $sectionBanner->background_image)
+        : asset('storage/LGU_bg.png');
 @endphp
 
 <div class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ $bgImagePath }}');">
@@ -89,19 +89,19 @@
     <div class="relative z-10 w-full bg-zinc-500/20 shadow-md py-4 md:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 mt-auto">
         <div class="flex flex-col sm:flex-row justify-around items-center gap-6 md:gap-12 lg:gap-24">
             <div class="text-center animate-stat-item" style="--delay: 0.2s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->barangay ?? 0 }}">{{ $sectionBanner->barangay ?? 0 }}</div> {{-- Dynamic Barangay --}}
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->barangay ?? 0 }}">{{ $sectionBanner && $sectionBanner->barangay ?? 0 }}</div> {{-- Dynamic Barangay --}}
                 <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Barangay</div>
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.4s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->residents ?? 0 }}">{{ $sectionBanner->residents ? $sectionBanner->residents . '+' : '0' }}</div> {{-- Dynamic Residents with '+' --}}
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner?->residents ?? 0 }}">{{ $sectionBanner && $sectionBanner->residents ? $sectionBanner->residents . '+' : '0' }}</div> {{-- Dynamic Residents with '+' --}}
                 <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Residents</div>
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.6s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->projects ?? 0 }}">{{ $sectionBanner->projects ? $sectionBanner->projects . '+' : '0' }}</div> {{-- Dynamic Projects with '+' --}}
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->projects ?? 0 }}">{{ $sectionBanner && $sectionBanner->projects ? $sectionBanner->projects . '+' : '0' }}</div> {{-- Dynamic Projects with '+' --}}
                 <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Public Projects</div>
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.8s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->yrs_service ?? 0 }}">{{ $sectionBanner->yrs_service ?? 0 }}</div> {{-- Dynamic Years of Service --}}
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->yrs_service ?? 0 }}">{{ $sectionBanner && $sectionBanner->yrs_service ?? 0 }}</div> {{-- Dynamic Years of Service --}}
                 <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Years of Service</div>
             </div>
         </div>
