@@ -3,7 +3,7 @@
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
 use App\Models\ContactMessage;
-use App\Models\PageContent; // Ensure PageContent model is imported
+use App\Models\PageContent; 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
@@ -19,15 +19,7 @@ Route::get('/', function () {
 
 // Route for your main LGU homepage that uses the banner
 // This passes dynamic background image data to the home view
-Route::get('/home', function () {
-    $mainContainerBgUrl = PageContent::where('key', 'main-container-bg')->value('value');
-    if (empty($mainContainerBgUrl) || !filter_var($mainContainerBgUrl, FILTER_VALIDATE_URL)) {
-        $mainContainerBgUrl = asset('storage/LGU_bg.png'); 
-    }
-    return view('User_Side_Screen.home', [ 
-        'mainContainerBgUrl' => $mainContainerBgUrl
-    ]);
-})->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Consider moving /morenews and /blog to dedicated controllers if they grow complex
 Route::get('/morenews', function () {
@@ -91,3 +83,5 @@ Route::get('/admin/notifications/{message}/show', [NotificationController::class
 Route::get('/page-content', [PageContentController::class, 'show'])->name('page.content.show');
 Route::post('/page-content', [PageContentController::class, 'update'])->name('page.content.update');
 Route::get('/initialize-content', [PageContentController::class, 'initializeDefaultContent'])->name('page.content.initialize');
+
+
