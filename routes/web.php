@@ -17,9 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route for your main LGU homepage that uses the banner
-// This passes dynamic background image data to the home view
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Correct: Using HomeController for dynamic data
+Route::get('/home', [HomeController::class, 'index', 'latestnews1'])->name('home');
 
 // Consider moving /morenews and /blog to dedicated controllers if they grow complex
 Route::get('/morenews', function () {
