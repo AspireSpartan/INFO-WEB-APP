@@ -15,7 +15,7 @@ Route::get('/', function () {
 });
 
 // Correct: Using HomeController for dynamic data
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index', 'latestnews1'])->name('home');
 
 // Consider moving /morenews and /blog to dedicated controllers if they grow complex
 Route::get('/morenews', function () {

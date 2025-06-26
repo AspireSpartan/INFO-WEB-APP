@@ -14,11 +14,20 @@ class HomeController extends Controller
     public function index()
     {
         $sectionBanner = SectionBanner::first();
+    $newsItems = NewsItem::orderBy('date', 'desc')->take(10)->get();
 
-        // Pass the data to your home view
-        return view('User_Side_Screen.home', compact('sectionBanner'));
+    return view('User_Side_Screen.home', compact('sectionBanner', 'newsItems'));
+
     }
 
+    public function latestnews1()
+{
+    // Get the latest 10 news items
+    $newsItems = \App\Models\NewsItem::orderBy('date', 'desc')->take(10)->get();
+
+    // Pass both to the view
+    return view('User_Side_Screen.home', compact('newsItems'));
+}
 
     public function blogIndex()
     {
