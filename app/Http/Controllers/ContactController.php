@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactFormMail; // Import your Mailable class
 use App\Models\ContactMessage; // Ensure this is imported if you're saving to DB
-use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
@@ -47,7 +46,7 @@ class ContactController extends Controller
                           ->with('contactFormSuccess', true);
         } catch (\Exception $e) {
             // 5. Handle any errors during email sending or database saving
-            Log::error('Error sending contact form email or saving message: ' . $e->getMessage());
+            \Log::error('Error sending contact form email or saving message: ' . $e->getMessage());
             return back()->with('error', 'There was an error sending your message. Please try again later.');
         }
     }

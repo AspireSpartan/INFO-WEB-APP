@@ -1,4 +1,3 @@
-@props(['newsItems'])
 <div class="bg-gray-100 min-h-screen py-8 z-10">
     <!-- Top Logos Section with staggered slide-in animations -->
     <div class="container mx-auto px-4 py-6 overflow-x-auto whitespace-nowrap scrollbar-hide animate-on-scroll">
@@ -16,108 +15,71 @@
     </div>
 
     <!-- News Section Container -->
-    <div class="container mx-auto px-4 py-12 flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12"
-     style="height: 500px; min-height: 500px; max-height: 500px; overflow: hidden;">
-    <!-- Left Content: Latest News Title and Description -->
-    <div class="w-full lg:w-1/3 flex flex-col items-start gap-6">
-        <div class="space-y-4">
-            <h2 class="text-indigo-900 text-3xl md:text-4xl font-bold font-['Merriweather'] font-size: 18px !important animate-title-slide">Latest News</h2>
-            <p class="text-gray-700 text-sm md:text-base font-light leading-relaxed animate-text-fade" style="--delay: 0.2s">
-                This page is made to show the latest local news happening here in the Philippines. It provides updates on important events, community stories, government announcements, and other news that matters to Filipinos. Stay informed and connected with what’s going on around the country through this page.
-            </p>
-        </div>
-        <a href="/morenews" class="w-48 md:w-56 h-12 md:h-14 flex items-center justify-center rounded-full border-2 border-indigo-900 text-indigo-900 text-lg font-medium hover:bg-indigo-900 hover:text-white transition-colors duration-300 animate-button-pop" style="--delay: 0.4s">
-            MORE NEWS
-        </a>
-    </div>
-
-<div class="relative flex items-center justify-center py-4" style="min-height: 350px;">
-    <!-- Previous Arrow Button -->
-    <button id="prev-news-btn"
-        class="absolute left-0 top-0 h-full w-12 flex items-center justify-center z-10 bg-white bg-opacity-50 text-indigo-900 rounded-l-lg shadow hover:bg-opacity-80 transition"
-        aria-label="Previous">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-    </button>
-
-    <!-- News Carousel (Fixed Size) -->
-    <div class="w-full flex justify-center items-center" id="news-carousel"
-         style="gap: 1.5rem; height: 400px; min-height: 400px; max-height: 400px; width: 1320px; max-width: 100%;">
-        @foreach($newsItems as $news)
-            <a href="{{ $news->url }}" target="_blank" style="text-decoration: none;"
-                class="news-card bg-white rounded-lg shadow-md p-4 animate-card-slide mx-auto block"
-                style="width: 320px; min-width: 320px; max-width: 320px; height: 370px; display: none;">
-                <img src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
-                     alt="{{ $news->title }}" class="w-full h-80 object-cover rounded-md mb-3">
-                <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">{{ $news->title }}</h3>
-                <p class="text-sm text-gray-600 mb-2">{{ $news->author }} | {{ $news->date->format('M d, Y') }}</p>
-                <span class="text-indigo-700 text-sm">
-                    {{ $news->sponsored ? 'Sponsored' : 'Not Sponsored' }}
-                </span>
+    <div class="container mx-auto px-4 py-12 flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12">
+        <!-- Left Content: Latest News Title and Description -->
+        <div class="w-full lg:w-1/3 flex flex-col items-start gap-6">
+            <div class="space-y-4">
+                <h2 class="text-indigo-900 text-3xl md:text-4xl font-bold font-['Merriweather'] font-size: 18px !important animate-title-slide">Latest News</h2>
+                <p class="text-gray-700 text-sm md:text-base font-light leading-relaxed animate-text-fade" style="--delay: 0.2s">
+                    This page is made to show the latest local news happening here in the Philippines. It provides updates on important events, community stories, government announcements, and other news that matters to Filipinos. Stay informed and connected with what’s going on around the country through this page.
+                </p>
+            </div>
+            <a href="/morenews" class="w-48 md:w-56 h-12 md:h-14 flex items-center justify-center rounded-full border-2 border-indigo-900 text-indigo-900 text-lg font-medium hover:bg-indigo-900 hover:text-white transition-colors duration-300 animate-button-pop" style="--delay: 0.4s">
+                MORE NEWS
             </a>
-        @endforeach
+        </div>
+
+        <!-- Right Content: News Carousel -->
+        <div class="w-full lg:w-2/3 relative">
+            <div class="flex items-center gap-4 md:gap-6 overflow-x-auto scrollbar-hide py-4" id="news-carousel">
+                <!-- News Card 1 -->
+                <div class="flex-none w-64 md:w-72 h-80 md:h-96 relative bg-white rounded-lg shadow-md overflow-hidden animate-card-slide" style="--delay: 0.2s">
+                    <img src="{{ asset('storage/Screenshot 2025-06-10 002831.png') }}" alt="Youth Leader Launches Park Clean-Up Drive in Cebu City" class="w-full h-2/3 object-cover transition-transform duration-300 hover:scale-105">
+                    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-indigo-900 via-indigo-900/80 to-transparent"></div>
+                    <div class="absolute inset-x-0 bottom-0 p-3 md:p-4 flex flex-col justify-end">
+                        <h3 class="text-white text-sm md:text-base font-bold leading-tight">Youth Leader Launches Park Clean-Up Drive in Cebu City</h3>
+                        <p class="text-white text-xs font-light">Barangay volunteers join forces to restore green spaces</p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-1 bg-indigo-900"></div>
+                </div>
+
+                <!-- News Card 2 -->
+                <div class="flex-none w-64 md:w-72 h-80 md:h-96 relative bg-white rounded-lg shadow-md overflow-hidden animate-card-slide" style="--delay: 0.4s">
+                    <img src="{{ asset('storage/Screenshot 2025-06-10 002831.png') }}" alt="Summer Style Takes Over: Youths Embrace Local Straw Hats" class="w-full h-2/3 object-cover transition-transform duration-300 hover:scale-105">
+                    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-indigo-900 via-indigo-900/80 to-transparent"></div>
+                    <div class="absolute inset-x-0 bottom-0 p-3 md:p-4 flex flex-col justify-end">
+                        <h3 class="text-white text-sm md:text-base font-bold leading-tight">Summer Style Takes Over: Youths Embrace Local Straw Hats</h3>
+                        <p class="text-white text-xs font-light">Fashion meets tradition under the Philippine sun</p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-1 bg-indigo-900"></div>
+                </div>
+
+                <!-- News Card 3 -->
+                <div class="flex-none w-64 md:w-72 h-80 md:h-96 relative bg-white rounded-lg shadow-md overflow-hidden animate-card-slide" style="--delay: 0.6s">
+                    <img src="{{ asset('storage/Screenshot 2025-06-10 002831.png') }}" alt="Urban Gardening Gains Popularity Among Gen Z" class="w-full h-2/3 object-cover transition-transform duration-300 hover:scale-105">
+                    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-indigo-900 via-indigo-900/80 to-transparent"></div>
+                    <div class="absolute inset-x-0 bottom-0 p-3 md:p-4 flex flex-col justify-end">
+                        <h3 class="text-white text-sm md:text-base font-bold leading-tight">Urban Gardening Gains Popularity Among Gen Z</h3>
+                        <p class="text-white text sputex-xs font-light">Green thumbs and good vibes fill city spaces</p>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-1 bg-indigo-900"></div>
+                </div>
+            </div>
+
+            <!-- Navigation Arrows with hover animation -->
+            <button class="absolute left-0 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 md:p-3 shadow-lg z-10 hover:scale-110 transition-transform duration-200" onclick="scrollCarousel('news-carousel', -300)">
+                <svg class="w-5 h-5 md:w-6 md:h-6 text-indigo-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <button class="absolute right-0 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 md:p-3 shadow-lg z-10 hover:scale-110 transition-transform duration-200" onclick="scrollCarousel('news-carousel', 300)">
+                <svg class="w-5 h-5 md:w-6 md:h-6 text-indigo-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </div>
     </div>
-
-    <!-- Next Arrow Button -->
-    <button id="next-news-btn"
-        class="absolute right-0 top-0 h-full w-12 flex items-center justify-center z-10 bg-white bg-opacity-50 text-indigo-900 rounded-r-lg shadow hover:bg-opacity-80 transition"
-        aria-label="Next">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-    </button>
 </div>
-
-</div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const cards = document.querySelectorAll('#news-carousel .news-card');
-    const prevBtn = document.getElementById('prev-news-btn');
-    const nextBtn = document.getElementById('next-news-btn');
-    const visibleCount = 4;
-    let start = 0;
-
-    function showCards(startIdx) {
-        cards.forEach((card, i) => {
-            card.style.display = (i >= startIdx && i < startIdx + visibleCount) ? '' : 'none';
-        });
-        prevBtn.disabled = startIdx === 0;
-        nextBtn.disabled = startIdx + visibleCount >= cards.length;
-    }
-
-    prevBtn.addEventListener('click', function() {
-        if (start > 0) {
-            start--;
-            showCards(start);
-        }
-    });
-
-    nextBtn.addEventListener('click', function() {
-        if (start + visibleCount < cards.length) {
-            start++;
-            showCards(start);
-        }
-    });
-
-    showCards(start); // Show first 4 cards on load
-});
-</script>
-<style>
-.news-card {
-    transition: box-shadow 0.3s;
-}
-.news-card:hover {
-    box-shadow: 0 8px 24px rgba(60,72,88,0.15);
-}
-</style>
-
-
-
-
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
