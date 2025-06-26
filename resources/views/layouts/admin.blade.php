@@ -5,36 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@yield('title')</title> 
 
-        <!-- Google Fonts -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Questrial&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-        <!-- Tailwind CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-        <!-- Alpine.js -->
+    <!-- Alpine.js -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{{ asset('js/screentransition.js') }}" defer></script>
 
     <!-- Add other global stylesheets and scripts here -->
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            overflow-y: scroll;               /* Always allow scroll */
-            -ms-overflow-style: none;         /* IE and Edge */
-            scrollbar-width: none;            /* Firefox */
-        }
-        body::-webkit-scrollbar {
-            display: none;                    /* Chrome, Safari, Edge */
-        }
-        .font-montserrat { font-family: 'Montserrat', sans-serif; }
-        .font-questrial { font-family: 'Questrial', sans-serif; }
-        .font-source-sans-pro { font-family: 'Source Sans Pro', sans-serif; }
-        [x-cloak] { display: none !important; }
-    </style>
+    {{-- Include the banner-specific styles here --}}
+    @include('Components.Admin.Content-Manager.banner.banner-styles')
     
 </head>
 <body class="bg-neutral-200 min-h-screen flex flex-col">
