@@ -1,15 +1,58 @@
-@props(['newsItems', 'contactMessages', 'blogfeeds'])
+@props(['newsItems', 'contactMessages', 'blogfeeds']) {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
 
 <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
-          activeScreen: 'dashboard',
-          notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-          screens: ['dashboard', 'news', 'blog', 'content manager', 'notifications', 'banner', 'latest news', 'mission', 'projects', 'developers', 'links'],
-          resetNotifications() {
-              this.notificationCount = 0;
-              localStorage.setItem('unreadNotifications', 0);
-          }
-     }">
+         // Initialize activeScreen based on session flash data (if redirected),
+         // URL parameter (if user navigated directly), or default to 'dashboard'.
+         activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
+         notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
+         screens: ['dashboard', 'news', 'blog', 'content manager', 'notifications', 'banner', 'latest news', 'mission', 'projects', 'developers', 'links'],
+         // Removed: showUploadModal from here, as it's now managed within news_content.blade.php
+
+         resetNotifications() {
+             this.notificationCount = 0;
+             localStorage.setItem('unreadNotifications', 0);
+         },
+
+         switchScreen(screenName) {
+             this.activeScreen = screenName;
+             // Update URL to reflect current screen for better bookmarking and back/forward behavior
+             const url = new URL(window.location);
+             url.searchParams.set('screen', screenName);
+             history.pushState({ screen: screenName }, '', url.toString()); // Pass state for popstate
+         }
+     }"
+     x-init="
+         // Handle initial URL parameters on page load if present
+         // This ensures the screen state is picked up from the URL query string
+         const initialScreenFromUrl = new URLSearchParams(window.location.search).get('screen');
+         if (initialScreenFromUrl && screens.includes(initialScreenFromUrl) && activeScreen === 'dashboard') {
+             // Only override if the activeScreen hasn't been set by a session flash already
+             activeScreen = initialScreenFromUrl;
+         }
+
+         // Listen for popstate event (browser back/forward buttons) to update screen
+         window.addEventListener('popstate', (event) => {
+             const popUrlParams = new URLSearchParams(window.location.search);
+             const popScreen = popUrlParams.get('screen');
+             if (popScreen && screens.includes(popScreen)) {
+                 activeScreen = popScreen;
+             } else if (!popScreen && activeScreen !== 'dashboard') { // If no screen param, go to dashboard
+                 activeScreen = 'dashboard';
+             }
+         });
+
+         // The showUploadModal logic for errors is now handled in news_content.blade.php directly.
+         // If showCreateBlogModal is a separate modal that is still needed here, keep its logic.
+         // Assuming showCreateBlogModal also uses the same upload-Modal component for now,
+         // but if it's a *different* modal, you would need a separate Alpine state for it.
+         @if ($errors->any() && session('showCreateBlogModal'))
+             // If blog modal is meant to be opened from here, ensure its state is available
+             // This needs clarification if blog modal is separate from upload-Modal.
+             // For now, assuming blog modal is distinct and not managed by `showUploadModal` from here.
+             // If it's the *same* modal, this line would be removed, and blog controller would also redirect to news.index with screen=blog.
+         @endif
+     ">
 
     <div class="relative w-full bg-gray-700 py-4 px-6 md:px-12 lg:px-20 flex items-center justify-between z-20">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -33,7 +76,7 @@
                         :class="{'text-amber-400': ['banner', 'latest news', 'mission', 'projects', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latest news', 'mission', 'projects', 'developers', 'links'].includes(activeScreen) || open)}"
                         class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
                     Content Manager
-                    <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
@@ -186,23 +229,21 @@
         </template>
     </div>
 
-    <x-Admin.upload-Modal.upload-Modal></x-Admin.upload-Modal.upload-Modal>
-
-    <script>
-        document.addEventListener('notification-increment', () => {
-            const mainAlpineData = document.querySelector('[x-data]').__alpine.$data;
-            if (mainAlpineData && typeof mainAlpineData.notificationCount !== 'undefined') {
-                mainAlpineData.notificationCount++;
-                localStorage.setItem('unreadNotifications', mainAlpineData.notificationCount);
-            }
-        });
-
-        document.addEventListener('notification-decrement', () => {
-            const mainAlpineData = document.querySelector('[x-data]').__alpine.$data;
-            if (mainAlpineData && typeof mainAlpineData.notificationCount !== 'undefined' && mainAlpineData.notificationCount > 0) {
-                mainAlpineData.notificationCount--;
-                localStorage.setItem('unreadNotifications', mainAlpineData.notificationCount);
-            }
-        });
-    </script>
 </div>
+<script>
+    document.addEventListener('notification-increment', () => {
+        const mainAlpineData = document.querySelector('[x-data]').__alpine.$data;
+        if (mainAlpineData && typeof mainAlpineData.notificationCount !== 'undefined') {
+            mainAlpineData.notificationCount++;
+            localStorage.setItem('unreadNotifications', mainAlpineData.notificationCount);
+        }
+    });
+
+    document.addEventListener('notification-decrement', () => {
+        const mainAlpineData = document.querySelector('[x-data]').__alpine.$data;
+        if (mainAlpineData && typeof mainAlpineData.notificationCount !== 'undefined' && mainAlpineData.notificationCount > 0) {
+            mainAlpineData.notificationCount--;
+            localStorage.setItem('unreadNotifications', mainAlpineData.notificationCount);
+        }
+    });
+</script>

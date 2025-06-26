@@ -1,12 +1,21 @@
-{{-- resources/views/Components/Admin/signin/news_content.blade.php --}}
-<main class="flex-grow p-4 md:p-8 lg:p-12">
+{{-- resources/views/Components/Admin/newss/news_content.blade.php --}}
+<main class="flex-grow p-4 md:p-8 lg:p-12"
+      x-data="{ showUploadModal: false }" {{-- showUploadModal state is now managed here --}}
+      x-init="
+          // Open the modal if there are validation errors AND the session indicates the modal should be shown
+          @if ($errors->any() && session('showUploadModal'))
+              showUploadModal = true;
+          @endif
+      ">
     <!-- Changed text color to D4AF37 -->
     <h1 class="text-[#D4AF37] text-3xl font-semibold font-montserrat mb-8 mt-4 md:ml-8">News</h1>
 
     <!-- Search & Upload Bar with Filtering -->
     <div class="flex flex-col md:flex-row justify-between items-center bg-transparent gap-4 mb-8">
         {{-- We'll use a form for search, filter, and sort for proper GET requests --}}
-        <form action="{{ route('admin.dashboard') }}" method="GET" class="relative w-full md:w-auto flex-grow max-w-xl flex items-center">
+        <form action="{{ route('news.index') }}" method="GET" class="relative w-full md:w-auto flex-grow max-w-xl flex items-center">
+            {{-- Hidden input to ensure 'news' screen remains active after search --}}
+            <input type="hidden" name="screen" value="news">
             {{-- Search Input --}}
             <input type="text" name="search" placeholder="Search news"
                 class="w-full pl-12 pr-4 py-2 border border-amber-400 rounded-[30px] bg-white focus:outline-none focus:ring-1 focus:ring-amber-500 text-gray-700 placeholder-zinc-400 font-montserrat"
@@ -37,9 +46,10 @@
                     class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
                     role="menu">
                     <div class="py-1">
-                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sponsored_filter'), ['sponsored_filter' => 'all'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter', 'all') == 'all' ? 'bg-gray-100 font-semibold' : '' }}">All</a>
-                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sponsored_filter'), ['sponsored_filter' => 'sponsored'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Sponsored</a>
-                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sponsored_filter'), ['sponsored_filter' => 'non-sponsored'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'non-sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Non-Sponsored</a>
+                        {{-- Ensure 'screen' parameter is included in filter links --}}
+                        <a href="{{ route('news.index', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'all', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter', 'all') == 'all' ? 'bg-gray-100 font-semibold' : '' }}">All</a>
+                        <a href="{{ route('news.index', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'sponsored', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Sponsored</a>
+                        <a href="{{ route('news.index', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'non-sponsored', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'non-sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Non-Sponsored</a>
                     </div>
                 </div>
             </div>
@@ -61,21 +71,23 @@
                     class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
                     role="menu">
                     <div class="py-1">
-                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sort_by'), ['sort_by' => 'date_desc'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by', 'date_desc') == 'date_desc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Newest)</a>
-                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sort_by'), ['sort_by' => 'date_asc'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'date_asc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Oldest)</a>
-                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sort_by'), ['sort_by' => 'views_desc'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_desc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Most)</a>
-                        <a href="{{ route('admin.dashboard', array_merge(request()->except('sort_by'), ['sort_by' => 'views_asc'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_asc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Least)</a>
+                        {{-- Ensure 'screen' parameter is included in sort links --}}
+                        <a href="{{ route('news.index', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'date_desc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by', 'date_desc') == 'date_desc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Newest)</a>
+                        <a href="{{ route('news.index', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'date_asc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'date_asc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Oldest)</a>
+                        <a href="{{ route('news.index', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'views_desc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_desc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Most)</a>
+                        <a href="{{ route('news.index', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'views_asc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_asc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Least)</a>
                     </div>
                 </div>
             </div>
 
             <button class="flex items-center gap-2 px-6 py-2 bg-amber-400 hover:bg-amber-500 text-white text-lg font-normal rounded-lg transition-colors shadow-md"
-                    @click="showUploadModal = true; setupNewsDateInput()">
+                    @click="showUploadModal = true"> {{-- Correctly triggers showUploadModal --}}
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                 </svg>
                 Upload News
             </button>
+            
             <button id="bulk-delete-button" class="p-2 bg-white rounded-lg shadow-md hover:bg-gray-100 transition-colors" onclick="confirmBulkDelete()">
                 <svg class="w-6 h-6 text-amber-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm2 3a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z" clip-rule="evenodd"></path>
@@ -115,6 +127,7 @@
             ])
         @endforeach
     </div>
+
+    {{-- The upload modal for news is now included here --}}
+    <x-Admin.upload-Modal.upload-Modal x-show="showUploadModal"></x-Admin.upload-Modal.upload-Modal>
 </main>
-
-
