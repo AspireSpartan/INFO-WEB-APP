@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\NewsItem;
-use App\Models\ContactMessage;
+use App\Models\ContactMessage; 
 
 class BlogController extends Controller
 {
@@ -21,9 +21,10 @@ class BlogController extends Controller
     public function index()
     {
         // Retrieve all blog posts from the database
-        $blogfeeds = Blogfeed::orderBy('published_at', 'desc')->get();
+        $blogfeeds = Blogfeed::orderBy('published_at', 'desc')->get(); //
 
         // IMPORTANT: Fetch data required by Admin_Side_Screen.Admin-Dashboard and its Ad-Header component
+        // This is why you were getting 'Undefined variable $newsItems'
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         $contactMessages = ContactMessage::all(); // Or filter if you only need unread messages
 
@@ -36,23 +37,22 @@ class BlogController extends Controller
         }
 
         // Pass all necessary data to the main admin dashboard view
-        // The 'activeAdminScreen' will be read by Alpine.js in Ad-Header.blade.php
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('blogfeeds', 'newsItems', 'contactMessages'));
-        // Removed: ->with('blogs'); as this flag is replaced by 'activeAdminScreen' session flash
+        // And pass a flag so the dashboard knows to display blog content
+        return view('Admin_Side_Screen.Admin-Dashboard', compact('blogfeeds', 'newsItems', 'contactMessages'))
+                    ->with('blogs'); // Added a more specific flag name
     }
 
     /**
      * Show the form for creating a new resource (new blog post).
      * This method simply returns the view containing the form for creating a new blog post.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        // Redirect to index, flag to show create modal, and set active screen to 'blog'
-        return redirect()->route('blogs.index')
-                        ->with('showCreateBlogModal', true)
-                        ->with('activeAdminScreen', 'blog'); // Added this line
+        // IMPORTANT: Fetch data required by Admin_Side_Screen.Admin-Dashboard and its Ad-Header component
+        // This ensures the header (with newsItems/contactMessages) still works when on the create page.
+        return redirect()->route('blogs.index')->with('showCreateBlogModal', true);
     }
 
     /**
@@ -82,12 +82,11 @@ class BlogController extends Controller
             return redirect()->back()
                              ->withErrors($validator)
                              ->withInput()
-                             ->with('showCreateBlogModal', true)
-                             ->with('activeAdminScreen', 'blog'); // Added this line for error redirect
+                             ->with('showCreateBlogModal', true);
         }
 
         // If validation passes, get the validated data
-        $validatedData = $validator->validated();
+        $validatedData = $validator->validated(); // <--- Get validated data here
 
         $blogfeed = new Blogfeed();
 
@@ -113,9 +112,7 @@ class BlogController extends Controller
         $blogfeed->save();
 
         // Redirect back to the blog index and show success, and close the modal
-        return redirect()->route('blogs.index')
-                        ->with('success', 'Blog post created successfully!')
-                        ->with('activeAdminScreen', 'blog'); // Added this line
+        return redirect()->route('blogs.index')->with('success', 'Blog post created successfully!');
     }
 
     /**
@@ -129,6 +126,10 @@ class BlogController extends Controller
     {
         // This view path might also need adjustment if it's not directly in resources/views/blogs/show.blade.php
         return view('blogs.show', compact('blogfeed')); //currently this line works even if i didn't add these next lines.
+
+        //return response()->json($blogfeed);             // This line will NEVER execute
+        //return view('User_Side_Screen.blog_detail', ['blogfeed' => $blogfeed]); // This line will NEVER execute
+        //return view('User_Side_Screen', ['blogfeed' => $blogfeed]); 
     }
 
     /**
@@ -139,11 +140,9 @@ class BlogController extends Controller
      * @param  \App\Models\Blogfeed  $blogfeed
      * @return \Illuminate\View\View
      */
-    public function edit(Blogfeed $blogfeed)
+    public function edit(Blogfeed $blogfeed) //
     {
         // This path should be correct based on your previous input
-        // When going to the edit view, also flash the active screen so a refresh returns to blog view
-        session()->flash('activeAdminScreen', 'blog'); // Added this to set screen on entering edit view
         return view('Components.Admin.blog.edit', compact('blogfeed'));
     }
 
@@ -157,15 +156,15 @@ class BlogController extends Controller
      * @param  \App\Models\Blogfeed  $blogfeed
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Blogfeed $blogfeed)
+    public function update(Request $request, Blogfeed $blogfeed) // Ensure $blogfeed here
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'author' => 'required|string|max:255',
             'authortitle' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8049', // Max 8MB
-            'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:999',   // Max 999KB
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8049', // Max 8MB [cite: 2025-06-09]
+            'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:999',   // Max 999KB [cite: 2025-06-09]
             'published_at' => 'required|date',
         ]);
 
@@ -196,10 +195,8 @@ class BlogController extends Controller
 
         $blogfeed->update($data);
 
-        // Redirect back to the blog index and show success message, setting the active screen
-        return redirect()->route('blogs.index')
-                        ->with('success', 'Blog post updated successfully!')
-                        ->with('activeAdminScreen', 'blog'); // Added this line
+        // CORRECTED REDIRECT ROUTE: Use 'blogs.index' as defined by resource route
+        return redirect()->route('blogs.index')->with('success', 'Blog post updated successfully!');
     }
 
     /**
@@ -223,9 +220,8 @@ class BlogController extends Controller
         // 2. Delete the blog post record from the database
         $blogfeed->delete();
 
-        // 3. Redirect with a success message, ensuring the 'blog' screen is active
-        return redirect()->route('blogs.index')
-                        ->with('success', 'Blog post deleted successfully!')
-                        ->with('activeAdminScreen', 'blog'); // Added this line
+        // 3. Redirect with a success message
+        // Make sure to redirect to 'blogs.index' as defined by your Route::resource
+        return redirect()->route('blogs.index')->with('success', 'Blog post deleted successfully!');
     }
 }
