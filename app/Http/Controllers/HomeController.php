@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Blogfeed; //this is the Blogfeed Model present that is present in my project
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
+use App\Models\NewsItem;
 
 class HomeController extends Controller
 {
