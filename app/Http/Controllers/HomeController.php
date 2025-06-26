@@ -7,6 +7,8 @@ use App\Models\PageContent; // IMPORTANT: Changed from SectionBanner to PageCont
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
 
+use App\Models\NewsItem;
+
 
 class HomeController extends Controller
 {
@@ -19,6 +21,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+
+        $newsItems = NewsItem::orderBy('date', 'desc')->get();
         // Fetch all key-value pairs from the 'page_contents' table
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
 
@@ -45,7 +49,8 @@ class HomeController extends Controller
         }
 
         // Pass all necessary data to the home view
-        return view('User_Side_Screen.home', compact('pageContent')); // Pass the pageContent array
+
+        return view('User_Side_Screen.home', compact('pageContent', 'newsItems')); // Pass the pageContent array
     }
 
     /**
@@ -58,10 +63,12 @@ class HomeController extends Controller
     {
         // Fetch data relevant to the blog page
         $blogfeeds = Blogfeed::orderBy('created_at', 'desc')->get();
+        $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
+
 
         // If your blog page also uses pageContent or a banner, you might fetch it here too.
         // For simplicity, it's not included by default in blogIndex unless specified.
+        return view('User_Side_Screen.blog', compact('blogfeeds', 'pageContent'));
 
-        return view('User_Side_Screen.blog', compact('blogfeeds'));
     }
 }
