@@ -1,12 +1,12 @@
 <?php
 
 use App\Models\Blogfeed;
-use App\Models\Newsfeed;
 use App\Models\NewsItem;
 use App\Models\ContactMessage;
 use App\Models\PageContent; // Ensure PageContent model is imported
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsfeedController;
@@ -29,9 +29,11 @@ Route::get('/home', function () {
     ]);
 })->name('home');
 
+// Consider moving /morenews and /blog to dedicated controllers if they grow complex
 Route::get('/morenews', function () {
     $newsItems = NewsItem::orderBy('date', 'desc')->get();
     return view('/User_Side_Screen.morenews', compact('newsItems'));
+})->name('morenews');
 })->name('morenews');
 
 Route::get('/sign-in', function () {
@@ -44,6 +46,7 @@ Route::get('/blog', function () {
 })->name('blog');
 
 Route::get('/logout', function () {
+    // For proper logout, you might need Auth::logout();
     return redirect('/home')->with('status', 'You have been logged out.');
 })->name('logout');
 
@@ -75,6 +78,7 @@ Route::prefix('admin')->group(function () {
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
 
     Route::resource('blogs', BlogController::class)->parameters([
+        'blogs' => 'blogfeed'
         'blogs' => 'blogfeed'
     ]);
 });
