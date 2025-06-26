@@ -1,26 +1,27 @@
 <?php
 
 use App\Models\Blogfeed;
+use App\Models\Newsfeed;
 use App\Models\NewsItem;
 use App\Models\ContactMessage;
-use App\Models\PageContent; 
+use App\Models\PageContent; // Ensure PageContent is imported!
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\NewsfeedController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PageContentController;
+use App\Http\Controllers\SectionBannerController;
+use App\Http\Controllers\PageContentController; // Ensure PageContentController is imported!
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Correct: Using HomeController for dynamic data
-Route::get('/home', [HomeController::class, 'index', 'latestnews1'])->name('home');
 
-// Consider moving /morenews and /blog to dedicated controllers if they grow complex
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+
 Route::get('/morenews', function () {
     $newsItems = NewsItem::orderBy('date', 'desc')->get();
     return view('/User_Side_Screen.morenews', compact('newsItems'));
@@ -30,12 +31,10 @@ Route::get('/sign-in', function () {
     return view('sign-in');
 })->name('sign-in');
 
-Route::get('/blog', function () {
-    $blogfeeds = Blogfeed::all();
-    return view('/User_Side_Screen.blog', compact('blogfeeds'));
-})->name('blog');
+Route::get('/blog', [HomeController::class, 'blogIndex'])->name('blog');
 
 Route::get('/logout', function () {
+    // Recommendation: Change this to a POST route for security reasons
     // For proper logout, you might need Auth::logout();
     return redirect('/home')->with('status', 'You have been logged out.');
 })->name('logout');
@@ -45,23 +44,25 @@ Route::get('/contact-us', function () {
 })->name('contact-us');
 
 Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
-->name('news.incrementViews');
+    ->name('news.incrementViews');
 
 // Admin Routes (Grouped for clarity and potential middleware)
 Route::prefix('admin')->group(function () {
-    // Updated admin dashboard route to fetch and pass mainContainerBgUrl
+    // FIX IS HERE: Change to fetch all PageContent and pass as 'pageContent'
     Route::get('/', function () {
-        $mainContainerBgUrl = PageContent::where('key', 'main-container-bg')->value('value');
-        if (empty($mainContainerBgUrl) || !filter_var($mainContainerBgUrl, FILTER_VALIDATE_URL)) {
-            $mainContainerBgUrl = asset('storage/LGU_bg.png');
-        }
+        // Fetch all page content as a key-value array
+        $pageContent = PageContent::pluck('value', 'key')->toArray(); // <--- THIS IS THE KEY CHANGE
+
+        // No need for the separate $mainContainerBgUrl logic here anymore
+        // as your banner.blade.php handles the fallback itself.
 
         // Fetch other necessary data for the Admin Dashboard
-        $newsItems = NewsItem::all(); 
-        $contactMessages = ContactMessage::all(); 
-        $blogfeeds = Blogfeed::all(); 
+        $newsItems = NewsItem::all();
+        $contactMessages = ContactMessage::all();
+        $blogfeeds = Blogfeed::all();
 
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'contactMessages', 'blogfeeds', 'mainContainerBgUrl'));
+        // Pass the entire $pageContent array along with other data
+        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent')); // <--- CHANGE VARIABLE NAME HERE
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
@@ -70,6 +71,8 @@ Route::prefix('admin')->group(function () {
     Route::resource('blogs', BlogController::class)->parameters([
         'blogs' => 'blogfeed'
     ]);
+
+    Route::put('section-banners/{section_banner}', [SectionBannerController::class, 'update'])->name('admin.section_banners.update');
 });
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
@@ -77,10 +80,10 @@ Route::get('/admin/notifications', [NotificationController::class, 'index'])->na
 Route::post('/admin/notifications/{message}/mark-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.mark_read');
 Route::delete('/admin/notifications/{message}', [NotificationController::class, 'destroy'])->name('admin.notifications.destroy');
 Route::get('/admin/notifications/{message}/show', [NotificationController::class, 'show'])->name('admin.notifications.show');
+Route::put('/section-banners/{section_banner}', [SectionBannerController::class, 'update'])->name('admin.section_banners.update');
 
 // --- NEW CONTENT MANAGEMENT ROUTES ---
 Route::get('/page-content', [PageContentController::class, 'show'])->name('page.content.show');
 Route::post('/page-content', [PageContentController::class, 'update'])->name('page.content.update');
-Route::get('/initialize-content', [PageContentController::class, 'initializeDefaultContent'])->name('page.content.initialize');
 
-
+// The initialize-content route has been removed. Use `php artisan db:seed` instead.

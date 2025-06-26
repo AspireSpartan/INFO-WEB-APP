@@ -1,9 +1,15 @@
-@props(['sectionBanner']) {{-- Accept the sectionBanner model as a prop --}}
+<!-- Component/user/banner/banner.blade.php-->
+@props(['pageContent']) {{-- Accept the pageContent array as a prop --}}
 
 @php
-    $bgImagePath = ($sectionBanner && $sectionBanner->background_image)
-        ? asset('storage/' . $sectionBanner->background_image)
-        : asset('storage/LGU_bg.png');
+    // Use the main-container-bg field from the pageContent array, with a default fallback
+    $bgImagePath = ($pageContent['main-container-bg'] ?? null)
+        ? asset('storage/' . str_replace(asset('storage/'), '', $pageContent['main-container-bg'])) // Extract path if full URL is stored
+        : asset('storage/LGU_bg.png'); // Fallback to a default local image
+    // If the image is stored as a full URL, strip the base URL part for asset() to work correctly on the path
+    if (str_starts_with($pageContent['main-container-bg'] ?? '', 'http')) {
+        $bgImagePath = $pageContent['main-container-bg']; // Use directly if it's already a full URL
+    }
 @endphp
 
 <div class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ $bgImagePath }}');">
@@ -20,7 +26,7 @@
         <div class="fixed inset-y-0 right-0 w-3/4 max-w-sm bg-gray-900 p-6 shadow-lg">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-2">
-                    <img src="{{ asset('coredev-logo.png') }}" alt="COREDEV Logo" class="h-10 w-auto animate-logo-slide">
+                    <img src="{{ asset('storage/CoreDev.svg') }}" alt="COREDEV Logo" class="h-11 w-auto animate-logo-slide">
                 </div>
                 <button type="button" class="text-gray-400 hover:text-white" @click="mobileMenuOpen = false">
                     <span class="sr-only">Close menu</span>
@@ -41,7 +47,7 @@
                         </svg>
                     </button>
                     <div x-show="mobileServicesOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1"
-                         class="pl-4 mt-2 space-y-2">
+                          class="pl-4 mt-2 space-y-2">
                         <a href="#" class="block text-gray-300 text-base hover:text-amber-400 animate-nav-subitem">Service 1</a>
                         <a href="#" class="block text-gray-300 text-base hover:text-amber-400 animate-nav-subitem">Service 2</a>
                         <a href="#" class="block text-gray-300 text-base hover:text-amber-400 animate-nav-subitem">Service 3</a>
@@ -57,7 +63,7 @@
                         </svg>
                     </button>
                     <div x-show="mobileBlogOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1"
-                         class="pl-4 mt-2 space-y-2">
+                          class="pl-4 mt-2 space-y-2">
                         <a href="#" class="block text-gray-300 text-base hover:text-amber-400 animate-nav-subitem">Article 1</a>
                         <a href="#" class="block text-gray-300 text-base hover:text-amber-400 animate-nav-subitem">Article 2</a>
                         <a href="#" class="block text-gray-300 text-base hover:text-amber-400 animate-nav-subitem">Article 3</a>
@@ -72,16 +78,16 @@
     <div class="relative z-10 flex flex-col items-end justify-center h-[calc(100vh-theme(spacing.24))] text-left px-4">
         <div class="w-full max-w-4xl space-y-6 md:space-y-8 lg:space-y-10 pr-2 md:pr-8 lg:pr-16">
             <p class="text-white text-2xl md:text-3xl lg:text-4xl font-normal font-['Noto_Sans'] animate-hero-text" style="--delay: 0.2s">
-                {{ $sectionBanner->header1 ?? 'DEFAULT H1 TEXT' }} {{-- Dynamic Header 1 --}}
+                {!! $pageContent['hero-subtitle-1'] ?? '“DRIVEN BY INNOVATION' !!} {{-- Dynamic Header 1 --}}
             </p>
             <h1 class="text-white text-6xl md:text-7xl lg:text-7xl font-bold font-['Merriweather'] leading-tight animate-hero-text" style="--delay: 0.4s">
-                {{ $sectionBanner->header2 ?? 'DEFAULT H2 TEXT' }} {{-- Dynamic Header 2 --}}
+                {!! $pageContent['hero-main-title'] ?? 'Local Government Unit' !!} {{-- Dynamic Header 2 --}}
             </h1>
             <p class="text-white text-2xl md:text-3xl lg:text-4xl font-normal font-['Roboto'] animate-hero-text" style="--delay: 0.6s">
-                {{ $sectionBanner->header3 ?? 'DEFAULT H3 TEXT' }} {{-- Dynamic Header 3 --}}
+                {!! $pageContent['hero-paragraph'] ?? 'Serving the community with <span class="text-amber-400">transparency</span>, <span class="text-amber-400">Integrity</span>, <br class="hidden sm:inline"/>and <span class="text-amber-400">commitment</span>.' !!} {{-- Dynamic Header 3 --}}
             </p>
             <p class="text-white text-lg md:text-xl lg:text-2xl font-normal font-['Source_Sans_Pro'] animate-hero-text" style="--delay: 0.8s">
-                <span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1"></span>{{ $sectionBanner->header4 ?? 'DEFAULT H4 TEXT' }} {{-- Dynamic Header 4 --}}
+                <span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1"></span>{!! $pageContent['hero-subtitle-2'] ?? '/BREAKING BOUNDARIES' !!} {{-- Dynamic Header 4 --}}
             </p>
         </div>
     </div>
@@ -89,25 +95,25 @@
     <div class="relative z-10 w-full bg-zinc-500/20 shadow-md py-4 md:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 mt-auto">
         <div class="flex flex-col sm:flex-row justify-around items-center gap-6 md:gap-12 lg:gap-24">
             <div class="text-center animate-stat-item" style="--delay: 0.2s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->barangay ?? 0 }}">{{ $sectionBanner && $sectionBanner->barangay ?? 0 }}</div> {{-- Dynamic Barangay --}}
-                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Barangay</div>
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ intval(str_replace('+', '', $pageContent['stat-1-number'] ?? 0)) }}">{!! $pageContent['stat-1-number'] ?? 0 !!}</div> {{-- Dynamic Barangay Number --}}
+                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">{!! $pageContent['stat-1-label'] ?? 'Barangay' !!}</div> {{-- Dynamic Barangay Label --}}
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.4s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner?->residents ?? 0 }}">{{ $sectionBanner && $sectionBanner->residents ? $sectionBanner->residents . '+' : '0' }}</div> {{-- Dynamic Residents with '+' --}}
-                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Residents</div>
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ intval(str_replace('+', '', $pageContent['stat-2-number'] ?? 0)) }}">{!! $pageContent['stat-2-number'] ?? 0 !!}</div> {{-- Dynamic Residents Number --}}
+                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">{!! $pageContent['stat-2-label'] ?? 'Residents' !!}</div> {{-- Dynamic Residents Label --}}
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.6s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->projects ?? 0 }}">{{ $sectionBanner && $sectionBanner->projects ? $sectionBanner->projects . '+' : '0' }}</div> {{-- Dynamic Projects with '+' --}}
-                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Public Projects</div>
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ intval(str_replace('+', '', $pageContent['stat-3-number'] ?? 0)) }}">{!! $pageContent['stat-3-number'] ?? 0 !!}</div> {{-- Dynamic Projects Number --}}
+                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">{!! $pageContent['stat-3-label'] ?? 'Public Projects' !!}</div> {{-- Dynamic Projects Label --}}
             </div>
             <div class="text-center animate-stat-item" style="--delay: 0.8s">
-                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ $sectionBanner->yrs_service ?? 0 }}">{{ $sectionBanner && $sectionBanner->yrs_service ?? 0 }}</div> {{-- Dynamic Years of Service --}}
-                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">Years of Service</div>
+                <div class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']" data-target="{{ intval(str_replace('+', '', $pageContent['stat-4-number'] ?? 0)) }}">{!! $pageContent['stat-4-number'] ?? 0 !!}</div> {{-- Dynamic Years of Service Number --}}
+                <div class="text-white text-sm md:text-lg font-light font-['Merriweather']">{!! $pageContent['stat-4-label'] ?? 'Years of Service' !!}</div> {{-- Dynamic Years of Service Label --}}
             </div>
         </div>
         <div class="w-full h-px bg-white/50 my-6"></div>
         <p class="relative z-10 w-full text-center text-white text-xs md:text-sm lg:text-base font-normal font-['Questrial'] px-4 md:px-8 lg:px-16 animate-footer-text">
-            {{ $sectionBanner->description ?? 'Default description text about Local Government Units (LGUs) in the Philippines...' }} {{-- Dynamic Description --}}
+            {!! $pageContent['footer-paragraph'] ?? 'Default description text about Local Government Units (LGUs) in the Philippines...' !!} {{-- Dynamic Footer Paragraph --}}
         </p>
     </div>
 </div>
@@ -145,13 +151,15 @@
             }, parseFloat(item.style.getPropertyValue('--delay')) * 1000);
         });
 
-        footerText.style.opacity = '0';
-        footerText.style.transform = 'translateY(10px)';
-        setTimeout(() => {
-            footerText.style.transition = 'opacity 1s ease-in-out, transform 1s ease-in-out';
-            footerText.style.opacity = '1';
-            footerText.style.transform = 'translateY(0)';
-        }, 1000);
+        if (footerText) { // Ensure footerText exists before trying to access its style
+            footerText.style.opacity = '0';
+            footerText.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                footerText.style.transition = 'opacity 1s ease-in-out, transform 1s ease-in-out';
+                footerText.style.opacity = '1';
+                footerText.style.transform = 'translateY(0)';
+            }, 1000);
+        }
     });
 
 
@@ -165,20 +173,23 @@
             let current = start;
             const increment = (end - start) / (duration / 10);
             const interval = setInterval(() => {
-                current += increment;
+                current = Math.min(current + increment, end); // Ensure current doesn't overshoot end
                 let displayValue = Math.floor(current);
+                element.textContent = displayValue + (addPlus && displayValue > 0 ? '+' : ''); // Conditionally add '+'
+
                 if (current >= end) {
                     clearInterval(interval);
-                    displayValue = end; // Ensure final number is exact
+                    element.textContent = end + (addPlus && end > 0 ? '+' : ''); // Ensure final number is exact
                 }
-                element.textContent = displayValue + (addPlus && displayValue > 0 ? '+' : ''); // Conditionally add '+'
             }, 10);
         }
 
         // Apply number animation to each stat item
         statItems.forEach(item => {
             const numberElement = item.querySelector('div:first-child');
-            const targetNumber = parseInt(numberElement.getAttribute('data-target'), 10); // Get target from data-target
+            // Get target from data-target, ensure it's a number
+            // Safely parse integer, handling potential '+' and ensuring a default of 0
+            const targetNumber = parseInt(String(numberElement.getAttribute('data-target')).replace('+', ''), 10) || 0; 
             const textContent = numberElement.textContent; // Get initial text content
             const needsPlus = textContent.includes('+'); // Check if '+' was present
 
@@ -196,13 +207,15 @@
             }, parseFloat(item.style.getPropertyValue('--delay')) * 1000);
         });
 
-        footerText.style.opacity = '0';
-        footerText.style.transform = 'translateY(10px)';
-        setTimeout(() => {
-            footerText.style.transition = 'opacity 1s ease-in-out, transform 1s ease-in-out';
-            footerText.style.opacity = '1';
-            footerText.style.transform = 'translateY(0)';
-        }, 1000);
+        if (footerText) { // Ensure footerText exists before trying to access its style
+            footerText.style.opacity = '0';
+            footerText.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                footerText.style.transition = 'opacity 1s ease-in-out, transform 1s ease-in-out';
+                footerText.style.opacity = '1';
+                footerText.style.transform = 'translateY(0)';
+            }, 1000);
+        }
     });
 </script>
 

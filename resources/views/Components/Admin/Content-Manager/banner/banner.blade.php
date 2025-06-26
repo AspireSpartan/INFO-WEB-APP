@@ -1,156 +1,16 @@
-<!DOCTYPE html>
-<html lang="en" x-data="{ mobileMenuOpen: false }">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editable LGU Homepage</title>
-    
-    <!-- CSRF Token for Laravel POST requests -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <!-- Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Alpine.js for mobile menu interactivity -->
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
-    <!-- Google Fonts from original design -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Questrial&family=Merriweather:wght@400;700&family=Noto+Sans:400&family=Roboto:400&family=Source+Sans+Pro:400&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Original animations and styling */
-        .animate-bg-overlay { opacity: 0; animation: fadeIn 1.5s ease-in-out forwards; }
-        .animate-logo-slide { transform: translateX(-20px); opacity: 0; animation: slideIn 0.5s ease-in-out forwards; }
-        .animate-nav-item { opacity: 0; transform: translateX(20px); animation: slideIn 0.5s ease-in-out forwards; animation-delay: calc(var(--index, 0) * 0.1s); }
-        .animate-nav-subitem { opacity: 0; transform: translateX(10px); animation: slideIn 0.4s ease-in-out forwards; animation-delay: calc(var(--index, 0) * 0.1s); }
-        .animate-hero-text { opacity: 0; transform: translateY(20px); }
-        .animate-stat-item { opacity: 0; transform: scale(0.8); }
-        .animate-footer-text { opacity: 0; transform: translateY(10px); }
-        @keyframes fadeIn { to { opacity: 1; } }
-        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+<!-- Components/Admin/Content-Manager/banner/banner.blade.php-->
+@php
+    // Use the main-container-bg field from the pageContent array, with a default fallback
+    $bgImagePath = ($pageContent['main-container-bg'] ?? null)
+        ? asset('storage/' . str_replace(asset('storage/'), '', $pageContent['main-container-bg'])) // Extract path if full URL is stored
+        : asset('storage/LGU_bg.png'); // Fallback to a default local image
+    // If the image is stored as a full URL, strip the base URL part for asset() to work correctly on the path
+    if (str_starts_with($pageContent['main-container-bg'] ?? '', 'http')) {
+        $bgImagePath = $pageContent['main-container-bg']; // Use directly if it's already a full URL
+    }
+@endphp
 
-        /* Styles for the editing functionality */
-        .editable-container { position: relative; }
-        
-        /* Overlay for editable containers */
-        .editable-container::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
-            opacity: 0; /* Hidden by default */
-            transition: opacity 0.3s ease-in-out;
-            z-index: 5; /* Below the edit button but above the content */
-            pointer-events: none; /* Allows clicks to pass through */
-            border-radius: inherit; /* Inherit border-radius if any */
-        }
-
-        .editable-container:hover::before {
-            opacity: 1; /* Show on hover */
-        }
-
-        .editable-container .edit-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-            opacity: 0;
-            z-index: 10; /* Above the overlay */
-            pointer-events: none; /* Allows hover to pass through to elements underneath */
-        }
-        .editable-container:hover .edit-button {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            pointer-events: auto; /* Make button clickable on hover */
-        }
-        
-        /* MODERN MODAL STYLES */
-        .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.7); /* Darker backdrop */
-            backdrop-filter: blur(8px); /* More pronounced blur */
-        }
-        #modal-content {
-            background-color: #ffffff; /* White background */
-            border-radius: 1.5rem; /* Larger border-radius */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Stronger shadow */
-            padding: 2.5rem; /* More padding */
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother transition */
-        }
-        #modal-title {
-            color: #1a202c; /* Darker text for formality */
-            font-weight: 700; /* Bold font */
-            font-size: 2rem; /* Larger font size */
-        }
-        .modal-body label {
-            font-weight: 600; /* Semi-bold labels */
-            color: #2d3748; /* Darker gray for labels */
-        }
-        .modal-body input[type="text"],
-        .modal-body textarea,
-        .modal-body input[type="file"] {
-            border: 1px solid #cbd5e0; /* Subtle border */
-            border-radius: 0.5rem; /* Rounded corners for inputs */
-            padding: 0.75rem 1rem; /* More padding */
-            transition: all 0.2s ease-in-out;
-        }
-        .modal-body input[type="text"]:focus,
-        .modal-body textarea:focus {
-            border-color: #3b82f6; /* Blue focus border */
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Blue focus ring */
-        }
-
-        /* Ensure edit button is visible on dark backgrounds */
-        .edit-button {
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 9999px;
-            font-weight: bold;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        /* Loading indicator styles */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
-        }
-        .loading-overlay.show {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.3s ease-in-out, visibility 0s linear 0s;
-        }
-        .spinner {
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #3b82f6;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-
-    <!-- Main container with background -->
-    <div id="main-container" class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('https://images.unsplash.com/photo-1598993169346-638c53a73c1d?q=80&w=2070&auto=format&fit=crop');">    
+<div id="main-container" class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ $bgImagePath }}');">
         <!-- Background Overlay -->    
         <div class="absolute inset-0 bg-gray-700/50 animate-bg-overlay"></div>  
         
@@ -171,7 +31,11 @@
             x-transition:leave-end="translate-x-full">  
             <div class="fixed inset-y-0 right-0 w-3/4 max-w-sm bg-gray-900 p-6 shadow-lg">  
                 <div class="flex justify-between items-center mb-6">    
-                    <!-- Removed logo and its edit button -->
+                    <div class="flex items-center gap-2 editable-container">    
+                        <!-- logo-image-src will remain static as per request -->
+                        <img id="logo-image" src="https://placehold.co/100x100/ffffff/333333?text=Logo" alt="COREDEV Logo" class="h-10 w-auto animate-logo-slide">
+                        <button class="edit-button edit-trigger" data-edit-type="image" data-target-id="logo-image">Edit</button>  
+                    </div>  
                     <button type="button" class="text-gray-400 hover:text-white" @click="mobileMenuOpen = false">  
                         <span class="sr-only">Close menu</span>    
                         <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">    
@@ -345,7 +209,6 @@
             const fetchContent = async () => {
                 toggleLoading(true);
                 try {
-                    // Adjusted fetch URL: no '/api'
                     const response = await fetch(`${API_BASE_URL}/page-content`); 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
@@ -387,16 +250,8 @@
                     const element = document.getElementById(elementId);
                     if (element) {
                         if (key === 'main-container-bg') {
-                            const imageUrl = pageContent[key];
-                            const mainContainer = document.getElementById('main-container');
-                            if (imageUrl && typeof imageUrl === 'string' && imageUrl.startsWith('http')) { 
-                                mainContainer.style.backgroundImage = `url('${imageUrl}')`;
-                                console.log('Background image applied:', imageUrl);
-                            } else {
-                                console.warn('Invalid or missing background image URL from database:', imageUrl);
-                                // Fallback to a default if the fetched URL is invalid
-                                mainContainer.style.backgroundImage = `url('https://images.unsplash.com/photo-1598993169346-638c53a73c1d?q=80&w=2070&auto=format&fit=crop')`; 
-                            }
+                            // For background image, apply to the style
+                            document.getElementById('main-container').style.backgroundImage = `url('${pageContent[key]}')`;
                         } else if (key.startsWith('stat-') && (key.endsWith('-number') || key.endsWith('-label'))) {
                             // For statistics, update text content directly
                             element.textContent = pageContent[key];
@@ -406,7 +261,11 @@
                         }
                     }
                 }
-                // Removed static logo setting
+
+                // Set static logo and sign-in button as they are not database-persisted
+                // These lines are kept as per your previous request to remove these from DB variables
+                document.getElementById('logo-image').src = 'https://placehold.co/100x100/ffffff/333333?text=Logo';
+                document.getElementById('signin-button').textContent = 'Sign In';
             };
 
 
@@ -428,36 +287,39 @@
                         // Get current value from the dynamically loaded pageContent variable
                         const currentTextValue = pageContent[currentTargetElement.id] || currentTargetElement.innerHTML;
                         modalBody.innerHTML = `
-                            <label for="text-input" class="block text-sm font-medium text-gray-700">Content Value</label>
+                            <label for="text-input" class="block text-sm font-medium text-gray-700">Content</label>
                             <textarea id="text-input" rows="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">${currentTextValue}</textarea>
                         `;
                         break;
                     case 'image':
                         modalTitle.textContent = 'Change Image';
                         let imgSrc;
-                        // Since only background image is present, imageKey is simplified
-                        const imageKey = 'main-container-bg';
-                        
-                        // Get current image URL from pageContent for the background
-                        imgSrc = pageContent[imageKey] || ''; 
-
-                        // Always include an image preview element
+                        let placeholderText = '';
+                        if (currentTargetElement.id === 'main-container') {
+                             // Get current image URL from pageContent for background
+                            imgSrc = pageContent['main-container-bg'];
+                            placeholderText = 'No image preview for background image.';
+                        } else if (currentTargetElement.id === 'logo-image') {
+                             // Get current image URL from current DOM for logo (static)
+                            imgSrc = currentTargetElement.src;
+                        }
+                       
                         modalBody.innerHTML = `
                             <label for="image-input" class="block text-sm font-medium text-gray-700">Upload new image</label>
                             <input type="file" id="image-input" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
-                            <img id="image-preview" src="${imgSrc}" class="mt-4 rounded-lg max-h-48 w-auto ${!imgSrc ? 'hidden' : ''}" alt="Image Preview" onerror="this.classList.add('hidden'); console.warn('Image preview failed to load:', this.src);"/>
-                            ${!imgSrc ? `<p id="image-placeholder" class="mt-4 text-gray-600 text-sm italic">No image currently set for background. Select an image to preview.</p>` : ''}
+                            ${currentTargetElement.id !== 'main-container' ? 
+                                `<img id="image-preview" src="${imgSrc}" class="mt-4 rounded-lg max-h-48 w-auto ${!imgSrc ? 'hidden' : ''}" onerror="this.classList.add('hidden')"/>` : 
+                                `<p id="image-placeholder" class="mt-4 text-gray-600 text-sm italic">${placeholderText}</p>`
+                            }
                         `;
                         
                         document.getElementById('image-input').addEventListener('change', (event) => {
                             const reader = new FileReader();
                             reader.onload = (e) => {
                                 const preview = document.getElementById('image-preview');
-                                const placeholder = document.getElementById('image-placeholder');
-                                if (preview) {
+                                if (preview) { // Check if preview element exists (not for main-container)
                                     preview.src = e.target.result;
-                                    preview.classList.remove('hidden'); // Show preview
-                                    if (placeholder) placeholder.classList.add('hidden'); // Hide placeholder if present
+                                    preview.classList.remove('hidden');
                                 }
                             }
                             if (event.target.files[0]) {
@@ -509,9 +371,7 @@
                 toggleLoading(true); // Show loading spinner
                 
                 try {
-                    // Get CSRF token from the meta tag
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
                     if (currentEditType === 'all-stats') {
                         const statUpdates = [];
                         for (let i = 1; i <= 4; i++) {
@@ -529,16 +389,15 @@
                         }
 
                         // Send individual requests for each changed stat
+                        // This loop handles saving to the database, NOT local storage
                         for (const update of statUpdates) {
                             const formData = new FormData();
                             formData.append('key', update.key);
                             formData.append('value', update.value);
+                            formData.append('_token', csrfToken); // Add CSRF token here for each individual request
                             
-                            const response = await fetch(`${API_BASE_URL}/page-content`, { 
+                            const response = await fetch(`${API_BASE_URL}/page-content`, {
                                 method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': csrfToken // Add CSRF token
-                                },
                                 body: formData
                             });
 
@@ -557,50 +416,37 @@
                         return; // Exit function early as stats are handled
                     }
 
-                    // Handling for text and image content
+                    // Handling for text and image content (as before, also saving to DB)
                     const formData = new FormData();
                     let keyToUpdate = currentTargetElement.id;
-                    
+                    let valueToUpdate = null;
+
                     switch(currentEditType) {
                         case 'text':
                         case 'button':
-                            let textValue = document.getElementById('text-input').value;
+                            valueToUpdate = document.getElementById('text-input').value;
                             formData.append('key', keyToUpdate);
-                            formData.append('value', textValue);
+                            formData.append('value', valueToUpdate);
                             break;
                         case 'image':
                             const fileInput = document.getElementById('image-input');
-                            // Now only dealing with main-container-bg
-                            const imageKey = 'main-container-bg'; 
-
-                            // Always append the key
-                            formData.append('key', imageKey);
-
                             if (fileInput.files && fileInput.files[0]) {
-                                // If a new file is uploaded, send the file
+                                formData.append('key', keyToUpdate === 'main-container' ? 'main-container-bg' : 'logo-image-src');
                                 formData.append('file', fileInput.files[0]);
-                                console.log('Uploading new image file for key:', imageKey);
                             } else {
-                                // If no new file is selected, send the existing value from pageContent
-                                let existingImageUrl = pageContent[imageKey];
-                                if (existingImageUrl) {
-                                    formData.append('value', existingImageUrl);
-                                    console.log('Sending existing image URL for key (no new file):', imageKey, existingImageUrl);
-                                } else {
-                                    // If there was no existing image and no new image, send an empty string or null
-                                    formData.append('value', ''); // Or null, depending on desired behavior for "no image"
-                                    console.log('No image or new file for key:', imageKey, 'Sending empty value.');
-                                }
+                                // If no new file is selected, send current value (if applicable)
+                                valueToUpdate = keyToUpdate === 'main-container' ? 
+                                    (pageContent['main-container-bg'] || document.getElementById('main-container').style.backgroundImage.slice(5, -2).replace(/['"]+/g, '')) : 
+                                    document.getElementById('logo-image').src; // For logo, use its current src
+                                formData.append('key', keyToUpdate === 'main-container' ? 'main-container-bg' : 'logo-image-src');
+                                formData.append('value', valueToUpdate);
                             }
                             break;
                     }
 
-                    // Send the POST request
-                    const response = await fetch(`${API_BASE_URL}/page-content`, { 
+                    formData.append('_token', csrfToken); // Add CSRF token for single update
+                    const response = await fetch(`${API_BASE_URL}/page-content`, {
                         method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken 
-                        },
                         body: formData
                     });
 
@@ -634,5 +480,3 @@
             });
         });
     </script>
-</body>
-</html>
