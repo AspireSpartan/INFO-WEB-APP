@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\News;
+use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
 use Illuminate\Http\Request;
@@ -16,15 +16,7 @@ class NewsController extends Controller
      * Display a listing of the news items (for admin dashboard).
      * This function now serves as the index for news items in the admin area.
      */
-
-    /*public function index()
-    {
-        $newsItems = NewsItem::orderBy('date', 'desc')->get();
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems'));
-    }*/
-
-    /* this area is the filtering, search, sorting, checkboxes, and the delete all button. */
-        public function index(Request $request)
+    public function index(Request $request)
     {
         $query = NewsItem::query();
 
@@ -67,22 +59,18 @@ class NewsController extends Controller
 
         $newsItems = $query->get();
 
-        // <--- IMPORTANT ADDITION/MODIFICATION HERE ---
         $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
-        
         $blogfeeds = Blogfeed::all();
 
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages', 'blogfeeds')); // Pass them to the view
-        // <--- END IMPORTANT ADDITION/MODIFICATION ---
+        // This method just loads the view with data. The active screen logic is in Ad-Header.blade.php
+        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages', 'blogfeeds'));
     }
 
-
-            /**
-         * Remove multiple specified news items from storage.
-         */
+    /**
+     * Remove multiple specified news items from storage.
+     */
     public function bulkDestroy(Request $request)
     {
-        // The JavaScript sends 'ids[]', so validate and get 'ids'
         $request->validate([
             'ids' => 'required|array', // Expect 'ids'
             'ids.*' => 'exists:news_items,id',
@@ -91,9 +79,10 @@ class NewsController extends Controller
         $newsItemIds = $request->input('ids'); // Get 'ids'
 
         if (empty($newsItemIds)) {
-            // This case should be caught by the client-side alert or validation,
-            // but as a fallback, ensure we don't proceed with an empty array.
-            return redirect()->route('admin.dashboard')->with('error', 'No news items selected for deletion.');
+            // Redirect to news index and keep on news screen
+            return redirect()->route('news.index')
+                             ->with('error', 'No news items selected for deletion.')
+                             ->with('activeAdminScreen', 'news');
         }
 
         foreach ($newsItemIds as $id) {
@@ -109,19 +98,23 @@ class NewsController extends Controller
             }
         }
 
-        return redirect()->route('admin.dashboard')->with('success', 'Selected news items deleted successfully!');
+        // Redirect to news index and keep on news screen
+        return redirect()->route('news.index')
+                         ->with('success', 'Selected news items deleted successfully!')
+                         ->with('activeAdminScreen', 'news');
     }
-        
 
     /**
      * Show the form for creating a new news item.
-     * (You might need a dedicated view for this, or it can be part of the Admin-Dashboard view)
+     * This method redirects to the news index with a flag to open the create modal.
      */
     public function create()
     {
-        // If you have a separate form for creating news items, return that view here.
-        // For now, assuming creation happens on the Admin-Dashboard itself.
-        return view('Admin_Side_Screen.Admin-Dashboard');
+        // Redirect to news index, flag to show create modal, and set active screen to 'news'
+        // CHANGED: showCreateNewsModal to showUploadModal to match your existing modal component
+        return redirect()->route('news.index')
+                         ->with('showUploadModal', true) // Flag to open the existing upload modal
+                         ->with('activeAdminScreen', 'news'); // Ensure 'news' screen is active
     }
 
     /**
@@ -129,54 +122,65 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        // Log the request data for debugging
         Log::info('News item store request:', $request->all());
 
-        // Validate the incoming request data
         $validatedData = $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:8242880', // Adjusted max size to 8MB based on your recollection (8049MB is too large for typical uploads, so I'm using 8MB as a more realistic interpretation of '8049MB')
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:8242880', // Max 8MB
             'author' => 'required|string|max:255',
-            'date' => 'required|date', // Changed from 'current_date' to 'date' to match your schema
-            'title' => 'required|string|max:255', // Increased max length for title, 50 characters might be too short. Adjust as needed.
+            'date' => 'required|date',
+            'title' => 'required|string|max:255',
             'url' => 'required|url',
-            'sponsored' => 'boolean', // 'required' is not necessary if it's a checkbox that might not be checked. If it always has a default, it's fine.
-            'views' => 'nullable|integer|min:0', // Added 'views' as nullable integer
+            'sponsored' => 'boolean',
+            'views' => 'nullable|integer|min:0',
         ]);
 
-        // Handle the image upload
         if ($request->hasFile('image')) {
             try {
-                $imagePath = $request->file('image')->store('news_images', 'public'); // Store in 'news_images' directory
+                $imagePath = $request->file('image')->store('news_images', 'public');
                 $validatedData['picture'] = $imagePath;
                 Log::info('Image uploaded successfully: ' . $imagePath);
             } catch (\Exception $e) {
                 Log::error('Image upload failed: ' . $e->getMessage());
-                return redirect()->back()->withInput()->withErrors(['image' => 'Failed to upload image. Please try again.']);
+                // CHANGED: showCreateNewsModal to showUploadModal for error redirect
+                return redirect()->back()
+                                 ->withInput()
+                                 ->withErrors(['image' => 'Failed to upload image. Please try again.'])
+                                 ->with('showUploadModal', true) // Re-open the existing upload modal on error
+                                 ->with('activeAdminScreen', 'news'); // Keep on news screen
             }
         } else {
             Log::warning('No image file found in the request.');
-            return redirect()->back()->withInput()->withErrors(['image' => 'Image file is required.']);
+            // CHANGED: showCreateNewsModal to showUploadModal for error redirect
+            return redirect()->back()
+                             ->withInput()
+                             ->withErrors(['image' => 'Image file is required.'])
+                             ->with('showUploadModal', true) // Re-open the existing upload modal on error
+                             ->with('activeAdminScreen', 'news'); // Keep on news screen
         }
 
-        // Add default for sponsored if not present (e.g., if checkbox is not checked)
-        $validatedData['sponsored'] = $request->has('sponsored'); // This will set it to true if present, false otherwise
-
-        // Default views to 0 if not provided
+        $validatedData['sponsored'] = $request->has('sponsored');
         $validatedData['views'] = $validatedData['views'] ?? 0;
 
         try {
-            // Create and save the news item
             NewsItem::create($validatedData);
             Log::info('News item created successfully.', $validatedData);
-            return redirect()->back()->with('success', 'News item uploaded successfully!');
+            // Redirect to news index and keep on news screen
+            return redirect()->route('news.index')
+                             ->with('success', 'News item uploaded successfully!')
+                             ->with('activeAdminScreen', 'news');
         } catch (\Exception $e) {
             Log::error('Failed to create news item: ' . $e->getMessage());
-            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to save news item. Please try again.']);
+            // CHANGED: showCreateNewsModal to showUploadModal for error redirect
+            return redirect()->back()
+                             ->withInput()
+                             ->withErrors(['error' => 'Failed to save news item. Please try again.'])
+                             ->with('showUploadModal', true) // Re-open the existing upload modal on error
+                             ->with('activeAdminScreen', 'news'); // Keep on news screen
         }
     }
 
     /**
-     * Display the specified news item.
+     * Display the specified news item (for public view).
      */
     public function show(NewsItem $newsItem) // Using route model binding
     {
@@ -189,7 +193,9 @@ class NewsController extends Controller
     public function edit($id)
     {
         $newsItem = NewsItem::findOrFail($id);
-        return view('Components.Admin.edit.edit', compact('newsItem')); // Assuming you have a news.edit view
+        // Ensure 'news' screen is active if refreshed or returning from edit
+        session()->flash('activeAdminScreen', 'news');
+        return view('Components.Admin.edit.edit', compact('newsItem')); // Assuming this is your news edit view
     }
 
     /**
@@ -199,15 +205,14 @@ class NewsController extends Controller
     {
         $newsItem = NewsItem::findOrFail($id);
 
-        // Validate the incoming request data for update
         $validatedData = $request->validate([
-            'title' => 'required|string|max:255', // Increased max length
+            'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
-            'date' => 'required|date', // Changed from 'current_date' to 'date'
+            'date' => 'required|date',
             'url' => 'required|url',
             'sponsored' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8242880', // Adjusted max size
-            'views' => 'nullable|integer|min:0', // Added 'views' as nullable integer
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8242880', // Max 8MB
+            'views' => 'nullable|integer|min:0',
         ]);
 
         // Handle image update
@@ -223,27 +228,32 @@ class NewsController extends Controller
                 Log::info('New image uploaded: ' . $validatedData['picture']);
             } catch (\Exception $e) {
                 Log::error('Image update failed: ' . $e->getMessage());
-                return redirect()->back()->withInput()->withErrors(['image' => 'Failed to upload new image.']);
+                return redirect()->back()
+                                 ->withInput()
+                                 ->withErrors(['image' => 'Failed to upload new image.'])
+                                 ->with('activeAdminScreen', 'news'); // Keep on news screen
             }
         } else {
             // If no new image is uploaded, retain the old one
             $validatedData['picture'] = $newsItem->picture;
         }
 
-        // Add default for sponsored if not present
         $validatedData['sponsored'] = $request->has('sponsored');
-
-        // Default views to 0 if not provided
-        $validatedData['views'] = $validatedData['views'] ?? $newsItem->views; // Keep existing views if not provided
+        $validatedData['views'] = $validatedData['views'] ?? $newsItem->views;
 
         try {
-            // Update the news item
             $newsItem->update($validatedData);
             Log::info('News item updated successfully.', $validatedData);
-            return redirect()->route('news.index')->with('success', 'News item updated successfully!');
+            // Redirect to news index and keep on news screen
+            return redirect()->route('news.index')
+                             ->with('success', 'News item updated successfully!')
+                             ->with('activeAdminScreen', 'news');
         } catch (\Exception $e) {
             Log::error('Failed to update news item: ' . $e->getMessage());
-            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update news item. Please try again.']);
+            return redirect()->back()
+                             ->withInput()
+                             ->withErrors(['error' => 'Failed to update news item. Please try again.'])
+                             ->with('activeAdminScreen', 'news'); // Keep on news screen
         }
     }
 
@@ -262,22 +272,22 @@ class NewsController extends Controller
 
         $newsItem->delete();
         Log::info('News item deleted: ' . $id);
-        return redirect()->route('news.index')->with('success', 'News item deleted successfully!');
+        // Redirect to news index and keep on news screen
+        return redirect()->route('news.index')
+                         ->with('success', 'News item deleted successfully!')
+                         ->with('activeAdminScreen', 'news');
     }
 
-        /**
+    /**
      * Increment the views count for a specific news item.
      *
      * @param  \App\Models\NewsItem  $newsItem
      * @return \Illuminate\Http\JsonResponse
      */
-    public function incrementViews(NewsItem  $newsItem)
+    public function incrementViews(NewsItem $newsItem)
     {
-        // Increment the views column
-        //$newsItem = NewsItem::findOrFail($id);
         $newsItem->increment('views');
 
-        // You can return the updated views count or just a success message
         return response()->json([
             'success' => true,
             'message' => 'View count incremented successfully.',

@@ -6,6 +6,9 @@ use App\Models\Blogfeed;
 use App\Models\NewsItem; // Assuming NewsItem is used in blogIndex or other related views
 use App\Models\PageContent; // IMPORTANT: Changed from SectionBanner to PageContent
 use Illuminate\Http\Request;
+use App\Models\SectionBanner;
+use App\Models\NewsItem;
+
 
 class HomeController extends Controller
 {
