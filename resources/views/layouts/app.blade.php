@@ -14,6 +14,9 @@
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="{{ asset('js/newscontent.js') }}" defer></script>
     <!-- Add other global stylesheets and scripts here -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
 <body>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

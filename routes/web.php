@@ -101,3 +101,9 @@ Route::get('/page-content', [PageContentController::class, 'show'])->name('page.
 Route::post('/page-content', [PageContentController::class, 'update'])->name('page.content.update');
 
 // The initialize-content route has been removed. Use `php artisan db:seed` instead.
+
+
+
+Route::get('/cedula', function () {
+    return view('User_Side_Screen.cedula');
+})->name('cedula');
