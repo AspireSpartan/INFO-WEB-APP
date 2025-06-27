@@ -31,42 +31,48 @@
         </a>
     </div>
 
-<div class="relative flex items-center justify-center py-4" style="min-height: 350px;">
-    <!-- Previous Arrow Button -->
-    <button id="prev-news-btn"
-        class="absolute left-0 top-0 h-full w-12 flex items-center justify-center z-10 bg-white bg-opacity-50 text-indigo-900 rounded-l-lg shadow hover:bg-opacity-80 transition"
-        aria-label="Previous">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-    </button>
+<div class="w-full flex justify-center">
+    <div class="relative flex items-center justify-center w-full max-w-6xl mx-auto" style="min-height: 350px;">
+        <!-- Previous Arrow Button -->
+        <button id="prev-news-btn"
+            class="absolute left-0 top-0 h-full w-12 flex items-center justify-center z-10 bg-white bg-opacity-50 text-indigo-900 rounded-l-lg shadow hover:bg-opacity-80 transition"
+            aria-label="Previous">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
 
-    <!-- News Carousel (Fixed Size) -->
-    <div class="w-full flex justify-center items-center" id="news-carousel"
-         style="gap: 1.5rem; height: 400px; min-height: 400px; max-height: 400px; width: 1320px; max-width: 100%;">
-        @foreach($newsItems as $news)
-            <a href="{{ $news->url }}" target="_blank" style="text-decoration: none;"
-                class="news-card bg-white rounded-lg shadow-md p-4 animate-card-slide mx-auto block"
-                style="width: 320px; min-width: 320px; max-width: 320px; height: 370px; display: none;">
-                <img src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
-                     alt="{{ $news->title }}" class="w-full h-80 object-cover rounded-md mb-3">
-                <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">{{ $news->title }}</h3>
-                <p class="text-sm text-gray-600 mb-2">{{ $news->author }} | {{ $news->date->format('M d, Y') }}</p>
-                <span class="text-indigo-700 text-sm">
-                    {{ $news->sponsored ? 'Sponsored' : 'Not Sponsored' }}
-                </span>
-            </a>
-        @endforeach
+        <!-- News Carousel (Fixed Size) -->
+        <div class="w-full flex justify-center items-center" id="news-carousel"
+            style="gap: 1.5rem; height: 400px;">
+            @foreach($newsItems as $news)
+                <a href="{{ $news->url }}" target="_blank" style="text-decoration: none;"
+                    class="news-card bg-white rounded-lg shadow-md p-4 animate-card-slide mx-auto block"
+                    style="width: 320px; height: 420px; min-width: 320px; max-width: 320px; min-height: 420px; max-height: 420px; display: none;">
+                    <img 
+                        src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
+                        alt="{{ $news->title }}"
+                        class="w-full h-64 object-cover rounded-md mb-3"
+                        style="width: 288px; height: 256px;"
+                    >
+                    <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">{{ $news->title }}</h3>
+                    <p class="text-sm text-gray-600 mb-2">{{ $news->author }} | {{ $news->date->format('M d, Y') }}</p>
+                    <span class="text-indigo-700 text-sm">
+                        {{ $news->sponsored ? 'Sponsored' : 'Not Sponsored' }}
+                    </span>
+                </a>
+            @endforeach
+        </div>
+
+        <!-- Next Arrow Button -->
+        <button id="next-news-btn"
+            class="absolute right-0 top-0 h-full w-12 flex items-center justify-center z-10 bg-white bg-opacity-50 text-indigo-900 rounded-r-lg shadow hover:bg-opacity-80 transition"
+            aria-label="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
     </div>
-
-    <!-- Next Arrow Button -->
-    <button id="next-news-btn"
-        class="absolute right-0 top-0 h-full w-12 flex items-center justify-center z-10 bg-white bg-opacity-50 text-indigo-900 rounded-r-lg shadow hover:bg-opacity-80 transition"
-        aria-label="Next">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-    </button>
 </div>
 
 </div>
@@ -74,7 +80,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const cards = document.querySelectorAll('#news-carousel .news-card');
     const prevBtn = document.getElementById('prev-news-btn');
     const nextBtn = document.getElementById('next-news-btn');
@@ -85,27 +91,33 @@
         cards.forEach((card, i) => {
             card.style.display = (i >= startIdx && i < startIdx + visibleCount) ? '' : 'none';
         });
-        prevBtn.disabled = startIdx === 0;
-        nextBtn.disabled = startIdx + visibleCount >= cards.length;
     }
 
     prevBtn.addEventListener('click', function() {
         if (start > 0) {
             start--;
-            showCards(start);
+        } else {
+            // Loop to the end
+            start = Math.max(cards.length - visibleCount, 0);
         }
+        showCards(start);
     });
 
     nextBtn.addEventListener('click', function() {
         if (start + visibleCount < cards.length) {
             start++;
-            showCards(start);
+        } else {
+            // Loop to the start
+            start = 0;
         }
+        showCards(start);
     });
 
     showCards(start); // Show first 4 cards on load
-});
+});     
 </script>
+
+
 <style>
 .news-card {
     transition: box-shadow 0.3s;

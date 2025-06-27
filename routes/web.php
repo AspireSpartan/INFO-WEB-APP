@@ -81,7 +81,7 @@ Route::prefix('admin')->group(function () {
     ]);
 
 
-    Route::put('section-banners/{section_banner}', [SectionBannerController::class, 'update'])->name('admin.section_banners.update');
+    
 });
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
