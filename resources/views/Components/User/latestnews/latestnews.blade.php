@@ -44,19 +44,23 @@
     <!-- News Carousel (Fixed Size) -->
     <div class="w-full flex justify-center items-center" id="news-carousel"
          style="gap: 1.5rem; height: 400px; min-height: 400px; max-height: 400px; width: 1320px; max-width: 100%;">
-        @foreach($newsItems as $news)
-            <a href="{{ $news->url }}" target="_blank" style="text-decoration: none;"
-                class="news-card bg-white rounded-lg shadow-md p-4 animate-card-slide mx-auto block"
-                style="width: 320px; min-width: 320px; max-width: 320px; height: 370px; display: none;">
-                <img src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
-                     alt="{{ $news->title }}" class="w-full h-80 object-cover rounded-md mb-3">
-                <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">{{ $news->title }}</h3>
-                <p class="text-sm text-gray-600 mb-2">{{ $news->author }} | {{ $news->date->format('M d, Y') }}</p>
-                <span class="text-indigo-700 text-sm">
-                    {{ $news->sponsored ? 'Sponsored' : 'Not Sponsored' }}
-                </span>
-            </a>
-        @endforeach
+       @foreach($newsItems as $news)
+    <a href="{{ $news->url }}" target="_blank" style="text-decoration: none;"
+        class="news-card bg-white rounded-lg shadow-md p-4 animate-card-slide mx-auto block"
+        style="width: 320px; height: 420px; min-width: 320px; max-width: 320px; min-height: 420px; max-height: 420px; display: none;">
+        <img 
+            src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
+            alt="{{ $news->title }}"
+            class="w-full h-64 object-cover rounded-md mb-3"
+            style="width: 288px; height: 256px;"
+        >
+        <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">{{ $news->title }}</h3>
+        <p class="text-sm text-gray-600 mb-2">{{ $news->author }} | {{ $news->date->format('M d, Y') }}</p>
+        <span class="text-indigo-700 text-sm">
+            {{ $news->sponsored ? 'Sponsored' : 'Not Sponsored' }}
+        </span>
+    </a>
+@endforeach
     </div>
 
     <!-- Next Arrow Button -->
@@ -74,7 +78,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const cards = document.querySelectorAll('#news-carousel .news-card');
     const prevBtn = document.getElementById('prev-news-btn');
     const nextBtn = document.getElementById('next-news-btn');
@@ -85,27 +89,33 @@
         cards.forEach((card, i) => {
             card.style.display = (i >= startIdx && i < startIdx + visibleCount) ? '' : 'none';
         });
-        prevBtn.disabled = startIdx === 0;
-        nextBtn.disabled = startIdx + visibleCount >= cards.length;
     }
 
     prevBtn.addEventListener('click', function() {
         if (start > 0) {
             start--;
-            showCards(start);
+        } else {
+            // Loop to the end
+            start = Math.max(cards.length - visibleCount, 0);
         }
+        showCards(start);
     });
 
     nextBtn.addEventListener('click', function() {
         if (start + visibleCount < cards.length) {
             start++;
-            showCards(start);
+        } else {
+            // Loop to the start
+            start = 0;
         }
+        showCards(start);
     });
 
     showCards(start); // Show first 4 cards on load
-});
+});     
 </script>
+
+
 <style>
 .news-card {
     transition: box-shadow 0.3s;
