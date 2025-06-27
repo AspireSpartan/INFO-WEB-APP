@@ -76,3 +76,6 @@ Route::get('/admin/notifications/{message}/show', [NotificationController::class
 Route::get('/page-content', [PageContentController::class, 'show'])->name('page.content.show');
 Route::post('/page-content', [PageContentController::class, 'update'])->name('page.content.update');
 
+Route::get('/cedula', function () {
+    return view('User_Side_Screen.cedula');
+})->name('cedula');
