@@ -19,15 +19,15 @@
                         <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                     </svg>
                 </button>
-                <div x-show="open"
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 translate-y-1"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="transition ease-in duration-150"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="opacity-0 translate-y-1"
-                     class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                     role="menu" aria-orientation="vertical" aria-labelledby="home-menu-button" tabindex="-1">
+                <div x-show="open" x-cloak
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-1"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 translate-y-1"
+                        class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                        role="menu" aria-orientation="vertical" aria-labelledby="services-menu-button" tabindex="-1">
                     <div class="py-1" role="none">
                         <a href="/home" data-scroll-percent="0" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Banner</a>
                         <a href="/home" data-scroll-percent="22" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Latest News</a>
@@ -49,17 +49,17 @@
                         <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                     </svg>
                 </button>
-                <div x-show="open"
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 translate-y-1"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="transition ease-in duration-150"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="opacity-0 translate-y-1"
-                     class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                     role="menu" aria-orientation="vertical" aria-labelledby="services-menu-button" tabindex="-1">
+                <div x-show="open" x-cloak
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-1"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 translate-y-1"
+                        class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                        role="menu" aria-orientation="vertical" aria-labelledby="services-menu-button" tabindex="-1">
                     <div class="py-1" role="none">
-                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Web Development</a>
+                        <a href="/cedula" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Cedula</a>
                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Mobile App Development</a>
                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">UI/UX Design</a>
                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Cloud Solutions</a>
@@ -77,15 +77,15 @@
                         <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                     </svg>
                 </button>
-                <div x-show="open"
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 translate-y-1"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="transition ease-in duration-150"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="opacity-0 translate-y-1"
-                     class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                     role="menu" aria-orientation="vertical" aria-labelledby="blog-menu-button" tabindex="-1">
+               <div x-show="open" x-cloak
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-1"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 translate-y-1"
+                        class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                        role="menu" aria-orientation="vertical" aria-labelledby="services-menu-button" tabindex="-1">
                     <div class="py-1" role="none">
                         <a href="/blog" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Latest Articles</a>
                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Tech News</a>
