@@ -13,7 +13,7 @@
             The government proudly presents a collection of completed projects that embody progress, resilience, and service to the Filipino people. From modern infrastructure and safer roads to revitalized heritage sites and sustainable community spaces, these accomplishments reflect our unwavering commitment to national development and inclusive growth. Explore how each project contributes to a stronger, more connected, and culturally enriched Philippines.
         </p>
     </div>
-
+        <!-- project 1 -->
     <div class="w-full max-w-[1428px] mx-auto mt-24 px-4 flex flex-col items-center gap-14 pb-20">
         <div class="relative w-full bg-white rounded-[20px] shadow-lg flex flex-col lg:flex-row items-center p-8 lg:p-0 min-h-[320px]">
             <div class="lg:w-2/3 p-6 order-2 lg:order-1">
@@ -29,6 +29,7 @@
             </div>
         </div>
 
+        <!-- project 2 -->
         <div class="relative w-full bg-white rounded-[20px] shadow-lg flex flex-col lg:flex-row items-center p-8 lg:p-0 min-h-[320px]">
             <div class="lg:w-1/3 flex justify-center items-center p-6 order-1 lg:order-1">
                 <img class="w-[571px] h-80 rounded-[20px] object-cover shadow-[18px_8px_18px_-1px_rgba(0,0,0,0.25)]" src="https://content.r9cdn.net/rimg/dimg/82/59/3e57aa2c-city-81174-1739a2ba3e2.jpg?width=1366&height=768&xhint=1999&yhint=1773&crop=true" alt="Heritage Preservation" />
