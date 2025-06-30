@@ -11,6 +11,16 @@ Setup Commands
 7. composer require fakerphp/faker --dev
 8. php artisan db:seed --class=NewsfeedSeeder
 9. php artisan storage:link
+10. Put these into your .env (This is for the Contact Us Screen)
+MAIL_MAILER=smtp
+MAIL_SCHEME=null
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=2f5902e3625e5b
+MAIL_PASSWORD=5322e9ee422a65
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
 
 after that you can now RUN the app at your localhost
 1. php artisan serve
