@@ -55,18 +55,14 @@ MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
 
-
-*************************************************************************
-
-🧪 Seed Database (Optional)
+🧪 Seed Database
 
 9. Install Faker (if not already installed via composer install):
 composer require fakerphp/faker --dev
 
 10. Run the Seeder:
-php artisan db:seed --class=**NAMEOFSEEDERCLASS**
+php artisan db:seed
 
-*************************************************************************
 
 ▶️ !Running the Application! input this command on your terminal
 1. php artisan serve
