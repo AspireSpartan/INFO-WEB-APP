@@ -107,5 +107,6 @@ memory_limit = 128M
 *************************************************************************
 
 ▶️ Running the Application
+1. Run the application
 php artisan serve
 
