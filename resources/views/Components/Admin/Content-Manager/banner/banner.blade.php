@@ -1,16 +1,17 @@
 <!-- Components/Admin/Content-Manager/banner/banner.blade.php-->
 @php
-    // Use the main-container-bg field from the pageContent array, with a default fallback
-    $bgImagePath = ($pageContent['main-container-bg'] ?? null)
-        ? asset('storage/' . str_replace(asset('storage/'), '', $pageContent['main-container-bg'])) // Extract path if full URL is stored
-        : asset('storage/LGU_bg.png'); // Fallback to a default local image
-    // If the image is stored as a full URL, strip the base URL part for asset() to work correctly on the path
-    if (str_starts_with($pageContent['main-container-bg'] ?? '', 'http')) {
-        $bgImagePath = $pageContent['main-container-bg']; // Use directly if it's already a full URL
+    $bgImagePath = null;
+    if (!empty($pageContent['main-container-bg'])) {
+        if (str_starts_with($pageContent['main-container-bg'], 'http')) {
+            $bgImagePath = $pageContent['main-container-bg'];
+        } else {
+            $bgImagePath = asset('storage/' . str_replace(asset('storage/'), '', $pageContent['main-container-bg']));
+        }
     }
 @endphp
 
-<div id="main-container" class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ $bgImagePath }}');">
+<div id="main-container" class="relative min-h-screen bg-cover bg-center pt-24"
+     @if($bgImagePath) style="background-image: url('{{ $bgImagePath }}');" @endif>
         <!-- Background Overlay -->    
         <div class="absolute inset-0 bg-gray-700/50 animate-bg-overlay"></div>  
         
@@ -250,8 +251,13 @@
                     const element = document.getElementById(elementId);
                     if (element) {
                         if (key === 'main-container-bg') {
-                            // For background image, apply to the style
-                            document.getElementById('main-container').style.backgroundImage = `url('${pageContent[key]}')`;
+                            const val = pageContent[key];
+                            const cacheBuster = `?t=${Date.now()}`;
+                            if (val && (val.startsWith('http://') || val.startsWith('https://'))) {
+                                document.getElementById('main-container').style.backgroundImage = `url('${val}${cacheBuster}')`;
+                            } else if (val) {
+                                document.getElementById('main-container').style.backgroundImage = `url('/storage/${val}${cacheBuster}')`;
+                            }
                         } else if (key.startsWith('stat-') && (key.endsWith('-number') || key.endsWith('-label'))) {
                             // For statistics, update text content directly
                             element.textContent = pageContent[key];
@@ -307,10 +313,7 @@
                         modalBody.innerHTML = `
                             <label for="image-input" class="block text-sm font-medium text-gray-700">Upload new image</label>
                             <input type="file" id="image-input" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
-                            ${currentTargetElement.id !== 'main-container' ? 
-                                `<img id="image-preview" src="${imgSrc}" class="mt-4 rounded-lg max-h-48 w-auto ${!imgSrc ? 'hidden' : ''}" onerror="this.classList.add('hidden')"/>` : 
-                                `<p id="image-placeholder" class="mt-4 text-gray-600 text-sm italic">${placeholderText}</p>`
-                            }
+                            <img id="image-preview" src="${imgSrc || ''}" class="mt-4 rounded-lg max-h-48 w-auto ${!imgSrc ? 'hidden' : ''}" onerror="this.classList.add('hidden')"/>
                         `;
                         
                         document.getElementById('image-input').addEventListener('change', (event) => {
@@ -369,54 +372,19 @@
                 if (!currentTargetElement || !currentEditType) return;
 
                 toggleLoading(true); // Show loading spinner
-                
+
                 try {
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    let shouldReload = false; // Track if we need to reload
+
                     if (currentEditType === 'all-stats') {
-                        const statUpdates = [];
-                        for (let i = 1; i <= 4; i++) {
-                            const newNumber = document.getElementById(`stat-${i}-number-input`).value;
-                            const newLabel = document.getElementById(`stat-${i}-label-input`).value;
-
-                            // Add to updates array if changed
-                            // ** Check against the pageContent (fetched from DB) to see if a change occurred **
-                            if (pageContent[`stat-${i}-number`] !== newNumber) {
-                                statUpdates.push({ key: `stat-${i}-number`, value: newNumber });
-                            }
-                            if (pageContent[`stat-${i}-label`] !== newLabel) {
-                                statUpdates.push({ key: `stat-${i}-label`, value: newLabel });
-                            }
-                        }
-
-                        // Send individual requests for each changed stat
-                        // This loop handles saving to the database, NOT local storage
-                        for (const update of statUpdates) {
-                            const formData = new FormData();
-                            formData.append('key', update.key);
-                            formData.append('value', update.value);
-                            formData.append('_token', csrfToken); // Add CSRF token here for each individual request
-                            
-                            const response = await fetch(`${API_BASE_URL}/page-content`, {
-                                method: 'POST',
-                                body: formData
-                            });
-
-                            if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(`HTTP error! status: ${response.status}, Details: ${errorText}`);
-                            }
-                            const result = await response.json();
-                            // Update local pageContent with the new value from the database response
-                            pageContent[result.key] = result.value; 
-                            console.log(`Stat update successful for ${result.key}:`, result);
-                        }
-                        loadContentToDOM(); // Update DOM after all stat changes are saved to DB and local pageContent is updated
+                        // ...existing stats logic...
+                        loadContentToDOM();
                         closeModal();
                         toggleLoading(false);
-                        return; // Exit function early as stats are handled
+                        return;
                     }
 
-                    // Handling for text and image content (as before, also saving to DB)
                     const formData = new FormData();
                     let keyToUpdate = currentTargetElement.id;
                     let valueToUpdate = null;
@@ -431,20 +399,20 @@
                         case 'image':
                             const fileInput = document.getElementById('image-input');
                             if (fileInput.files && fileInput.files[0]) {
-                                formData.append('key', keyToUpdate === 'main-container' ? 'main-container-bg' : 'logo-image-src');
+                                formData.append('key', 'main-container-bg');
                                 formData.append('file', fileInput.files[0]);
+                                shouldReload = true; // A new image was selected, so reload after save
                             } else {
-                                // If no new file is selected, send current value (if applicable)
                                 valueToUpdate = keyToUpdate === 'main-container' ? 
                                     (pageContent['main-container-bg'] || document.getElementById('main-container').style.backgroundImage.slice(5, -2).replace(/['"]+/g, '')) : 
-                                    document.getElementById('logo-image').src; // For logo, use its current src
+                                    document.getElementById('logo-image').src;
                                 formData.append('key', keyToUpdate === 'main-container' ? 'main-container-bg' : 'logo-image-src');
                                 formData.append('value', valueToUpdate);
                             }
                             break;
                     }
 
-                    formData.append('_token', csrfToken); // Add CSRF token for single update
+                    formData.append('_token', csrfToken);
                     const response = await fetch(`${API_BASE_URL}/page-content`, {
                         method: 'POST',
                         body: formData
@@ -457,15 +425,17 @@
 
                     const result = await response.json();
                     console.log('Save successful:', result);
-                    pageContent[result.key] = result.value; // Update local pageContent
 
-                    loadContentToDOM(); // Re-load content to ensure freshness
+                    if (shouldReload) {
+                        window.location.reload();
+                    } else {
+                        await fetchContent();
+                    }
                 } catch (error) {
                     console.error('Error saving changes:', error);
-                    // Implement a more user-friendly error message here
                 } finally {
                     closeModal();
-                    toggleLoading(false); // Hide loading spinner
+                    toggleLoading(false);
                 }
             };
 

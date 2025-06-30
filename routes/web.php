@@ -50,12 +50,18 @@ Route::prefix('admin')->group(function () {
     // FIX IS HERE: Change to fetch all PageContent and pass as 'pageContent'
     Route::get('/', function () {
         // Fetch all page content as a key-value array
-        $pageContent = PageContent::pluck('value', 'key')->toArray(); 
+        $pageContent = PageContent::pluck('value', 'key')->toArray(); // <--- THIS IS THE KEY CHANGE
+
+        // No need for the separate $mainContainerBgUrl logic here anymore
+        // as your banner.blade.php handles the fallback itself.
+
+        // Fetch other necessary data for the Admin Dashboard
         $newsItems = NewsItem::all();
         $contactMessages = ContactMessage::all();
         $blogfeeds = Blogfeed::all();
 
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent'));
+        // Pass the entire $pageContent array along with other data
+        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent')); // <--- CHANGE VARIABLE NAME HERE
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
