@@ -4,6 +4,8 @@ Follow these steps to get your INFO-WEB-APP project up and running on your local
 Prerequisites
 Before you begin, ensure you have the following installed:
 
+[USE THE !!OBERVER!! Branch to clone our project. do not use main the Branch.]
+
 PHP: Version 8.1 or higher (as required by Laravel 10/11)
 
 Composer: For PHP dependency management.
