@@ -9,7 +9,7 @@
 
             <div class="flex flex-col items-center gap-4 mb-8">
                 <div class="flex items-center gap-4">
-                    <img src="{{ asset('storage/Contact_icon1.svg') }}" alt="Gear Icon" class="w-16 h-16">
+                    <img src="{{ asset('storage/Connect_icon.svg') }}" alt="Gear Icon" class="w-16 h-16">
                     <h1 class="text-black text-4xl font-bold">Connect with our team</h1>
                 </div>
 
@@ -66,7 +66,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex items-center gap-4 bg-blue-950 rounded-xl p-4 shadow-sm transform transition duration-300 ease-in-out hover:scale-105 hover:bg-blue-800 cursor-pointer">
                             <div class="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center">
-                                <img src="{{ asset('storage/Contact_add.svg') }}" alt="Address Icon" class="w-6 h-6">
+                                <img src="{{ asset('storage/address_icon.svg') }}" alt="Address Icon" class="w-6 h-6">
                             </div>
                             <div>
                                 <div class="text-white text-base font-bold">Address</div>
@@ -76,7 +76,7 @@
 
                         <div class="flex items-center gap-4 bg-blue-950 rounded-xl p-4 shadow-sm transform transition duration-300 ease-in-out hover:scale-105 hover:bg-blue-800 cursor-pointer">
                             <div class="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center">
-                                <img src="{{ asset('storage/Contact_mobile.svg') }}" alt="Mobile Icon" class="w-6 h-6">
+                                <img src="{{ asset('storage/Mobile_icon.svg') }}" alt="Mobile Icon" class="w-6 h-6">
                             </div>
                             <div>
                                 <div class="text-white text-base font-bold">Mobile</div>
@@ -86,7 +86,7 @@
 
                         <div class="flex items-center gap-4 bg-blue-950 rounded-xl p-4 shadow-sm transform transition duration-300 ease-in-out hover:scale-105 hover:bg-blue-800 cursor-pointer">
                             <div class="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center">
-                                <img src="{{ asset('storage/Contact_avail.svg') }}" alt="Availability Icon" class="w-6 h-6">
+                                <img src="{{ asset('storage/Availability_icon.svg') }}" alt="Availability Icon" class="w-6 h-6">
                             </div>
                             <div>
                                 <div class="text-white text-base font-bold">Availability</div>
@@ -96,7 +96,7 @@
 
                         <div class="flex items-center gap-4 bg-blue-950 rounded-xl p-4 shadow-sm transform transition duration-300 ease-in-out hover:scale-105 hover:bg-blue-800 cursor-pointer">
                             <div class="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center">
-                                <img src="{{ asset('storage/Contact_email.svg') }}" alt="Email Icon" class="w-6 h-6">
+                                <img src="{{ asset('storage/Email_icon.svg') }}" alt="Email Icon" class="w-6 h-6">
                             </div>
                             <div>
                                 <div class="text-white text-base font-bold">E Mail</div>
