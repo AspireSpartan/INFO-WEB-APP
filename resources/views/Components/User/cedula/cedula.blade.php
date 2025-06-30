@@ -1,4 +1,4 @@
-<div class="max-w-4xl mx-auto bg-white p-6 md:p-8 lg:p-10 rounded-lg shadow-xl border border-gray-200">
+<div class="max-w-4xl mx-auto bg-white p-6 md:p-8 lg:p-10 rounded-lg shadow-xl border border-gray-200 mt-20">
 
         <!-- Removed Laravel Form Integration attributes (action, method) and @csrf -->
         <form>
