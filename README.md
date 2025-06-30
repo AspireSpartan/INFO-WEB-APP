@@ -2,14 +2,18 @@
 Setup Commands
 
     REQUIRED to Install after Cloning (REQUIRED to install during production/coding)
-1. cp .env.example .env
-2. php artisan key:generate
-3. change the DB properties in the .env file
-4. then  last php artisan migrate
-5. mkdir -p public/storage/news
-6. composer require fakerphp/faker --dev
-7. php artisan db:seed --class=NewsfeedSeeder
-8. php artisan storage:link
+1. composer install
+2. cp .env.example .env
+3. php artisan key:generate
+4. change the DB properties in the .env file
+5. then  last php artisan migrate
+6. mkdir -p public/storage/news
+7. composer require fakerphp/faker --dev
+8. php artisan db:seed --class=NewsfeedSeeder
+9. php artisan storage:link
+
+after that you can now RUN the app at your localhost
+1. php artisan serve
 
 (if images are not rendering or loaded try this command)
 1. rmdir public\storage
