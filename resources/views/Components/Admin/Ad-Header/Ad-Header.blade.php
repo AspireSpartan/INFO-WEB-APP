@@ -154,7 +154,7 @@
             <div class="relative flex items-center gap-4" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open" class="flex items-center gap-4 focus:outline-none">
                     <span class="text-white text-base font-normal font-questrial hidden md:block">Admin</span>
-                    <img class="w-14 h-14 rounded-full object-cover" src="https://placehold.co/60x60/cccccc/white?text=Admin" alt="Admin Profile" />
+                    <img class="w-14 h-14 rounded-full object-cover" src="{{ asset('storage/user_image.png') }}" alt="Admin Profile" />
                 </button>
 
                 <div x-show="open"
