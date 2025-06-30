@@ -81,9 +81,6 @@
                         @method('DELETE')
                         <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" role="menuitem">Delete</button>
                     </form>
-
-                    {{-- View Details Link (assuming you want to use the show method) --}}
-                    <a href="{{ route('news.show', $newsItem->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View Details</a>
                 </div>
             </div>
         </div>
