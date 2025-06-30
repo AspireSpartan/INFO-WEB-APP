@@ -4,7 +4,12 @@
 @section('title', 'Admin View')
 
 @section('content')
-<x-Admin.Ad-Header.Ad-Header :newsItems="$newsItems" :contactMessages="$contactMessages" :blogfeeds="$blogfeeds"></x-Admin.Ad-Header.Ad-Header>
+@include('Components.Admin.Ad-Header.Ad-Header', [
+    'newsItems' => $newsItems ?? [],
+    'contactMessages' => $contactMessages ?? [],
+    'blogfeeds' => $blogfeeds ?? [],
+    'pageContent' => $pageContent ?? []
+])
 
     <script>
         function confirmBulkDelete() {
