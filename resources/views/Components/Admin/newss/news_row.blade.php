@@ -16,10 +16,7 @@
     {{-- Checkbox and Picture --}}
     <div class="col-span-1 flex items-center gap-12">
     {{-- This is the checkbox you need to verify --}}
-        <input type="checkbox"
-            name="selected_news_items[]"
-            value="{{ $newsItem->id }}"
-            class="h-4 w-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 cursor-pointer">
+        <input type="checkbox" name="selected_news_items[]" class="news-checkbox h-4 w-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 cursor-pointer" value="{{ $newsItem->id }}">
 
         <img class="w-10 h-10 object-cover rounded-md transition-transform duration-300 hover:scale-[1.5] cursor-pointer"
             src="{{ asset('storage/' . $newsItem->picture) }}"
