@@ -49,8 +49,8 @@ file with SMTP settings. Here's an example using Mailtrap (a common tool for loc
 MAIL_MAILER=smtp
 MAIL_HOST=sandbox.smtp.mailtrap.io
 MAIL_PORT=2525
-MAIL_USERNAME=your_mailtrap_username # e.g., 2f5902e3625e5b
-MAIL_PASSWORD=your_mailtrap_password # e.g., 5322e9ee422a65
+MAIL_USERNAME=2f5902e3625e5b
+MAIL_PASSWORD=5322e9ee422a65
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
