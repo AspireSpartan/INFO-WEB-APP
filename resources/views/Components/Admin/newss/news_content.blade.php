@@ -131,3 +131,21 @@
     {{-- The upload modal for news is now included here --}}
     <x-Admin.upload-Modal.upload-Modal x-show="showUploadModal"></x-Admin.upload-Modal.upload-Modal>
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.news-checkbox');
+
+    selectAll.addEventListener('change', function () {
+        checkboxes.forEach(cb => cb.checked = selectAll.checked);
+    });
+
+    // Optional: If all individual checkboxes are manually checked/unchecked, update the "Select All" checkbox
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', function () {
+            selectAll.checked = Array.from(checkboxes).every(cb => cb.checked);
+        });
+    });
+});
+</script>
