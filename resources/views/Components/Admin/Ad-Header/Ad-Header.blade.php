@@ -1,5 +1,4 @@
 @props(['newsItems', 'contactMessages', 'blogfeeds']) {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
-
 <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
          // Initialize activeScreen based on session flash data (if redirected),
@@ -202,7 +201,7 @@
                     <div>@include('Components.Admin.blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
                 </template>
                 <template x-if="screen === 'banner'">
-                    <div>@include('Components.Admin.Content-Manager.banner.banner')</div>
+                    <div>@include('Components.Admin.Content-Manager.banner.banner', ['pageContent' => $pageContent ?? []])</div>
                 </template>
                 <template x-if="screen === 'latest news'">
                     <div><h1>Latest News Content</h1></div>

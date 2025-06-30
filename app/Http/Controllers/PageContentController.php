@@ -31,34 +31,23 @@ namespace App\Http\Controllers;
                 $request->validate([
                     'key' => 'required|string',
                     'value' => 'nullable|string',
-                    'file' => 'nullable|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+                    'file' => 'nullable|mimes:jpeg,png,jpg,gif,svg,webp|max:10120',
                 ]);
 
                 $key = $request->input('key');
                 $value = $request->input('value');
-                $file = $request->file('file');
 
                 if ($request->hasFile('file')) {
-                    Log::info('PageContentController@update: File detected for key: ' . $key); 
+                    $file = $request->file('file');
                     $path = $file->store('page_images', 'public');
-                    $value = asset('storage/' . $path);
-                    Log::info('PageContentController@update: File stored at: ' . $path . ', generated URL (using asset()): ' . $value); 
-                } else {
-                    Log::info('PageContentController@update: No new file uploaded for key: ' . $key . ', using provided value: ' . ($value ?? 'NULL (empty value)'));
+                    $value = $path; // Only 'page_images/filename.png'
                 }
 
-                $pageContent = PageContent::updateOrCreate(
-                    ['key' => $key],
-                    ['value' => $value]
-                );
+                $pageContent = PageContent::updateOrCreate(['key' => $key], ['value' => $value]);
 
-                Log::info('PageContentController@update: Content saved to DB:', ['key' => $pageContent->key, 'value' => $pageContent->value]);
+                Log::info('PageContentController@update: Content saved to DB:', ['key' => $key, 'value' => $value]);
 
-                return response()->json([
-                    'message' => 'Content updated successfully!',
-                    'key' => $pageContent->key,
-                    'value' => $pageContent->value
-                ]);
+                return response()->json(['key' => $key, 'value' => $value]);
             }
 
             public function index() // Or whatever your method name is, e.g., 'showDashboard', 'manage'
@@ -68,7 +57,7 @@ namespace App\Http\Controllers;
 
                 // Return the admin dashboard view, passing the $pageContent array
                 // Make sure this path ('Admin_Side_Screen.Admin-Dashboard') matches how you call the view in your route
-                return view('Admin_Side_Screen.Admin-Dashboard', compact('pageContent'));
+                return view('Components.Admin.Ad-Header.Ad-Header', compact('pageContent'));
             }
             // The initializeDefaultContent() method has been removed and moved to PageContentSeeder.php
         }
