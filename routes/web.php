@@ -59,7 +59,7 @@ Route::prefix('admin')->group(function () {
         $blogfeeds = Blogfeed::all();
 
         // Pass the entire $pageContent array along with other data
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent')); 
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
