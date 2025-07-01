@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Blogfeed;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Models\PageContent;
 use App\Models\NewsItem;
 use App\Models\ContactMessage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
 {
@@ -20,6 +21,7 @@ class BlogController extends Controller
      */
     public function index()
     {
+        $pageContent = PageContent::pluck('value', 'key')->toArray();
         // Retrieve all blog posts from the database
         $blogfeeds = Blogfeed::orderBy('published_at', 'desc')->get();
 
@@ -37,7 +39,7 @@ class BlogController extends Controller
 
         // Pass all necessary data to the main admin dashboard view
         // The 'activeAdminScreen' will be read by Alpine.js in Ad-Header.blade.php
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent'));
         // Removed: ->with('blogs'); as this flag is replaced by 'activeAdminScreen' session flash
     }
 
