@@ -63,7 +63,7 @@ class NewsController extends Controller
         $blogfeeds = Blogfeed::all();
 
         // This method just loads the view with data. The active screen logic is in Ad-Header.blade.php
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages', 'blogfeeds'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds'));
     }
 
     /**
