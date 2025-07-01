@@ -48,10 +48,12 @@
                         <img
                             src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
                             alt="{{ $news->title }}"
-                            class="w-full h-64 object-cover rounded-md mb-3"
-                            style="width: 288px; height: 256px;"
+                            class="rounded-md mb-3 object-cover"
+                            style="width: 288px; height: 256px; min-width: 288px; max-width: 288px; min-height: 256px; max-height: 256px;"
                         >
-                        <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">{{ $news->title }}</h3>
+                        <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">
+                            {{ \Illuminate\Support\Str::limit($news->title, 25, '...') }}
+                        </h3>
                         <p class="text-sm text-gray-600 mb-2">
                             {{ $news->author }} | {{ $news->date->format('M d, Y') }}
                             @if($news->sponsored)
@@ -83,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextBtn = document.getElementById('next-news-btn');
     const newsCarouselInner = document.getElementById('news-carousel-inner'); // Get the inner container
     const cardWidth = 320 + 24; // Card width + gap (1.5rem = 24px)
-    const visibleCount = 3; // Let's display 3 full cards + a hint of the next one
+    const visibleCount = 4; // Let's display 3 full cards + a hint of the next one
     let start = 0;
 
     function positionCards() {
