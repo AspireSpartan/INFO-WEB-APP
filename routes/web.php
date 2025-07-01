@@ -47,13 +47,11 @@ Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'increme
 
 // Admin Routes (Grouped for clarity and potential middleware)
 Route::prefix('admin')->group(function () {
-    // FIX IS HERE: Change to fetch all PageContent and pass as 'pageContent'
+
     Route::get('/', function () {
         // Fetch all page content as a key-value array
-        $pageContent = PageContent::pluck('value', 'key')->toArray(); // <--- THIS IS THE KEY CHANGE
+        $pageContent = PageContent::pluck('value', 'key')->toArray(); 
 
-        // No need for the separate $mainContainerBgUrl logic here anymore
-        // as your banner.blade.php handles the fallback itself.
 
         // Fetch other necessary data for the Admin Dashboard
         $newsItems = NewsItem::all();
@@ -61,7 +59,7 @@ Route::prefix('admin')->group(function () {
         $blogfeeds = Blogfeed::all();
 
         // Pass the entire $pageContent array along with other data
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent')); // <--- CHANGE VARIABLE NAME HERE
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
