@@ -37,7 +37,7 @@ class BlogController extends Controller
 
         // Pass all necessary data to the main admin dashboard view
         // The 'activeAdminScreen' will be read by Alpine.js in Ad-Header.blade.php
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('blogfeeds', 'newsItems', 'contactMessages'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages'));
         // Removed: ->with('blogs'); as this flag is replaced by 'activeAdminScreen' session flash
     }
 
