@@ -1,5 +1,5 @@
 <div class="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div class="bg-white p-6 sm:p-8 md:p-10 rounded-lg shadow-xl w-full max-w-4xl border border-gray-200">
+        <div class="bg-white p-6 sm:p-8 md:p-10 rounded-lg shadow-xl w-full max-w-4xl border border-gray-200 mt-[60px]">
             <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-6 sm:mb-8">Business Permit Application</h1>
             <p class="text-center text-gray-600 mb-8 sm:mb-10">Please fill out the form below accurately to apply for your business permit.</p>
 

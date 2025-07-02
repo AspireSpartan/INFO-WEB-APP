@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Blogfeed;
-use App\Models\PageContent; // IMPORTANT: Changed from SectionBanner to PageContent
+use App\Models\NewsItem;
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
-use App\Models\Project;
-
-use App\Models\NewsItem;
+use App\Models\ProjectDescription;
+use App\Models\PageContent; // IMPORTANT: Changed from SectionBanner to PageContent
 
 
 class HomeController extends Controller
@@ -26,6 +26,7 @@ class HomeController extends Controller
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         // Fetch all key-value pairs from the 'page_contents' table
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
+        $description = ProjectDescription::first();
 
         // Provide a fallback if no content is found in the database.
         // These defaults should match what your PageContentSeeder provides
@@ -51,7 +52,7 @@ class HomeController extends Controller
 
         // Pass all necessary data to the home view
 
-        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects')); // Pass the pageContent array
+        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description')); // Pass the pageContent array
     }
 
     /**
