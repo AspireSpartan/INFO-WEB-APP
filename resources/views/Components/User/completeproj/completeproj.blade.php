@@ -44,56 +44,59 @@
         <div class="text-amber-400 text-lg font-normal font-['Sans_Serif_Collection']">SHOW ALL PROJECTS</div>
     </a>
 
-    <script>
-        // transition or animation parameters are here
-        // Pass projects data from PHP to JS
-        const projects = @json($projects);
+<script>
+    const projects = @json($projects);
 
-        let currentIndex = 0;
+    let currentIndex = 0;
 
-        function updateCards() {
-            const card1 = document.getElementById('card1');
-            const card2 = document.getElementById('card2');
+    function updateCards() {
+        const card1 = document.getElementById('card1');
+        const card2 = document.getElementById('card2');
 
-            card1.classList.add('project-card-hidden-right'); 
-            card2.classList.add('project-card-hidden-left');  
+        card1.classList.add('project-card-hidden-right'); 
+        card2.classList.add('project-card-hidden-left');  
 
-            setTimeout(() => {
-                const firstIndex = currentIndex % projects.length;
-                const secondIndex = (currentIndex + 1) % projects.length;
+        setTimeout(() => {
+            const firstIndex = currentIndex % projects.length;
+            const secondIndex = (currentIndex + 1) % projects.length;
 
-                const firstProject = projects[firstIndex];
-                const secondProject = projects[secondIndex];
+            const firstProject = projects[firstIndex];
+            const secondProject = projects[secondIndex];
 
-                document.getElementById('card1-title').textContent = firstProject.title;
-                document.getElementById('card1-text').innerHTML = `
-                    <span class="text-amber-400 font-bold">Site:</span> ${firstProject.site}<br/>
-                    <span class="text-amber-400 font-bold">Scope:</span> ${firstProject.scope}<br/>
-                    <span class="text-amber-400 font-bold">Outcome:</span> ${firstProject.outcome}
-                `;
-                document.getElementById('card1-img').src = firstProject.image_url;
-                document.getElementById('card1-img').alt = firstProject.title;
+            // The image_url from the controller should already be the complete URL.
+            // No need for baseImageUrl concatenation here.
 
-                document.getElementById('card2-title').textContent = secondProject.title;
-                document.getElementById('card2-text').innerHTML = `
-                    <span class="text-amber-400 font-bold">Site:</span> ${secondProject.site}<br/>
-                    <span class="text-amber-400 font-bold">Scope:</span> ${secondProject.scope}<br/>
-                    <span class="text-amber-400 font-bold">Outcome:</span> ${secondProject.outcome}
-                `;
-                document.getElementById('card2-img').src = secondProject.image_url;
-                document.getElementById('card2-img').alt = secondProject.title;
+            document.getElementById('card1-title').textContent = firstProject.title;
+            document.getElementById('card1-text').innerHTML = `
+                <span class="text-amber-400 font-bold">Site:</span> ${firstProject.site}<br/>
+                <span class="text-amber-400 font-bold">Scope:</span> ${firstProject.scope}<br/>
+                <span class="text-amber-400 font-bold">Outcome:</span> ${firstProject.outcome}
+            `;
+            // Use firstProject.image_url directly as it's already a full URL
+            document.getElementById('card1-img').src = firstProject.image_url; 
+            document.getElementById('card1-img').alt = firstProject.title;
 
-                card1.classList.remove('project-card-hidden-right');
-                card2.classList.remove('project-card-hidden-left');
+            document.getElementById('card2-title').textContent = secondProject.title;
+            document.getElementById('card2-text').innerHTML = `
+                <span class="text-amber-400 font-bold">Site:</span> ${secondProject.site}<br/>
+                <span class="text-amber-400 font-bold">Scope:</span> ${secondProject.scope}<br/>
+                <span class="text-amber-400 font-bold">Outcome:</span> ${secondProject.outcome}
+            `;
+            // Use secondProject.image_url directly as it's already a full URL
+            document.getElementById('card2-img').src = secondProject.image_url; 
+            document.getElementById('card2-img').alt = secondProject.title;
 
-                currentIndex = (currentIndex + 2) % projects.length;
-            }, 700); 
-        }
+            card1.classList.remove('project-card-hidden-right');
+            card2.classList.remove('project-card-hidden-left');
 
-        updateCards();
+            currentIndex = (currentIndex + 2) % projects.length;
+        }, 700); 
+    }
 
-        setInterval(updateCards, 9000);
-    </script>
+    updateCards();
+
+    setInterval(updateCards, 9000);
+</script>
     <style>
         .project-card-transition {
             transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
