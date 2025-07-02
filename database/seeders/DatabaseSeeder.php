@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PageContentSeeder::class);
         $this->call(BlogfeedSeeder::class);
         $this->call(NewsItemSeeder::class);
+        $this->call(ProjectDescriptionSeeder​::class);
         $this->call(ProjectSeeder::class);
 
         // Your existing User factory call is retained here
