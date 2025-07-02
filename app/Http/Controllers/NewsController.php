@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PageContent;
-use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
+use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\PageContent;
 use Illuminate\Http\Request;
 use App\Models\ContactMessage;
+use App\Models\ProjectDescription;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log; // Added for logging
+use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
 
 class NewsController extends Controller
 {
@@ -59,13 +61,14 @@ class NewsController extends Controller
         }
         
         $projects = Project::all();
+        $description = ProjectDescription::first();
         $newsItems = $query->get();
         $pageContent = PageContent::pluck('value', 'key')->toArray();
         $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
         $blogfeeds = Blogfeed::all();
 
         // This method just loads the view with data. The active screen logic is in Ad-Header.blade.php
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description'));
     }
 
     /**

@@ -87,7 +87,7 @@
                         role="menu" aria-orientation="vertical" aria-labelledby="services-menu-button" tabindex="-1">
                     <div class="py-1" role="none">
                         <a href="/blog" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Latest Articles</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Tech News</a>
+                        <a href="/showallproject" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Projects</a>
                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Case Studies</a>
                     </div>
                 </div>

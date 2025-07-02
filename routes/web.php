@@ -1,17 +1,21 @@
 <?php
 
-use App\Models\Blogfeed;
 use App\Models\Project;
+use App\Models\Blogfeed;
 use App\Models\NewsItem;
-use App\Models\ContactMessage;
 use App\Models\PageContent; 
+use App\Models\ContactMessage;
+use App\Models\ProjectDescription;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageContentController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProjectDescriptionController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -40,7 +44,8 @@ Route::get('/contact-us', function () {
 
 Route::get('/showallproject', function () {
     $projects = Project::all();
-    return view('User_Side_Screen.showallproject', compact('projects'));
+    $description = ProjectDescription::first(); // Fetch the single description row
+    return view('User_Side_Screen.showallproject', compact('projects', 'description'));
 })->name('showallproject');
 
 Route::get('/cedula', function () {
@@ -80,8 +85,9 @@ Route::prefix('admin')->group(function () {
         $contactMessages = ContactMessage::all();
         $blogfeeds = Blogfeed::all();
         $projects = Project::all();
+        $description = ProjectDescription::first(); 
 
-       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects'));
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
@@ -90,4 +96,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('blogs', BlogController::class)->parameters([
         'blogs' => 'blogfeed'
     ]);
+    Route::resource('projects', ProjectController::class);
+    Route::get('projects', [ProjectController::class, 'indexAdmin'])->name('projects.indexAdmin');
+    Route::post('/project-description/update', [ProjectDescriptionController::class, 'update'])->name('project-description.update');
 });
