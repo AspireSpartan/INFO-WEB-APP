@@ -57,14 +57,15 @@ class NewsController extends Controller
                 $query->orderBy('date', 'desc');
                 break;
         }
-
+        
+        $projects = Project::all();
         $newsItems = $query->get();
         $pageContent = PageContent::pluck('value', 'key')->toArray();
         $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
         $blogfeeds = Blogfeed::all();
 
         // This method just loads the view with data. The active screen logic is in Ad-Header.blade.php
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects'));
     }
 
     /**
