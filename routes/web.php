@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Blogfeed;
+use App\Models\Project;
 use App\Models\NewsItem;
 use App\Models\ContactMessage;
 use App\Models\PageContent; 
@@ -11,7 +12,6 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageContentController;
-use App\Models\Project;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -75,15 +75,13 @@ Route::get('/cedula', function () {
 Route::prefix('admin')->group(function () {
 
     Route::get('/', function () {
-        // Fetch all page content as a key-value array
         $pageContent = PageContent::pluck('value', 'key')->toArray(); 
-        // Fetch other necessary data for the Admin Dashboard
         $newsItems = NewsItem::all();
         $contactMessages = ContactMessage::all();
         $blogfeeds = Blogfeed::all();
+        $projects = Project::all();
 
-        // Pass the entire $pageContent array along with other data
-       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent'));
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
@@ -92,5 +90,4 @@ Route::prefix('admin')->group(function () {
     Route::resource('blogs', BlogController::class)->parameters([
         'blogs' => 'blogfeed'
     ]);
-
 });
