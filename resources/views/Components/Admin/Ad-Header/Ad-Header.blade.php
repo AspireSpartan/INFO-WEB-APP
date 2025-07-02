@@ -1,13 +1,13 @@
 @extends('layouts.admin') {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
 @section('title', 'Admin View')
 @section('content')
-@props(['newsItems', 'contactMessages', 'blogfeeds']) 
-<div class="bg-neutral-200 min-h-screen flex flex-col"
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects']) 
+    <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
 
          activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
          notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-         screens: ['dashboard', 'news', 'blog', 'content manager', 'notifications', 'banner', 'latest news', 'mission', 'projects', 'developers', 'links'],
+         screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latest news', 'mission', 'developers', 'links'],
 
 
          resetNotifications() {
@@ -52,18 +52,48 @@
         </div>
 
         <nav class="hidden lg:flex items-center gap-x-8">
-            <template x-for="screen in ['dashboard', 'news', 'blog']" :key="screen">
+            <template x-for="screen in ['dashboard', 'news']" :key="screen">
                 <a href="#"
-                   @click.prevent="switchScreen(screen)"
-                   :class="{'text-amber-400': activeScreen === screen, 'text-white': activeScreen !== screen}"
-                   class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize"
-                   x-text="screen">
+                @click.prevent="switchScreen(screen)"
+                :class="{'text-amber-400': activeScreen === screen, 'text-white': activeScreen !== screen}"
+                class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize"
+                x-text="screen">
                 </a>
             </template>
 
+            <!-- Blog dropdown -->
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open"
-                        :class="{'text-amber-400': ['banner', 'latest news', 'mission', 'projects', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latest news', 'mission', 'projects', 'developers', 'links'].includes(activeScreen) || open)}"
+                        :class="{'text-amber-400': ['blog', 'projects'].includes(activeScreen) || open, 'text-white': !(['blog', 'projects'].includes(activeScreen) || open)}"
+                        class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
+                    Blog
+                    <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                    <div x-show="open"
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="origin-top-left absolute top-full left-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
+                    role="menu">
+                    <div class="py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click.prevent="switchScreen('blog'); open = false">Latest Articles</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click.prevent="switchScreen('projects'); open = false">Projects</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Manager dropdown -->
+            <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                <button @click="open = !open"
+                        :class="{'text-amber-400': ['banner', 'latest news', 'mission', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latest news', 'mission', 'developers', 'links'].includes(activeScreen) || open)}"
                         class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
                     Content Manager
                     <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -72,27 +102,25 @@
                 </button>
 
                 <div x-show="open"
-                     x-transition:enter="transition ease-out duration-100"
-                     x-transition:enter-start="transform opacity-0 scale-95"
-                     x-transition:enter-end="transform opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-75"
-                     x-transition:leave-start="transform opacity-100 scale-100"
-                     x-transition:leave-end="transform opacity-0 scale-95"
-                     class="origin-top-left absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
-                     role="menu">
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="origin-top-left absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
+                    role="menu">
                     <div class="py-1">
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('banner'); open = false">Banner</a>
+                        @click.prevent="switchScreen('banner'); open = false">Banner</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('latest news'); open = false">Latest News</a>
+                        @click.prevent="switchScreen('latest news'); open = false">Latest News</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('mission'); open = false">Mission</a>
+                        @click.prevent="switchScreen('mission'); open = false">Mission</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('projects'); open = false">Projects</a>
+                        @click.prevent="switchScreen('developers'); open = false">Developers</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('developers'); open = false">Developers</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('links'); open = false">Links</a>
+                        @click.prevent="switchScreen('links'); open = false">Links</a>
                     </div>
                 </div>
             </div>
@@ -191,6 +219,9 @@
                 <template x-if="screen === 'blog'">
                     <div>@include('Components.Admin.blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
                 </template>
+                <template x-if="screen === 'projects'">
+                    <div>@include('Components.Admin.blog.projects.project_content', ['projects' => $projects ?? []])</div>
+                </template>
                 <template x-if="screen === 'banner'">
                     <div>@include('Components.Admin.Content-Manager.banner.banner', ['pageContent' => $pageContent ?? []])</div>
                 </template>
@@ -199,9 +230,6 @@
                 </template>
                 <template x-if="screen === 'mission'">
                     <div><h1>Mission Content</h1></div>
-                </template>
-                <template x-if="screen === 'projects'">
-                    <div><h1>Projects Content</h1></div>
                 </template>
                 <template x-if="screen === 'developers'">
                     <div><h1>Developers Content</h1></div>
