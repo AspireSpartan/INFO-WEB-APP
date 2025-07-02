@@ -9,6 +9,6 @@
     @include('Components.User.banner.banner', ['pageContent' => $pageContent]) 
     <x-User.latestnews.latestnews :newsItems="$newsItems"></x-User.latestnews.latestnews>
     <x-User.3goals.3goals></x-User.3goals.3goals>
-    <x-User.completeproj.completeproj></x-User.completeproj.completeproj>
+    <x-User.completeproj.completeproj :projects="$projects"></x-User.completeproj.completeproj>
     <x-User.teamdev.teamdev></x-User.teamdev.teamdev>
 @endsection
