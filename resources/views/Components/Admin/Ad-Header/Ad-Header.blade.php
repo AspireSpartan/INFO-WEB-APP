@@ -1,13 +1,14 @@
-@props(['newsItems', 'contactMessages', 'blogfeeds']) {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
-
-<div class="bg-neutral-200 min-h-screen flex flex-col"
+@extends('layouts.admin') {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
+@section('title', 'Admin View')
+@section('content')
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects']) 
+    <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
-         // Initialize activeScreen based on session flash data (if redirected),
-         // URL parameter (if user navigated directly), or default to 'dashboard'.
+
          activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
          notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-         screens: ['dashboard', 'news', 'blog', 'content manager', 'notifications', 'banner', 'latest news', 'mission', 'projects', 'developers', 'links'],
-         // Removed: showUploadModal from here, as it's now managed within news_content.blade.php
+         screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latest news', 'mission', 'developers', 'links'],
+
 
          resetNotifications() {
              this.notificationCount = 0;
@@ -16,22 +17,18 @@
 
          switchScreen(screenName) {
              this.activeScreen = screenName;
-             // Update URL to reflect current screen for better bookmarking and back/forward behavior
              const url = new URL(window.location);
              url.searchParams.set('screen', screenName);
              history.pushState({ screen: screenName }, '', url.toString()); // Pass state for popstate
          }
      }"
      x-init="
-         // Handle initial URL parameters on page load if present
-         // This ensures the screen state is picked up from the URL query string
          const initialScreenFromUrl = new URLSearchParams(window.location.search).get('screen');
          if (initialScreenFromUrl && screens.includes(initialScreenFromUrl) && activeScreen === 'dashboard') {
              // Only override if the activeScreen hasn't been set by a session flash already
              activeScreen = initialScreenFromUrl;
          }
 
-         // Listen for popstate event (browser back/forward buttons) to update screen
          window.addEventListener('popstate', (event) => {
              const popUrlParams = new URLSearchParams(window.location.search);
              const popScreen = popUrlParams.get('screen');
@@ -42,15 +39,8 @@
              }
          });
 
-         // The showUploadModal logic for errors is now handled in news_content.blade.php directly.
-         // If showCreateBlogModal is a separate modal that is still needed here, keep its logic.
-         // Assuming showCreateBlogModal also uses the same upload-Modal component for now,
-         // but if it's a *different* modal, you would need a separate Alpine state for it.
          @if ($errors->any() && session('showCreateBlogModal'))
-             // If blog modal is meant to be opened from here, ensure its state is available
-             // This needs clarification if blog modal is separate from upload-Modal.
-             // For now, assuming blog modal is distinct and not managed by `showUploadModal` from here.
-             // If it's the *same* modal, this line would be removed, and blog controller would also redirect to news.index with screen=blog.
+
          @endif
      ">
 
@@ -62,18 +52,48 @@
         </div>
 
         <nav class="hidden lg:flex items-center gap-x-8">
-            <template x-for="screen in ['dashboard', 'news', 'blog']" :key="screen">
+            <template x-for="screen in ['dashboard', 'news']" :key="screen">
                 <a href="#"
-                   @click.prevent="switchScreen(screen)"
-                   :class="{'text-amber-400': activeScreen === screen, 'text-white': activeScreen !== screen}"
-                   class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize"
-                   x-text="screen">
+                @click.prevent="switchScreen(screen)"
+                :class="{'text-amber-400': activeScreen === screen, 'text-white': activeScreen !== screen}"
+                class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize"
+                x-text="screen">
                 </a>
             </template>
 
+            <!-- Blog dropdown -->
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open"
-                        :class="{'text-amber-400': ['banner', 'latest news', 'mission', 'projects', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latest news', 'mission', 'projects', 'developers', 'links'].includes(activeScreen) || open)}"
+                        :class="{'text-amber-400': ['blog', 'projects'].includes(activeScreen) || open, 'text-white': !(['blog', 'projects'].includes(activeScreen) || open)}"
+                        class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
+                    Blog
+                    <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                    <div x-show="open"
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="origin-top-left absolute top-full left-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
+                    role="menu">
+                    <div class="py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click.prevent="switchScreen('blog'); open = false">Latest Articles</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click.prevent="switchScreen('projects'); open = false">Projects</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Manager dropdown -->
+            <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                <button @click="open = !open"
+                        :class="{'text-amber-400': ['banner', 'latest news', 'mission', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latest news', 'mission', 'developers', 'links'].includes(activeScreen) || open)}"
                         class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
                     Content Manager
                     <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -82,27 +102,25 @@
                 </button>
 
                 <div x-show="open"
-                     x-transition:enter="transition ease-out duration-100"
-                     x-transition:enter-start="transform opacity-0 scale-95"
-                     x-transition:enter-end="transform opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-75"
-                     x-transition:leave-start="transform opacity-100 scale-100"
-                     x-transition:leave-end="transform opacity-0 scale-95"
-                     class="origin-top-left absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
-                     role="menu">
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="origin-top-left absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
+                    role="menu">
                     <div class="py-1">
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('banner'); open = false">Banner</a>
+                        @click.prevent="switchScreen('banner'); open = false">Banner</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('latest news'); open = false">Latest News</a>
+                        @click.prevent="switchScreen('latest news'); open = false">Latest News</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('mission'); open = false">Mission</a>
+                        @click.prevent="switchScreen('mission'); open = false">Mission</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('projects'); open = false">Projects</a>
+                        @click.prevent="switchScreen('developers'); open = false">Developers</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('developers'); open = false">Developers</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                           @click.prevent="switchScreen('links'); open = false">Links</a>
+                        @click.prevent="switchScreen('links'); open = false">Links</a>
                     </div>
                 </div>
             </div>
@@ -155,7 +173,7 @@
             <div class="relative flex items-center gap-4" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open" class="flex items-center gap-4 focus:outline-none">
                     <span class="text-white text-base font-normal font-questrial hidden md:block">Admin</span>
-                    <img class="w-14 h-14 rounded-full object-cover" src="https://placehold.co/60x60/cccccc/white?text=Admin" alt="Admin Profile" />
+                    <img class="w-14 h-14 rounded-full object-cover" src="{{ asset('storage/user_image.png') }}" alt="Admin Profile" />
                 </button>
 
                 <div x-show="open"
@@ -201,17 +219,17 @@
                 <template x-if="screen === 'blog'">
                     <div>@include('Components.Admin.blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
                 </template>
+                <template x-if="screen === 'projects'">
+                    <div>@include('Components.Admin.blog.projects.project_content', ['projects' => $projects ?? []])</div>
+                </template>
                 <template x-if="screen === 'banner'">
-                    <div>@include('Components.Admin.Content-Manager.banner.banner')</div>
+                    <div>@include('Components.Admin.Content-Manager.banner.banner', ['pageContent' => $pageContent ?? []])</div>
                 </template>
                 <template x-if="screen === 'latest news'">
                     <div><h1>Latest News Content</h1></div>
                 </template>
                 <template x-if="screen === 'mission'">
                     <div><h1>Mission Content</h1></div>
-                </template>
-                <template x-if="screen === 'projects'">
-                    <div><h1>Projects Content</h1></div>
                 </template>
                 <template x-if="screen === 'developers'">
                     <div><h1>Developers Content</h1></div>
@@ -247,3 +265,48 @@
         }
     });
 </script>
+
+<script>
+        function confirmBulkDelete() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="selected_news_items[]"]:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+
+            if (selectedIds.length === 0) {
+                alert('Please select at least one news item to delete.');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete ${selectedIds.length} selected news item(s)?`)) {
+                const form = document.createElement('form');
+                form.method = 'POST'; // This is correct, as Laravel spoofs DELETE from POST
+                form.action = '{{ route('news.bulkDestroy') }}'; // This should resolve to /admin/news/bulk-delete
+
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                form.appendChild(csrfInput);
+
+                // This is the crucial part for spoofing the DELETE m   ethod
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE'; // Ensure this is exactly 'DELETE'
+                form.appendChild(methodInput);
+
+                selectedIds.forEach(id => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = id;
+                    form.appendChild(input);
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+@endsection
+
+

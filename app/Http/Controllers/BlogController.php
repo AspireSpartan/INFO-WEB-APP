@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Blogfeed;
+use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Models\PageContent;
 use App\Models\NewsItem;
 use App\Models\ContactMessage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
 {
@@ -20,25 +22,17 @@ class BlogController extends Controller
      */
     public function index()
     {
-        // Retrieve all blog posts from the database
+        $projects = Project::all();
+        $pageContent = PageContent::pluck('value', 'key')->toArray();
         $blogfeeds = Blogfeed::orderBy('published_at', 'desc')->get();
-
-        // IMPORTANT: Fetch data required by Admin_Side_Screen.Admin-Dashboard and its Ad-Header component
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         $contactMessages = ContactMessage::all(); // Or filter if you only need unread messages
-
-        // Check if the user's viewport is present (this is a placeholder condition)
         $isViewportPresent = request()->has('viewport'); // Adjust this condition as needed
 
         if ($isViewportPresent) {
-            // Return the view with the blog content included directly
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
-
-        // Pass all necessary data to the main admin dashboard view
-        // The 'activeAdminScreen' will be read by Alpine.js in Ad-Header.blade.php
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('blogfeeds', 'newsItems', 'contactMessages'));
-        // Removed: ->with('blogs'); as this flag is replaced by 'activeAdminScreen' session flash
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects'));
     }
 
     /**

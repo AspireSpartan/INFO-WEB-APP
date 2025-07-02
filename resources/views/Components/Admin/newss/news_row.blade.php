@@ -16,10 +16,7 @@
     {{-- Checkbox and Picture --}}
     <div class="col-span-1 flex items-center gap-12">
     {{-- This is the checkbox you need to verify --}}
-        <input type="checkbox"
-            name="selected_news_items[]"
-            value="{{ $newsItem->id }}"
-            class="h-4 w-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 cursor-pointer">
+        <input type="checkbox" name="selected_news_items[]" class="news-checkbox h-4 w-4 rounded border-gray-300 text-amber-400 focus:ring-amber-400 cursor-pointer" value="{{ $newsItem->id }}">
 
         <img class="w-10 h-10 object-cover rounded-md transition-transform duration-300 hover:scale-[1.5] cursor-pointer"
             src="{{ asset('storage/' . $newsItem->picture) }}"
@@ -69,7 +66,7 @@
                 x-transition:leave="transition ease-in duration-75"
                 x-transition:leave-start="transform opacity-100 scale-100"
                 x-transition:leave-end="transform opacity-0 scale-95"
-                class="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                class="fixed z-[9999] right-8 top-auto mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                 <div class="py-1" role="none">
                     {{-- Update Link --}}
@@ -81,9 +78,6 @@
                         @method('DELETE')
                         <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" role="menuitem">Delete</button>
                     </form>
-
-                    {{-- View Details Link (assuming you want to use the show method) --}}
-                    <a href="{{ route('news.show', $newsItem->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View Details</a>
                 </div>
             </div>
         </div>

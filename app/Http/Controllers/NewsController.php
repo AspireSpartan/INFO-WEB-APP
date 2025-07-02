@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PageContent;
 use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
@@ -56,14 +57,15 @@ class NewsController extends Controller
                 $query->orderBy('date', 'desc');
                 break;
         }
-
+        
+        $projects = Project::all();
         $newsItems = $query->get();
-
+        $pageContent = PageContent::pluck('value', 'key')->toArray();
         $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
         $blogfeeds = Blogfeed::all();
 
         // This method just loads the view with data. The active screen logic is in Ad-Header.blade.php
-        return view('Admin_Side_Screen.Admin-Dashboard', compact('newsItems', 'request', 'contactMessages', 'blogfeeds'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects'));
     }
 
     /**

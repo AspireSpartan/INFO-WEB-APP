@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         // Call the PageContentSeeder to populate static page content (like banner texts, stats)
         $this->call(PageContentSeeder::class);
-
-        // REMOVED: The call to SectionBannerSeeder as user-side banner now uses PageContent
-        // $this->call(SectionBannerSeeder::class); 
+        $this->call(BlogfeedSeeder::class);
+        $this->call(NewsItemSeeder::class);
+        $this->call(ProjectSeeder::class);
 
         // Your existing User factory call is retained here
         User::factory()->create([

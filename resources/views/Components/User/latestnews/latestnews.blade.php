@@ -1,6 +1,5 @@
 @props(['newsItems'])
 <div class="bg-gray-100 min-h-screen py-8 z-10">
-    <!-- Top Logos Section with staggered slide-in animations -->
     <div class="container mx-auto px-4 py-6 overflow-x-auto whitespace-nowrap scrollbar-hide animate-on-scroll">
         <div class="flex items-center justify-center gap-x-8 md:gap-x-12 animate-on-scroll">
             <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.1s" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
@@ -15,10 +14,8 @@
         </div>
     </div>
 
-    <!-- News Section Container -->
-    <div class="container mx-auto px-4 py-12 flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12"
-     style="height: 500px; min-height: 500px; max-height: 500px; overflow: hidden;">
-    <!-- Left Content: Latest News Title and Description -->
+    <div class="container mx-auto px-4 py-12 flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-10"
+      style="height: 500px; min-height: 500px; max-height: 500px; overflow: hidden;">
     <div class="w-full lg:w-1/3 flex flex-col items-start gap-6">
         <div class="space-y-4">
             <h2 class="text-indigo-900 text-3xl md:text-4xl font-bold font-['Merriweather'] font-size: 18px !important animate-title-slide">Latest News</h2>
@@ -31,101 +28,230 @@
         </a>
     </div>
 
-<div class="relative flex items-center justify-center py-4" style="min-height: 350px;">
-    <!-- Previous Arrow Button -->
-    <button id="prev-news-btn"
-        class="absolute left-0 top-0 h-full w-12 flex items-center justify-center z-10 bg-white bg-opacity-50 text-indigo-900 rounded-l-lg shadow hover:bg-opacity-80 transition"
-        aria-label="Previous">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-    </button>
+    <div class="w-full flex justify-center">
+        <div class="relative flex items-center justify-center w-full max-w-6xl mx-auto" style="min-height: 350px;">
+            <button id="prev-news-btn"
+                class="absolute left-0 top-0 h-full w-12 flex items-center justify-center z-20 bg-white bg-opacity-50 text-indigo-900 rounded-l-lg shadow hover:bg-opacity-80 transition"
+                aria-label="Previous">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
 
-    <!-- News Carousel (Fixed Size) -->
-    <div class="w-full flex justify-center items-center" id="news-carousel"
-         style="gap: 1.5rem; height: 400px; min-height: 400px; max-height: 400px; width: 1320px; max-width: 100%;">
-        @foreach($newsItems as $news)
-            <a href="{{ $news->url }}" target="_blank" style="text-decoration: none;"
-                class="news-card bg-white rounded-lg shadow-md p-4 animate-card-slide mx-auto block"
-                style="width: 320px; min-width: 320px; max-width: 320px; height: 370px; display: none;">
-                <img src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
-                     alt="{{ $news->title }}" class="w-full h-80 object-cover rounded-md mb-3">
-                <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">{{ $news->title }}</h3>
-                <p class="text-sm text-gray-600 mb-2">{{ $news->author }} | {{ $news->date->format('M d, Y') }}</p>
-                <span class="text-indigo-700 text-sm">
-                    {{ $news->sponsored ? 'Sponsored' : 'Not Sponsored' }}
-                </span>
-            </a>
-        @endforeach
+            <div class="w-full flex justify-center items-center overflow-hidden" id="news-carousel-inner"
+                style="gap: 1.5rem; height: 400px; position: relative;">
+                @foreach($newsItems as $news)
+                    <a href="{{ $news->url }}" target="_blank" style="text-decoration: none;"
+                        class="news-card bg-white rounded-lg shadow-md p-4 mx-auto block absolute transition-all duration-500 ease-in-out"
+                        data-index="{{ $loop->index }}"
+                        style="width: 320px; height: 420px; min-width: 320px; max-width: 320px; min-height: 420px; max-height: 420px; opacity: 0; pointer-events: none;">
+                        <img
+                            src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
+                            alt="{{ $news->title }}"
+                            class="rounded-md mb-3 object-cover"
+                            style="width: 288px; height: 256px; min-width: 288px; max-width: 288px; min-height: 256px; max-height: 256px;"
+                        >
+                        <h3 class="text-lg font-bold text-indigo-900 mb-1 line-clamp-2">
+                            {{ \Illuminate\Support\Str::limit($news->title, 25, '...') }}
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-2">
+                            {{ $news->author }} | {{ $news->date->format('M d, Y') }}
+                            @if($news->sponsored)
+                                | <span class="text-indigo-700 text-sm">Sponsored</span>
+                            @endif
+                        </p>
+                    </a>
+                @endforeach
+            </div>
+
+            <button id="next-news-btn"
+                class="absolute right-0 top-0 h-full w-12 flex items-center justify-center z-20 bg-white bg-opacity-50 text-indigo-900 rounded-r-lg shadow hover:bg-opacity-80 transition"
+                aria-label="Next">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
     </div>
-
-    <!-- Next Arrow Button -->
-    <button id="next-news-btn"
-        class="absolute right-0 top-0 h-full w-12 flex items-center justify-center z-10 bg-white bg-opacity-50 text-indigo-900 rounded-r-lg shadow hover:bg-opacity-80 transition"
-        aria-label="Next">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-    </button>
-</div>
 
 </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const cards = document.querySelectorAll('#news-carousel .news-card');
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('#news-carousel-inner .news-card');
     const prevBtn = document.getElementById('prev-news-btn');
     const nextBtn = document.getElementById('next-news-btn');
-    const visibleCount = 4;
+    const newsCarouselInner = document.getElementById('news-carousel-inner'); // Get the inner container
+    const cardWidth = 320 + 24; // Card width + gap (1.5rem = 24px)
+    const visibleCount = 4; // Let's display 3 full cards + a hint of the next one
     let start = 0;
 
-    function showCards(startIdx) {
-        cards.forEach((card, i) => {
-            card.style.display = (i >= startIdx && i < startIdx + visibleCount) ? '' : 'none';
+    function positionCards() {
+        // Hide all cards initially
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateX(0)';
+            card.style.zIndex = '1';
+            card.style.pointerEvents = 'none'; // Disable clicks when hidden
         });
-        prevBtn.disabled = startIdx === 0;
-        nextBtn.disabled = startIdx + visibleCount >= cards.length;
+
+        const carouselWidth = newsCarouselInner.offsetWidth;
+        const totalCardsWidth = visibleCount * cardWidth;
+        const startX = (carouselWidth - totalCardsWidth) / 2; // Center the group of visible cards
+
+        for (let i = 0; i < visibleCount; i++) {
+            const cardIndex = (start + i) % cards.length;
+            const card = cards[cardIndex];
+
+            // Calculate target X position for the slide-in animation
+            const targetX = startX + i * cardWidth;
+
+            card.style.left = `${targetX}px`; // Set the target position
+            card.style.opacity = '1';
+            card.style.transform = 'translateX(0)'; // Ensure it's at its final position after animation
+            card.style.zIndex = '10'; // Bring active cards to front
+            card.style.pointerEvents = 'auto'; // Enable clicks for visible cards
+        }
     }
 
-    prevBtn.addEventListener('click', function() {
-        if (start > 0) {
-            start--;
-            showCards(start);
+    function animateCarousel(direction) {
+        // 1. Animate current visible cards out
+        for (let i = 0; i < visibleCount; i++) {
+            const cardIndex = (start + i) % cards.length;
+            const card = cards[cardIndex];
+            card.style.opacity = '0';
+            if (direction === 'next') {
+                card.style.transform = 'translateX(-50px)'; // Slide left out
+            } else {
+                card.style.transform = 'translateX(50px)'; // Slide right out
+            }
+            card.style.zIndex = '1';
+            card.style.pointerEvents = 'none';
         }
+
+        // Update start index
+        if (direction === 'next') {
+            start = (start + 1) % cards.length;
+        } else {
+            start = (start - 1 + cards.length) % cards.length;
+        }
+
+        // 2. Animate new visible cards in after a short delay
+        setTimeout(() => {
+            const carouselWidth = newsCarouselInner.offsetWidth;
+            const totalCardsWidth = visibleCount * cardWidth;
+            const startX = (carouselWidth - totalCardsWidth) / 2;
+
+            for (let i = 0; i < visibleCount; i++) {
+                const cardIndex = (start + i) % cards.length;
+                const card = cards[cardIndex];
+
+                const targetX = startX + i * cardWidth;
+
+                // Initial position for incoming cards (off-screen)
+                if (direction === 'next') {
+                    card.style.left = `${targetX + 50}px`; // Start slightly right
+                } else {
+                    card.style.left = `${targetX - 50}px`; // Start slightly left
+                }
+                card.style.opacity = '0'; // Start faded out
+                card.style.zIndex = '10'; // Bring to front before animating in
+
+                // Trigger animation
+                requestAnimationFrame(() => {
+                    card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out, left 0.5s ease-out';
+                    card.style.left = `${targetX}px`; // Slide to target
+                    card.style.opacity = '1'; // Fade in
+                    card.style.transform = 'translateX(0)'; // Ensure no lingering transform
+                    card.style.pointerEvents = 'auto'; // Enable clicks for visible cards
+                });
+            }
+        }, 100); // Small delay to allow old cards to start animating out
+    }
+
+
+    prevBtn.addEventListener('click', function() {
+        animateCarousel('prev');
     });
 
     nextBtn.addEventListener('click', function() {
-        if (start + visibleCount < cards.length) {
-            start++;
-            showCards(start);
-        }
+        animateCarousel('next');
     });
 
-    showCards(start); // Show first 4 cards on load
+    // Initial positioning of cards on load
+    positionCards();
 });
 </script>
+
+
 <style>
+/* Existing styles for news-card hover */
 .news-card {
     transition: box-shadow 0.3s;
 }
 .news-card:hover {
     box-shadow: 0 8px 24px rgba(60,72,88,0.15);
 }
+
+/* Add styles for animation on scroll if not already present */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.start-animation {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hide scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Initial states for other entrance animations (if they exist) */
+.animate-logo-slide {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.animate-title-slide {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.animate-text-fade {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.animate-button-pop {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+/*
+The .animate-card-slide class is removed from the HTML for individual news-cards
+because their animation is now handled by the JavaScript in positionCards()
+and animateCarousel().
+*/
 </style>
 
-
-
-
-
 <script>
+    // This script block should remain for the initial page load animations
     document.addEventListener('DOMContentLoaded', () => {
         const logoItems = document.querySelectorAll('.animate-logo-slide');
         const title = document.querySelector('.animate-title-slide');
         const text = document.querySelector('.animate-text-fade');
         const button = document.querySelector('.animate-button-pop');
-        const cards = document.querySelectorAll('.animate-card-slide');
+        // const cards = document.querySelectorAll('.animate-card-slide'); // No longer needed here
 
         logoItems.forEach((item, index) => {
             item.style.opacity = '0';
@@ -161,17 +287,12 @@
             button.style.transform = 'scale(1)';
         }, parseFloat(button.style.getPropertyValue('--delay')) * 1000);
 
-        cards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            setTimeout(() => {
-                card.style.transition = 'opacity 0.7s ease-in-out, transform 0.7s ease-in-out';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, parseFloat(card.style.getPropertyValue('--delay')) * 1000);
-        });
+        // Initial cards animation for the carousel should now be handled by the carousel-specific JS
+        // Removed: cards.forEach((card, index) => { ... });
     });
 
+    // This function is for a different carousel scroll, not directly related to the news carousel navigation.
+    // Kept for completeness if it's used elsewhere.
     function scrollCarousel(id, scrollAmount) {
         const carousel = document.getElementById(id);
         carousel.scrollBy({
@@ -182,6 +303,7 @@
 </script>
 
 <script>
+    // This script block should remain for the scroll-based animations
     document.addEventListener('DOMContentLoaded', () => {
         const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
 
@@ -205,51 +327,3 @@
         });
     });
 </script>
-
-<style>
-    .animate-on-scroll {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-
-    .start-animation {
-        opacity: 1;
-        transform: translateY(0);
-    }
-</style>
-
-<style>
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-    }
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-    .animate-logo-slide {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    .animate-title-slide {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    .animate-text-fade {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    .animate-button-pop {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-
-    .animate-card-slide {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-</style>

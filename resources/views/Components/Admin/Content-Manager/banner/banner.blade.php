@@ -1,16 +1,17 @@
 <!-- Components/Admin/Content-Manager/banner/banner.blade.php-->
 @php
-    // Use the main-container-bg field from the pageContent array, with a default fallback
-    $bgImagePath = ($pageContent['main-container-bg'] ?? null)
-        ? asset('storage/' . str_replace(asset('storage/'), '', $pageContent['main-container-bg'])) // Extract path if full URL is stored
-        : asset('storage/LGU_bg.png'); // Fallback to a default local image
-    // If the image is stored as a full URL, strip the base URL part for asset() to work correctly on the path
-    if (str_starts_with($pageContent['main-container-bg'] ?? '', 'http')) {
-        $bgImagePath = $pageContent['main-container-bg']; // Use directly if it's already a full URL
+    $bgImagePath = null;
+    if (!empty($pageContent['main-container-bg'])) {
+        if (str_starts_with($pageContent['main-container-bg'], 'http')) {
+            $bgImagePath = $pageContent['main-container-bg'];
+        } else {
+            $bgImagePath = asset('storage/' . str_replace(asset('storage/'), '', $pageContent['main-container-bg']));
+        }
     }
 @endphp
 
-<div id="main-container" class="relative min-h-screen bg-cover bg-center pt-24" style="background-image: url('{{ $bgImagePath }}');">
+<div id="main-container" class="relative min-h-screen bg-cover bg-center pt-24"
+     @if($bgImagePath) style="background-image: url('{{ $bgImagePath }}');" @endif>
         <!-- Background Overlay -->    
         <div class="absolute inset-0 bg-gray-700/50 animate-bg-overlay"></div>  
         
@@ -138,345 +139,341 @@
     </div>
 
     <script>
-        // Base URL for your Laravel API
-        const API_BASE_URL = 'http://127.0.0.1:8000'; // Adjusted: No '/api' as routes are in web.php
+    // Base URL for your Laravel API
+    const API_BASE_URL = 'http://127.0.0.1:8000'; // Adjusted: No '/api' as routes are in web.php
 
-        // Original animation script
-        document.addEventListener('DOMContentLoaded', () => {    
-            const heroItems = document.querySelectorAll('.animate-hero-text');    
-            const statItems = document.querySelectorAll('.animate-stat-item');    
-            const footerText = document.querySelector('.animate-footer-text');    
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                        if(entry.target.classList.contains('animate-stat-item')) {
-                            entry.target.style.transform = 'scale(1)';
-                        }
-                        observer.unobserve(entry.target);
+    // Function to handle animations on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const heroItems = document.querySelectorAll('.animate-hero-text');
+        const statItems = document.querySelectorAll('.animate-stat-item');
+        const footerText = document.querySelector('.animate-footer-text');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    if (entry.target.classList.contains('animate-stat-item')) {
+                        entry.target.style.transform = 'scale(1)';
                     }
-                });
-            }, { threshold: 0.1 });
-
-            heroItems.forEach((item, index) => {
-                item.style.transitionDelay = `${index * 200}ms`;
-                observer.observe(item);
+                    observer.unobserve(entry.target);
+                }
             });
+        }, { threshold: 0.1 });
 
-            statItems.forEach((item, index) => {
-                item.style.transitionDelay = `${index * 200}ms`;
-                observer.observe(item);
-            });
-
-            if (footerText) {
-                footerText.style.transitionDelay = '400ms';
-                observer.observe(footerText);
-            }
+        heroItems.forEach((item, index) => {
+            item.style.transitionDelay = `${index * 200}ms`;
+            observer.observe(item);
         });
 
-        // Editing functionality script
-        document.addEventListener('DOMContentLoaded', () => {
-            // Modal elements
-            const modal = document.getElementById('edit-modal');
-            const modalContent = document.getElementById('modal-content');
-            const modalTitle = document.getElementById('modal-title');
-            const modalBody = document.getElementById('modal-body');
-            const closeModalButton = document.getElementById('close-modal');
-            const saveButton = document.getElementById('save-button');
-            const cancelButton = document.getElementById('cancel-button');
-            const editTriggers = document.querySelectorAll('.edit-trigger');
-            const loadingOverlay = document.getElementById('loading-overlay');
+        statItems.forEach((item, index) => {
+            item.style.transitionDelay = `${index * 200}ms`;
+            observer.observe(item);
+        });
 
-            let currentTargetElement = null;
-            let currentEditType = null;
+        if (footerText) {
+            footerText.style.transitionDelay = '400ms';
+            observer.observe(footerText);
+        }
+    });
 
-            // pageContent will now be dynamically loaded from the database and include stats
-            let pageContent = {}; 
-            
-            // Function to show/hide loading spinner
-            const toggleLoading = (show) => {
-                if (show) {
-                    loadingOverlay.classList.add('show');
-                } else {
-                    loadingOverlay.classList.remove('show');
+    // Editing functionality script
+    document.addEventListener('DOMContentLoaded', () => {
+        // Modal elements
+        const modal = document.getElementById('edit-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const closeModalButton = document.getElementById('close-modal');
+        const saveButton = document.getElementById('save-button');
+        const cancelButton = document.getElementById('cancel-button');
+        const editTriggers = document.querySelectorAll('.edit-trigger');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        let currentTargetElement = null;
+        let currentEditType = null;
+
+        // pageContent will now be dynamically loaded from the database and include stats
+        let pageContent = {};
+
+        // Function to show/hide loading spinner
+        const toggleLoading = (show) => {
+            if (show) {
+                loadingOverlay.classList.add('show');
+            } else {
+                loadingOverlay.classList.remove('show');
+            }
+        };
+
+        // Function to fetch content from Laravel backend
+        const fetchContent = async () => {
+            toggleLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/page-content`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            };
+                const data = await response.json();
+                pageContent = data; // Update the global pageContent variable with fetched data
+                loadContentToDOM(); // Update DOM after fetching
+            } catch (error) {
+                console.error('Error fetching page content:', error);
+                // Fallback to default static content if fetching fails
+                pageContent = {
+                    'hero-subtitle-1': '“DRIVEN BY INNOVATION',
+                    'hero-main-title': 'Local Government Unit',
+                    'hero-paragraph': 'Serving the community with <span class="text-amber-400">transparency</span>, <span class="text-amber-400">Integrity</span>, <br class="hidden sm:inline"/>and <span class="text-amber-400">commitment</span>.',
+                    'hero-subtitle-2': '<span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1">/</span>BREAKING BOUNDARIES',
+                    'footer-paragraph': 'Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.',
+                    'main-container-bg': 'https://images.unsplash.com/photo-1598993169346-638c53a73c1d?q=80&w=2070&auto=format&fit=crop',
+                    'stat-1-number': '24',
+                    'stat-1-label': 'Barangay',
+                    'stat-2-number': '1500+',
+                    'stat-2-label': 'Residents',
+                    'stat-3-number': '120+',
+                    'stat-3-label': 'Public Projects',
+                    'stat-4-number': '75',
+                    'stat-4-label': 'Years of Service',
+                };
+                loadContentToDOM(); // Update DOM with fallback content
+            } finally {
+                toggleLoading(false);
+            }
+        };
 
-            // Function to fetch content from Laravel backend
-            const fetchContent = async () => {
-                toggleLoading(true);
-                try {
-                    const response = await fetch(`${API_BASE_URL}/page-content`); 
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    pageContent = data; // Update the global pageContent variable with fetched data
-                    loadContentToDOM(); // Update DOM after fetching
-                } catch (error) {
-                    console.error('Error fetching page content:', error);
-                    // Fallback to default static content if fetching fails
-                    // Note: The default values here should match those in initializeDefaultContent() in the Controller
-                    pageContent = {
-                        'hero-subtitle-1': '“DRIVEN BY INNOVATION',
-                        'hero-main-title': 'Local Government Unit',
-                        'hero-paragraph': 'Serving the community with <span class="text-amber-400">transparency</span>, <span class="text-amber-400">Integrity</span>, <br class="hidden sm:inline"/>and <span class="text-amber-400">commitment</span>.',
-                        'hero-subtitle-2': '<span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1">/</span>BREAKING BOUNDARIES',
-                        'footer-paragraph': 'Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.',
-                        'main-container-bg': 'https://images.unsplash.com/photo-1598993169346-638c53a73c1d?q=80&w=2070&auto=format&fit=crop',
-                        'stat-1-number': '24',
-                        'stat-1-label': 'Barangay',
-                        'stat-2-number': '1500+',
-                        'stat-2-label': 'Residents',
-                        'stat-3-number': '120+',
-                        'stat-3-label': 'Public Projects',
-                        'stat-4-number': '75',
-                        'stat-4-label': 'Years of Service',
-                    };
-                    loadContentToDOM(); // Update DOM with fallback content
-                } finally {
-                    toggleLoading(false);
-                }
-            };
-
-            // Function to load content from the `pageContent` variable into the DOM
-            const loadContentToDOM = () => {
-                // Load general content from pageContent variable (from database or fallback)
-                for (const key in pageContent) {
-                    const elementId = key; 
-                    const element = document.getElementById(elementId);
-                    if (element) {
-                        if (key === 'main-container-bg') {
-                            // For background image, apply to the style
-                            document.getElementById('main-container').style.backgroundImage = `url('${pageContent[key]}')`;
-                        } else if (key.startsWith('stat-') && (key.endsWith('-number') || key.endsWith('-label'))) {
-                            // For statistics, update text content directly
-                            element.textContent = pageContent[key];
-                        } else {
-                            // For other text content, update innerHTML
-                            element.innerHTML = pageContent[key];
+        // Function to load content from the `pageContent` variable into the DOM
+        const loadContentToDOM = () => {
+            for (const key in pageContent) {
+                const elementId = key;
+                const element = document.getElementById(elementId);
+                if (element) {
+                    if (key === 'main-container-bg') {
+                        const val = pageContent[key];
+                        const cacheBuster = `?t=${Date.now()}`;
+                        if (val && (val.startsWith('http://') || val.startsWith('https://'))) {
+                            document.getElementById('main-container').style.backgroundImage = `url('${val}${cacheBuster}')`;
+                        } else if (val) {
+                            document.getElementById('main-container').style.backgroundImage = `url('/storage/${val}${cacheBuster}')`;
                         }
+                    } else if (key.startsWith('stat-') && (key.endsWith('-number') || key.endsWith('-label'))) {
+                        element.textContent = pageContent[key];
+                    } else {
+                        element.innerHTML = pageContent[key];
                     }
                 }
+            }
 
-                // Set static logo and sign-in button as they are not database-persisted
-                // These lines are kept as per your previous request to remove these from DB variables
-                document.getElementById('logo-image').src = 'https://placehold.co/100x100/ffffff/333333?text=Logo';
-                document.getElementById('signin-button').textContent = 'Sign In';
-            };
+            document.getElementById('logo-image').src = 'https://placehold.co/100x100/ffffff/333333?text=Logo';
+            document.getElementById('signin-button').textContent = 'Sign In';
+        };
 
+        const openModal = (e) => {
+            e.stopPropagation();
+            const triggerButton = e.currentTarget;
+            currentEditType = triggerButton.dataset.editType;
+            const targetId = triggerButton.dataset.targetId;
+            currentTargetElement = document.getElementById(targetId);
 
-            const openModal = (e) => {
-                e.stopPropagation(); // Prevent event bubbling
-                const triggerButton = e.currentTarget;
-                currentEditType = triggerButton.dataset.editType;
-                const targetId = triggerButton.dataset.targetId;
-                currentTargetElement = document.getElementById(targetId);
+            if (!currentTargetElement) return;
 
-                if (!currentTargetElement) return;
-                
-                modalBody.innerHTML = ''; // Clear previous modal content
-                
-                switch(currentEditType) {
-                    case 'text':
-                    case 'button': // button text can be edited like general text
-                        modalTitle.textContent = 'Edit Text';
-                        // Get current value from the dynamically loaded pageContent variable
-                        const currentTextValue = pageContent[currentTargetElement.id] || currentTargetElement.innerHTML;
-                        modalBody.innerHTML = `
-                            <label for="text-input" class="block text-sm font-medium text-gray-700">Content</label>
-                            <textarea id="text-input" rows="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">${currentTextValue}</textarea>
-                        `;
-                        break;
-                    case 'image':
-                        modalTitle.textContent = 'Change Image';
-                        let imgSrc;
-                        let placeholderText = '';
-                        if (currentTargetElement.id === 'main-container') {
-                             // Get current image URL from pageContent for background
-                            imgSrc = pageContent['main-container-bg'];
-                            placeholderText = 'No image preview for background image.';
-                        } else if (currentTargetElement.id === 'logo-image') {
-                             // Get current image URL from current DOM for logo (static)
-                            imgSrc = currentTargetElement.src;
+            modalBody.innerHTML = '';
+
+            switch (currentEditType) {
+                case 'text':
+                case 'button':
+                    modalTitle.textContent = 'Edit Text';
+                    const currentTextValue = pageContent[currentTargetElement.id] || currentTargetElement.innerHTML;
+                    modalBody.innerHTML = `
+                        <label for="text-input" class="block text-sm font-medium text-gray-700">Content</label>
+                        <textarea id="text-input" rows="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">${currentTextValue}</textarea>
+                    `;
+                    break;
+                case 'image':
+                    modalTitle.textContent = 'Change Image';
+                    let imgSrc;
+                    if (currentTargetElement.id === 'main-container') {
+                        imgSrc = pageContent['main-container-bg'];
+                    } else if (currentTargetElement.id === 'logo-image') {
+                        imgSrc = currentTargetElement.src;
+                    }
+
+                    modalBody.innerHTML = `
+                        <label for="image-input" class="block text-sm font-medium text-gray-700">Upload new image</label>
+                        <input type="file" id="image-input" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                        <img id="image-preview" src="${imgSrc || ''}" class="mt-4 rounded-lg max-h-48 w-auto ${!imgSrc ? 'hidden' : ''}" onerror="this.classList.add('hidden')"/>
+                    `;
+
+                    document.getElementById('image-input').addEventListener('change', (event) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const preview = document.getElementById('image-preview');
+                            if (preview) {
+                                preview.src = e.target.result;
+                                preview.classList.remove('hidden');
+                            }
                         }
-                       
-                        modalBody.innerHTML = `
-                            <label for="image-input" class="block text-sm font-medium text-gray-700">Upload new image</label>
-                            <input type="file" id="image-input" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
-                            ${currentTargetElement.id !== 'main-container' ? 
-                                `<img id="image-preview" src="${imgSrc}" class="mt-4 rounded-lg max-h-48 w-auto ${!imgSrc ? 'hidden' : ''}" onerror="this.classList.add('hidden')"/>` : 
-                                `<p id="image-placeholder" class="mt-4 text-gray-600 text-sm italic">${placeholderText}</p>`
-                            }
-                        `;
-                        
-                        document.getElementById('image-input').addEventListener('change', (event) => {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                const preview = document.getElementById('image-preview');
-                                if (preview) { // Check if preview element exists (not for main-container)
-                                    preview.src = e.target.result;
-                                    preview.classList.remove('hidden');
-                                }
-                            }
-                            if (event.target.files[0]) {
-                                reader.readAsDataURL(event.target.files[0]);
-                            }
-                        });
-                        break;
-                    case 'all-stats':
-                        modalTitle.textContent = 'Edit All Statistics';
-                        let statInputsHtml = '';
-                        // Populate modal with current statistics data from pageContent
-                        for (let i = 1; i <= 4; i++) {
-                            const statNumberKey = `stat-${i}-number`;
-                            const statLabelKey = `stat-${i}-label`;
-                            const currentNumber = pageContent[statNumberKey] || '';
-                            const currentLabel = pageContent[statLabelKey] || '';
+                        if (event.target.files[0]) {
+                            reader.readAsDataURL(event.target.files[0]);
+                        }
+                    });
+                    break;
+                case 'all-stats':
+                    modalTitle.textContent = 'Edit All Statistics';
+                    let statInputsHtml = '';
+                    for (let i = 1; i <= 4; i++) {
+                        const statNumberKey = `stat-${i}-number`;
+                        const statLabelKey = `stat-${i}-label`;
+                        const currentNumber = pageContent[statNumberKey] || '';
+                        const currentLabel = pageContent[statLabelKey] || '';
 
-                            statInputsHtml += `
-                                <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-2 sm:space-y-0 sm:space-x-4 mb-4 p-3 bg-gray-50 rounded-lg">
-                                    <h4 class="text-lg font-semibold text-gray-800 sm:w-1/4">Stat ${i}</h4>
-                                    <div class="flex-grow flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                                        <div class="w-full sm:w-1/2">
-                                            <label for="stat-${i}-number-input" class="block text-sm font-medium text-gray-700">Number</label>
-                                            <input type="text" id="stat-${i}-number-input" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="${currentNumber}">
-                                        </div>
-                                        <div class="w-full sm:w-1/2">
-                                            <label for="stat-${i}-label-input" class="block text-sm font-medium text-gray-700">Label</label>
-                                            <input type="text" id="stat-${i}-label-input" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="${currentLabel}">
-                                        </div>
+                        statInputsHtml += `
+                            <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-2 sm:space-y-0 sm:space-x-4 mb-4 p-3 bg-gray-50 rounded-lg">
+                                <h4 class="text-lg font-semibold text-gray-800 sm:w-1/4">Stat ${i}</h4>
+                                <div class="flex-grow flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                                    <div class="w-full sm:w-1/2">
+                                        <label for="stat-${i}-number-input" class="block text-sm font-medium text-gray-700">Number</label>
+                                        <input type="text" id="stat-${i}-number-input" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="${currentNumber}">
+                                    </div>
+                                    <div class="w-full sm:w-1/2">
+                                        <label for="stat-${i}-label-input" class="block text-sm font-medium text-gray-700">Label</label>
+                                        <input type="text" id="stat-${i}-label-input" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="${currentLabel}">
                                     </div>
                                 </div>
-                            `;
-                        }
-                        modalBody.innerHTML = statInputsHtml;
-                        break;
-                }
-                modal.classList.remove('hidden');
-                setTimeout(() => modalContent.classList.remove('scale-95', 'opacity-0'), 10);
-            };
-            
-            const closeModal = () => {
-                modalContent.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            };
+                            </div>
+                        `;
+                    }
+                    modalBody.innerHTML = statInputsHtml;
+                    break;
+            }
+            modal.classList.remove('hidden');
+            setTimeout(() => modalContent.classList.remove('scale-95', 'opacity-0'), 10);
+        };
 
-            const saveChanges = async () => {
-                if (!currentTargetElement || !currentEditType) return;
+        const closeModal = () => {
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
 
-                toggleLoading(true); // Show loading spinner
-                
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                    if (currentEditType === 'all-stats') {
-                        const statUpdates = [];
-                        for (let i = 1; i <= 4; i++) {
-                            const newNumber = document.getElementById(`stat-${i}-number-input`).value;
-                            const newLabel = document.getElementById(`stat-${i}-label-input`).value;
+        const saveChanges = async () => {
+            if (!currentTargetElement || !currentEditType) return;
 
-                            // Add to updates array if changed
-                            // ** Check against the pageContent (fetched from DB) to see if a change occurred **
-                            if (pageContent[`stat-${i}-number`] !== newNumber) {
-                                statUpdates.push({ key: `stat-${i}-number`, value: newNumber });
-                            }
-                            if (pageContent[`stat-${i}-label`] !== newLabel) {
-                                statUpdates.push({ key: `stat-${i}-label`, value: newLabel });
-                            }
-                        }
+            toggleLoading(true);
 
-                        // Send individual requests for each changed stat
-                        // This loop handles saving to the database, NOT local storage
-                        for (const update of statUpdates) {
-                            const formData = new FormData();
-                            formData.append('key', update.key);
-                            formData.append('value', update.value);
-                            formData.append('_token', csrfToken); // Add CSRF token here for each individual request
-                            
-                            const response = await fetch(`${API_BASE_URL}/page-content`, {
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                let shouldReload = false;
+
+                if (currentEditType === 'all-stats') {
+                    // Send each stat key-value pair in separate POST requests
+                    for (let i = 1; i <= 4; i++) {
+                        const numberInput = document.getElementById(`stat-${i}-number-input`);
+                        const labelInput = document.getElementById(`stat-${i}-label-input`);
+
+                        if (numberInput) {
+                            const formDataNumber = new FormData();
+                            formDataNumber.append('key', `stat-${i}-number`);
+                            formDataNumber.append('value', numberInput.value);
+                            formDataNumber.append('_token', csrfToken);
+
+                            const responseNumber = await fetch(`${API_BASE_URL}/page-content`, {
                                 method: 'POST',
-                                body: formData
+                                body: formDataNumber
                             });
 
-                            if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(`HTTP error! status: ${response.status}, Details: ${errorText}`);
+                            if (!responseNumber.ok) {
+                                const errorText = await responseNumber.text();
+                                throw new Error(`HTTP error! status: ${responseNumber.status}, Details: ${errorText}`);
                             }
-                            const result = await response.json();
-                            // Update local pageContent with the new value from the database response
-                            pageContent[result.key] = result.value; 
-                            console.log(`Stat update successful for ${result.key}:`, result);
                         }
-                        loadContentToDOM(); // Update DOM after all stat changes are saved to DB and local pageContent is updated
-                        closeModal();
-                        toggleLoading(false);
-                        return; // Exit function early as stats are handled
-                    }
 
-                    // Handling for text and image content (as before, also saving to DB)
-                    const formData = new FormData();
-                    let keyToUpdate = currentTargetElement.id;
-                    let valueToUpdate = null;
+                        if (labelInput) {
+                            const formDataLabel = new FormData();
+                            formDataLabel.append('key', `stat-${i}-label`);
+                            formDataLabel.append('value', labelInput.value);
+                            formDataLabel.append('_token', csrfToken);
 
-                    switch(currentEditType) {
-                        case 'text':
-                        case 'button':
-                            valueToUpdate = document.getElementById('text-input').value;
-                            formData.append('key', keyToUpdate);
-                            formData.append('value', valueToUpdate);
-                            break;
-                        case 'image':
-                            const fileInput = document.getElementById('image-input');
-                            if (fileInput.files && fileInput.files[0]) {
-                                formData.append('key', keyToUpdate === 'main-container' ? 'main-container-bg' : 'logo-image-src');
-                                formData.append('file', fileInput.files[0]);
-                            } else {
-                                // If no new file is selected, send current value (if applicable)
-                                valueToUpdate = keyToUpdate === 'main-container' ? 
-                                    (pageContent['main-container-bg'] || document.getElementById('main-container').style.backgroundImage.slice(5, -2).replace(/['"]+/g, '')) : 
-                                    document.getElementById('logo-image').src; // For logo, use its current src
-                                formData.append('key', keyToUpdate === 'main-container' ? 'main-container-bg' : 'logo-image-src');
-                                formData.append('value', valueToUpdate);
+                            const responseLabel = await fetch(`${API_BASE_URL}/page-content`, {
+                                method: 'POST',
+                                body: formDataLabel
+                            });
+
+                            if (!responseLabel.ok) {
+                                const errorText = await responseLabel.text();
+                                throw new Error(`HTTP error! status: ${responseLabel.status}, Details: ${errorText}`);
                             }
-                            break;
+                        }
                     }
 
-                    formData.append('_token', csrfToken); // Add CSRF token for single update
-                    const response = await fetch(`${API_BASE_URL}/page-content`, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(`HTTP error! status: ${response.status}, Details: ${errorText}`);
-                    }
-
-                    const result = await response.json();
-                    console.log('Save successful:', result);
-                    pageContent[result.key] = result.value; // Update local pageContent
-
-                    loadContentToDOM(); // Re-load content to ensure freshness
-                } catch (error) {
-                    console.error('Error saving changes:', error);
-                    // Implement a more user-friendly error message here
-                } finally {
+                    await fetchContent();
                     closeModal();
-                    toggleLoading(false); // Hide loading spinner
+                    toggleLoading(false);
+                    return;
                 }
-            };
 
-            // --- EVENT LISTENERS ---
-            fetchContent(); // Initial fetch on page load
-            editTriggers.forEach(button => button.addEventListener('click', openModal));
-            closeModalButton.addEventListener('click', closeModal);
-            cancelButton.addEventListener('click', closeModal);
-            saveButton.addEventListener('click', saveChanges);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
+                // Existing logic for other edit types
+                const formData = new FormData();
+                let keyToUpdate = currentTargetElement.id;
+                let valueToUpdate = null;
+
+                switch (currentEditType) {
+                    case 'text':
+                    case 'button':
+                        valueToUpdate = document.getElementById('text-input').value;
+                        formData.append('key', keyToUpdate);
+                        formData.append('value', valueToUpdate);
+                        break;
+                    case 'image':
+                        const fileInput = document.getElementById('image-input');
+                        if (fileInput.files && fileInput.files[0]) {
+                            formData.append('key', 'main-container-bg');
+                            formData.append('file', fileInput.files[0]);
+                            shouldReload = true;
+                        } else {
+                            valueToUpdate = keyToUpdate === 'main-container' ?
+                                (pageContent['main-container-bg'] || document.getElementById('main-container').style.backgroundImage.slice(5, -2).replace(/['"]+/g, '')) :
+                                document.getElementById('logo-image').src;
+                            formData.append('key', keyToUpdate === 'main-container' ? 'main-container-bg' : 'logo-image-src');
+                            formData.append('value', valueToUpdate);
+                        }
+                        break;
+                }
+
+                formData.append('_token', csrfToken);
+                const response = await fetch(`${API_BASE_URL}/page-content`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, Details: ${errorText}`);
+                }
+
+                const result = await response.json();
+                console.log('Save successful:', result);
+
+                if (shouldReload) {
+                    window.location.reload();
+                } else {
+                    await fetchContent();
+                }
+            } catch (error) {
+                console.error('Error saving changes:', error);
+            } finally {
+                closeModal();
+                toggleLoading(false);
+            }
+        };
+
+        // --- EVENT LISTENERS ---
+        fetchContent(); // Initial fetch on page load
+        editTriggers.forEach(button => button.addEventListener('click', openModal));
+        closeModalButton.addEventListener('click', closeModal);
+        cancelButton.addEventListener('click', closeModal);
+        saveButton.addEventListener('click', saveChanges);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
         });
-    </script>
+    });
+</script>
