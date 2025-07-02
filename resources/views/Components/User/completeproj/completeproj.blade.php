@@ -63,16 +63,12 @@
             const firstProject = projects[firstIndex];
             const secondProject = projects[secondIndex];
 
-            // The image_url from the controller should already be the complete URL.
-            // No need for baseImageUrl concatenation here.
-
             document.getElementById('card1-title').textContent = firstProject.title;
             document.getElementById('card1-text').innerHTML = `
                 <span class="text-amber-400 font-bold">Site:</span> ${firstProject.site}<br/>
                 <span class="text-amber-400 font-bold">Scope:</span> ${firstProject.scope}<br/>
                 <span class="text-amber-400 font-bold">Outcome:</span> ${firstProject.outcome}
             `;
-            // Use firstProject.image_url directly as it's already a full URL
             document.getElementById('card1-img').src = firstProject.image_url; 
             document.getElementById('card1-img').alt = firstProject.title;
 
@@ -82,7 +78,6 @@
                 <span class="text-amber-400 font-bold">Scope:</span> ${secondProject.scope}<br/>
                 <span class="text-amber-400 font-bold">Outcome:</span> ${secondProject.outcome}
             `;
-            // Use secondProject.image_url directly as it's already a full URL
             document.getElementById('card2-img').src = secondProject.image_url; 
             document.getElementById('card2-img').alt = secondProject.title;
 
