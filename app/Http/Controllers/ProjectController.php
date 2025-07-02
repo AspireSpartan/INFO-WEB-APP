@@ -16,7 +16,7 @@ class ProjectController extends Controller
 {
 public function index() // user side
 {
-    $projects = Project::all(); // Fetch all projects
+    $projects = Project::all(); 
 
     $projects->transform(function ($project) {
         if (Str::startsWith($project->image_url, 'storage/')) {

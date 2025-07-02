@@ -8,7 +8,7 @@ use App\Models\NewsItem;
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
 use App\Models\ProjectDescription;
-use App\Models\PageContent; // IMPORTANT: Changed from SectionBanner to PageContent
+use App\Models\PageContent; 
 
 
 class HomeController extends Controller
@@ -24,23 +24,19 @@ class HomeController extends Controller
     {
         $projects = Project::all();
         $projects->transform(function ($project) {
-            // If image_url already contains 'storage/', assume it's a full path and use asset directly
+           
             if (str_contains($project->image_url, 'storage/')) {
                 $project->image_url = asset($project->image_url);
             } else {
-                // Otherwise, prepend 'storage/' to the relative path
+                
                 $project->image_url = asset('storage/' . $project->image_url);
             }
             return $project;
         });
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
-        // Fetch all key-value pairs from the 'page_contents' table
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
         $description = ProjectDescription::first();
 
-        // Provide a fallback if no content is found in the database.
-        // These defaults should match what your PageContentSeeder provides
-        // to ensure content displays correctly even if the table is empty.
         if (empty($pageContent)) {
             $pageContent = [
                 'hero-subtitle-1' => '“DRIVEN BY INNOVATION',
@@ -78,8 +74,6 @@ class HomeController extends Controller
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
 
 
-        // If your blog page also uses pageContent or a banner, you might fetch it here too.
-        // For simplicity, it's not included by default in blogIndex unless specified.
         return view('User_Side_Screen.blog', compact('blogfeeds', 'pageContent'));
 
     }
