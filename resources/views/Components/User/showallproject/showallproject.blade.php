@@ -17,8 +17,16 @@
             
             {{-- Image Container --}}
             <div class="flex-shrink-0 w-full lg:w-1/2 flex justify-center items-center">
-                <img src="{{ asset('storage/' . $project->image_url) }}" alt="{{ $project->title }}
-                     class="max-w-full h-auto max-h-96 rounded-xl shadow-lg object-contain"> {{-- Dynamic sizing --}}
+                <img 
+                    src="{{ 
+                        (Str::startsWith($project->image_url, ['http', 'storage/'])) 
+                            ? asset($project->image_url) 
+                            : asset('storage/' . $project->image_url) 
+                    }}" 
+                    alt="{{ $project->title }}" 
+                    onerror="this.onerror=null;this.src='{{ asset('storage/sampling.jpg') }}';"
+                    class="max-w-full h-auto max-h-96 rounded-xl shadow-lg object-contain"
+                />
             </div>
 
             {{-- Text Content --}}
