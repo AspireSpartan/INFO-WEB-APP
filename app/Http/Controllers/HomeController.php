@@ -23,6 +23,16 @@ class HomeController extends Controller
     public function index()
     {
         $projects = Project::all();
+        $projects->transform(function ($project) {
+            // If image_url already contains 'storage/', assume it's a full path and use asset directly
+            if (str_contains($project->image_url, 'storage/')) {
+                $project->image_url = asset($project->image_url);
+            } else {
+                // Otherwise, prepend 'storage/' to the relative path
+                $project->image_url = asset('storage/' . $project->image_url);
+            }
+            return $project;
+        });
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         // Fetch all key-value pairs from the 'page_contents' table
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
