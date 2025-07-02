@@ -60,9 +60,8 @@
                         role="menu" aria-orientation="vertical" aria-labelledby="services-menu-button" tabindex="-1">
                     <div class="py-1" role="none">
                         <a href="/cedula" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Cedula</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Mobile App Development</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">UI/UX Design</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Cloud Solutions</a>
+                        <a href="/businesspermit" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Business Permit</a>
+                        <a href=/reportconcern#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Report Concern</a>
                     </div>
                 </div>
             </div>
