@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="screenTransition()" x-init="init()">
+<html lang="en"> {{-- Removed x-data="screenTransition()" x-init="init()" from here --}}
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -17,19 +17,16 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Alpine.js -->
+    <!-- Alpine.js (Load ONLY ONCE, and preferably the CDN version) -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{{ asset('js/screentransition.js') }}" defer></script>
 
     <!-- Add other global stylesheets and scripts here -->
 
-    {{-- Include the banner-specific styles here --}}
     @include('Components.Admin.Content-Manager.banner.banner-styles')
     
 </head>
 <body class="bg-neutral-200 min-h-screen flex flex-col">
-
-    <!-- Header -->
 
     <div class="w-full h-px bg-neutral-400"></div>
 
@@ -37,51 +34,6 @@
     <main>
         @yield('content')
     </main>
-
-    <!-- Alpine.js Screen Switch Logic -->
-    <script>
-        function screenTransition() {
-            return {
-                activeScreen: 'dashboard',
-                isTransitioning: false,
-                showUploadModal: false,
-
-                async switchScreen(target) {
-                    if (this.isTransitioning || this.activeScreen === target) return;
-                    this.isTransitioning = true;
-
-                    const oldScreenElement = this.$el.querySelector(`.absolute.w-full.h-full[x-show="activeScreen === '${this.activeScreen}'"]`);
-                    if (oldScreenElement) {
-                        oldScreenElement.classList.add('opacity-0');
-                        await new Promise(resolve => setTimeout(resolve, 300));
-                    }
-                    this.activeScreen = null;
-                    await new Promise(resolve => setTimeout(resolve, 10));
-                    this.activeScreen = target;
-                    await new Promise(resolve => setTimeout(resolve, 300));
-                    this.isTransitioning = false;
-                },
-
-                init() {
-                    this.activeScreen = 'dashboard';
-                    this.$watch('showUploadModal', (value) => {
-                        if (value) {
-                            this.$nextTick(() => {
-                                const today = new Date();
-                                const yyyy = today.getFullYear();
-                                const mm = String(today.getMonth() + 1).padStart(2, '0');
-                                const dd = String(today.getDate()).padStart(2, '0');
-                                const dateInput = document.getElementById('newsDatePosted');
-                                if (dateInput) {
-                                    dateInput.value = `${yyyy}-${mm}-${dd}`;
-                                }
-                            });
-                        }
-                    });
-                }
-            };
-        }
-    </script>
 
 </body>
 </html>

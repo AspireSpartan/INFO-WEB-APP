@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Blogfeed;
 use App\Models\Project;
-use Illuminate\Http\Request;
-use App\Models\PageContent;
+use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\PageContent;
+use Illuminate\Http\Request;
 use App\Models\ContactMessage;
+use App\Models\ProjectDescription;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,6 +24,7 @@ class BlogController extends Controller
     public function index()
     {
         $projects = Project::all();
+        $description = ProjectDescription::first();
         $pageContent = PageContent::pluck('value', 'key')->toArray();
         $blogfeeds = Blogfeed::orderBy('published_at', 'desc')->get();
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
@@ -32,7 +34,7 @@ class BlogController extends Controller
         if ($isViewportPresent) {
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description'));
     }
 
     /**
