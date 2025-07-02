@@ -42,6 +42,18 @@ Route::get('/showallproject', function () {
     return view('/User_Side_Screen.showallproject');
 })->name('showallproject');
 
+Route::get('/cedula', function () {
+    return view('User_Side_Screen.cedula');
+})->name('cedula');
+
+Route::get('/businesspermit', function () {
+    return view('User_Side_Screen.businesspermit');
+})->name('businesspermit');
+
+Route::get('/reportconcern', function () {
+    return view('User_Side_Screen.reportconcern');
+})->name('reportconcern');
+
 Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
     ->name('news.incrementViews');
 
@@ -80,6 +92,3 @@ Route::get('/admin/notifications/{message}/show', [NotificationController::class
 Route::get('/page-content', [PageContentController::class, 'show'])->name('page.content.show');
 Route::post('/page-content', [PageContentController::class, 'update'])->name('page.content.update');
 
-Route::get('/cedula', function () {
-    return view('User_Side_Screen.cedula');
-})->name('cedula');
