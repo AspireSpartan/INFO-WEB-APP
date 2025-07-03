@@ -16,25 +16,39 @@ class BlogfeedSeeder extends Seeder
      */
     public function run(): void
     {
-        // Define paths for dummy images/icons.
-        // Ensure these paths match where you intend to store dummy images or exist virtually.
-        // It's good practice to have some placeholder images in public/storage/blog_images/
-        // and public/storage/blog_icons/ for these to work visually in development.
-        $dummyImagePath1 = 'blog_images/dummy_blog_image_1.jpg';
-        $dummyIconPath1 = 'blog_icons/dummy_icon_blog_1.png';
-
-        // Initialize Faker for generating random data
         $faker = Faker::create();
 
-        // Create 9 dummy blog posts
-        for ($i = 0; $i < 9; $i++) {
-            Blogfeed::create([ // Changed Newsfeed to Blogfeed
-                'title' => $faker->sentence(5),
-                'content' => $faker->paragraph(rand(3, 7)), // More varied paragraph length
-                // Assign dummy image paths. These files need to exist in storage/app/public/blog_images
-                // or you'll need to disable image validation when seeding.
-                'image_path' => $faker->boolean(70) ? $dummyImagePath1 : null,
-                'icon_path' => $faker->boolean(70) ? $dummyIconPath1 : null,
+        $filipinoBlogs = [
+            [
+                'title' => 'Pag-unlad ng Agrikultura sa Pilipinas',
+                'content' => 'Tinalakay sa blog na ito ang mga bagong teknolohiya at programa na nagpapalago sa sektor ng agrikultura sa bansa.',
+            ],
+            [
+                'title' => 'Kultura at Tradisyon ng mga Pilipino',
+                'content' => 'Isang malalim na pagtingin sa mga makukulay na tradisyon at kultura na bumubuo sa pagkakakilanlan ng Pilipinas.',
+            ],
+            [
+                'title' => 'Epekto ng Teknolohiya sa Kabataan',
+                'content' => 'Pagsusuri kung paano binabago ng makabagong teknolohiya ang pamumuhay at pag-aaral ng mga kabataan sa Pilipinas.',
+            ],
+            [
+                'title' => 'Pagpapahalaga sa Kalikasan at Kapaligiran',
+                'content' => 'Mga hakbang at inisyatibo para mapanatili ang kalinisan at kagandahan ng kalikasan sa bansa.',
+            ],
+            [
+                'title' => 'Paglalakbay sa mga Sikretong Destinasyon ng Pilipinas',
+                'content' => 'Isang gabay sa mga hindi pa gaanong kilalang lugar na dapat bisitahin sa Pilipinas.',
+            ],
+        ];
+
+        $externalImageUrl = 'https://media.istockphoto.com/id/1973365581/vector/sample-ink-rubber-stamp.jpg?s=612x612&w=0&k=20&c=_m6hNbFtLdulg3LK5LRjJiH6boCb_gcxPvRLytIz0Ws=';
+
+        foreach ($filipinoBlogs as $blog) {
+            Blogfeed::create([
+                'title' => $blog['title'],
+                'content' => $blog['content'],
+                'image_path' => $externalImageUrl,
+                'icon_path' => $faker->boolean(70) ? 'blog_icons/dummy_icon_blog_1.png' : null,
                 'published_at' => $faker->date(),
                 'author' => $faker->name(),
                 'authortitle' => $faker->jobTitle(),
