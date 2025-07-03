@@ -226,16 +226,16 @@
                     <div>@include('Components.Admin.Content-Manager.banner.banner', ['pageContent' => $pageContent ?? []])</div>
                 </template>
                 <template x-if="screen === 'latest news'">
-                    <div><h1>Latest News Content</h1></div>
+                    <div>@include('Components.Admin.Content-Manager.latestnews.latestnews')</div>
                 </template>
                 <template x-if="screen === 'mission'">
-                    <div><h1>Mission Content</h1></div>
+                    <div>@include('Components.Admin.Content-Manager.3goals.3goals')</div>
                 </template>
                 <template x-if="screen === 'developers'">
-                    <div><h1>Developers Content</h1></div>
+                    <div>@include('Components.Admin.Content-Manager.teamdev.teamdev')</div>
                 </template>
                 <template x-if="screen === 'links'">
-                    <div><h1>Links Content</h1></div>
+                    <div>@include('Components.Admin.Content-Manager.footer.footer')</div>
                 </template>
                 <template x-if="screen === 'notifications'">
                     <div>@include('Components.Admin.notification.notification', ['contactMessages' => $contactMessages ?? []])</div>

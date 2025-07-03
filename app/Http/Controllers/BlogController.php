@@ -114,13 +114,6 @@ class BlogController extends Controller
                         ->with('activeAdminScreen', 'blog'); // Added this line
     }
 
-    /**
-     * Display the specified resource (a single blog post).
-     * This method uses Route Model Binding to automatically fetch the Blogfeed instance.
-     *
-     * @param  \App\Models\Blogfeed  $blogfeed
-     * @return \Illuminate\View\View
-     */
     public function show(Blogfeed $blogfeed)
     {
         // This view path might also need adjustment if it's not directly in resources/views/blogs/show.blade.php
