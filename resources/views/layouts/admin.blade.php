@@ -24,6 +24,10 @@
     <!-- Add other global stylesheets and scripts here -->
 
     @include('Components.Admin.Content-Manager.banner.banner-styles')
+    @include('Components.Admin.Content-Manager.latestnews.latestnews-styles')
+    @include('Components.Admin.Content-Manager.footer.footer-styles')
+    @include('Components.Admin.Content-Manager.teamdev.teamdev-styles')
+    @include('Components.Admin.Content-Manager.3goals.3goals-styles')
     
 </head>
 <body class="bg-neutral-200 min-h-screen flex flex-col">
