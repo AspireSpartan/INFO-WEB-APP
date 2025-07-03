@@ -46,7 +46,13 @@
                         data-index="{{ $loop->index }}"
                         style="width: 320px; height: 420px; min-width: 320px; max-width: 320px; min-height: 420px; max-height: 420px; opacity: 0; pointer-events: none;">
                         <img
-                            src="{{ $news->picture ? asset('storage/' . $news->picture) : asset('default-news.jpg') }}"
+                            src="{{ 
+                                $news->picture 
+                                    ? (Str::startsWith($news->picture, ['http://', 'https://']) 
+                                        ? $news->picture 
+                                        : asset('storage/' . $news->picture)) 
+                                    : asset('default-news.jpg') 
+                            }}"
                             alt="{{ $news->title }}"
                             class="rounded-md mb-3 object-cover"
                             style="width: 288px; height: 256px; min-width: 288px; max-width: 288px; min-height: 256px; max-height: 256px;"
@@ -162,10 +168,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Trigger animation
                 requestAnimationFrame(() => {
                     card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out, left 0.5s ease-out';
-                    card.style.left = `${targetX}px`; // Slide to target
-                    card.style.opacity = '1'; // Fade in
-                    card.style.transform = 'translateX(0)'; // Ensure no lingering transform
-                    card.style.pointerEvents = 'auto'; // Enable clicks for visible cards
+                    card.style.left = `${targetX}px`; 
+                    card.style.opacity = '1'; 
+                    card.style.transform = 'translateX(0)'; 
+                    card.style.pointerEvents = 'auto'; 
                 });
             }
         }, 100); // Small delay to allow old cards to start animating out
@@ -237,11 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
     transform: scale(0.8);
 }
 
-/*
-The .animate-card-slide class is removed from the HTML for individual news-cards
-because their animation is now handled by the JavaScript in positionCards()
-and animateCarousel().
-*/
 </style>
 
 <script>
@@ -251,7 +252,6 @@ and animateCarousel().
         const title = document.querySelector('.animate-title-slide');
         const text = document.querySelector('.animate-text-fade');
         const button = document.querySelector('.animate-button-pop');
-        // const cards = document.querySelectorAll('.animate-card-slide'); // No longer needed here
 
         logoItems.forEach((item, index) => {
             item.style.opacity = '0';
@@ -287,12 +287,10 @@ and animateCarousel().
             button.style.transform = 'scale(1)';
         }, parseFloat(button.style.getPropertyValue('--delay')) * 1000);
 
-        // Initial cards animation for the carousel should now be handled by the carousel-specific JS
-        // Removed: cards.forEach((card, index) => { ... });
+
     });
 
-    // This function is for a different carousel scroll, not directly related to the news carousel navigation.
-    // Kept for completeness if it's used elsewhere.
+
     function scrollCarousel(id, scrollAmount) {
         const carousel = document.getElementById(id);
         carousel.scrollBy({
