@@ -144,66 +144,53 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+    // --- News Carousel ---
     const cards = document.querySelectorAll('#news-carousel-inner .news-card');
     const prevBtn = document.getElementById('prev-news-btn');
     const nextBtn = document.getElementById('next-news-btn');
-    const newsCarouselInner = document.getElementById('news-carousel-inner'); // Get the inner container
+    const newsCarouselInner = document.getElementById('news-carousel-inner');
     const cardWidth = 320 + 24; // Card width + gap (1.5rem = 24px)
-    const visibleCount = 4; // Let's display 3 full cards + a hint of the next one
+    const visibleCount = 4;
     let start = 0;
 
     function positionCards() {
-        // Hide all cards initially
         cards.forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateX(0)';
             card.style.zIndex = '1';
-            card.style.pointerEvents = 'none'; // Disable clicks when hidden
+            card.style.pointerEvents = 'none';
         });
 
         const carouselWidth = newsCarouselInner.offsetWidth;
         const totalCardsWidth = visibleCount * cardWidth;
-        const startX = (carouselWidth - totalCardsWidth) / 2; // Center the group of visible cards
+        const startX = (carouselWidth - totalCardsWidth) / 2;
 
         for (let i = 0; i < visibleCount; i++) {
             const cardIndex = (start + i) % cards.length;
             const card = cards[cardIndex];
-
-            // Calculate target X position for the slide-in animation
             const targetX = startX + i * cardWidth;
 
-            card.style.left = `${targetX}px`; // Set the target position
+            card.style.left = `${targetX}px`;
             card.style.opacity = '1';
-            card.style.transform = 'translateX(0)'; // Ensure it's at its final position after animation
-            card.style.zIndex = '10'; // Bring active cards to front
-            card.style.pointerEvents = 'auto'; // Enable clicks for visible cards
+            card.style.transform = 'translateX(0)';
+            card.style.zIndex = '10';
+            card.style.pointerEvents = 'auto';
         }
     }
 
     function animateCarousel(direction) {
-        // 1. Animate current visible cards out
         for (let i = 0; i < visibleCount; i++) {
             const cardIndex = (start + i) % cards.length;
             const card = cards[cardIndex];
             card.style.opacity = '0';
-            if (direction === 'next') {
-                card.style.transform = 'translateX(-50px)'; // Slide left out
-            } else {
-                card.style.transform = 'translateX(50px)'; // Slide right out
-            }
+            card.style.transform = direction === 'next' ? 'translateX(-50px)' : 'translateX(50px)';
             card.style.zIndex = '1';
             card.style.pointerEvents = 'none';
         }
 
-        // Update start index
-        if (direction === 'next') {
-            start = (start + 1) % cards.length;
-        } else {
-            start = (start - 1 + cards.length) % cards.length;
-        }
+        start = direction === 'next' ? (start + 1) % cards.length : (start - 1 + cards.length) % cards.length;
 
-        // 2. Animate new visible cards in after a short delay
         setTimeout(() => {
             const carouselWidth = newsCarouselInner.offsetWidth;
             const totalCardsWidth = visibleCount * cardWidth;
@@ -212,19 +199,12 @@ document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < visibleCount; i++) {
                 const cardIndex = (start + i) % cards.length;
                 const card = cards[cardIndex];
-
                 const targetX = startX + i * cardWidth;
 
-                // Initial position for incoming cards (off-screen)
-                if (direction === 'next') {
-                    card.style.left = `${targetX + 50}px`; // Start slightly right
-                } else {
-                    card.style.left = `${targetX - 50}px`; // Start slightly left
-                }
-                card.style.opacity = '0'; // Start faded out
-                card.style.zIndex = '10'; // Bring to front before animating in
+                card.style.left = direction === 'next' ? `${targetX + 50}px` : `${targetX - 50}px`;
+                card.style.opacity = '0';
+                card.style.zIndex = '10';
 
-                // Trigger animation
                 requestAnimationFrame(() => {
                     card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out, left 0.5s ease-out';
                     card.style.left = `${targetX}px`;
@@ -233,305 +213,248 @@ document.addEventListener('DOMContentLoaded', function() {
                     card.style.pointerEvents = 'auto';
                 });
             }
-        }, 100); // Small delay to allow old cards to start animating out
+        }, 100);
     }
 
-
-    prevBtn.addEventListener('click', function() {
-        animateCarousel('prev');
-    });
-
-    nextBtn.addEventListener('click', function() {
-        animateCarousel('next');
-    });
-
-    // Initial positioning of cards on load
+    prevBtn.addEventListener('click', () => animateCarousel('prev'));
+    nextBtn.addEventListener('click', () => animateCarousel('next'));
     positionCards();
-});
-</script>
 
-<script>
-    // This script block should remain for the initial page load animations
-    document.addEventListener('DOMContentLoaded', () => {
-        const logoItems = document.querySelectorAll('.animate-logo-slide');
-        const title = document.querySelector('.animate-title-slide');
-        const text = document.querySelector('.animate-text-fade');
-        const button = document.querySelector('.animate-button-pop');
+    // --- Initial Page Load Animations ---
+    const logoItems = document.querySelectorAll('.animate-logo-slide');
+    const title = document.querySelector('.animate-title-slide');
+    const text = document.querySelector('.animate-text-fade');
+    const button = document.querySelector('.animate-button-pop');
 
-        logoItems.forEach((item, index) => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                item.style.transition = 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out';
-                item.style.opacity = '1';
-                item.style.transform = 'translateY(0)';
-            }, parseFloat(item.style.getPropertyValue('--delay')) * 1000);
-        });
-
-        title.style.opacity = '0';
-        title.style.transform = 'translateX(-20px)';
+    logoItems.forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
         setTimeout(() => {
-            title.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
-            title.style.opacity = '1';
-            title.style.transform = 'translateX(0)';
-        }, 200);
-
-        text.style.opacity = '0';
-        text.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            text.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
-            text.style.opacity = '1';
-            text.style.transform = 'translateY(0)';
-        }, parseFloat(text.style.getPropertyValue('--delay')) * 1000);
-
-        button.style.opacity = '0';
-        button.style.transform = 'scale(0.8)';
-        setTimeout(() => {
-            button.style.transition = 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out';
-            button.style.opacity = '1';
-            button.style.transform = 'scale(1)';
-        }, parseFloat(button.style.getPropertyValue('--delay')) * 1000);
+            item.style.transition = 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out';
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+        }, parseFloat(item.style.getPropertyValue('--delay')) * 1000);
     });
 
+    title.style.opacity = '0';
+    title.style.transform = 'translateX(-20px)';
+    setTimeout(() => {
+        title.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
+        title.style.opacity = '1';
+        title.style.transform = 'translateX(0)';
+    }, 200);
 
-    function scrollCarousel(id, scrollAmount) {
-        const carousel = document.getElementById(id);
-        carousel.scrollBy({
-            left: scrollAmount,
-            behavior: 'smooth'
+    text.style.opacity = '0';
+    text.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+        text.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
+        text.style.opacity = '1';
+        text.style.transform = 'translateY(0)';
+    }, parseFloat(text.style.getPropertyValue('--delay')) * 1000);
+
+    button.style.opacity = '0';
+    button.style.transform = 'scale(0.8)';
+    setTimeout(() => {
+        button.style.transition = 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out';
+        button.style.opacity = '1';
+        button.style.transform = 'scale(1)';
+    }, parseFloat(button.style.getPropertyValue('--delay')) * 1000);
+
+    // --- Animate on Scroll ---
+    const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('start-animation');
+                observer.unobserve(entry.target);
+            }
         });
+    }, observerOptions);
+    elementsToAnimate.forEach(element => observer.observe(element));
+
+    // --- Editing Functionality ---
+
+    // Text modal elements
+    const editTextModal = document.getElementById('edit-text-modal');
+    const editTitleInput = document.getElementById('edit-title');
+    const editParagraphInput = document.getElementById('edit-paragraph');
+    const saveTextEditBtn = document.getElementById('save-text-edit');
+    const cancelTextEditBtn = document.getElementById('cancel-text-edit');
+    const latestNewsTitle = document.getElementById('latest-news-title');
+    const latestNewsParagraph = document.getElementById('latest-news-paragraph');
+    const latestNewsTextContainer = document.getElementById('latest-news-text-container');
+    const editTextButton = document.getElementById('edit-text-button');
+
+    // Logos modal elements
+    const editLogosModal = document.getElementById('edit-logos-modal');
+    const editLogosButton = document.getElementById('edit-logos-button');
+    const newLogoFileInput = document.getElementById('new-logo-file');
+    const newLogoPreview = document.getElementById('new-logo-preview');
+    const logoPreviewContainer = document.getElementById('logo-preview-container');
+    const noPreviewText = document.getElementById('no-preview-text');
+    const addLogoButton = document.getElementById('add-logo-button');
+    const modalLogosList = document.getElementById('modal-logos-list');
+    const cancelLogosEditBtn = document.getElementById('cancel-logos-edit');
+    const logosContainer = document.getElementById('logos-container');
+
+    let currentLogos = [
+        '{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}',
+        '{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}',
+        '{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}',
+        '{{ asset('storage/images (5) 1.svg') }}',
+        '{{ asset('storage/images 1.svg') }}',
+        '{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}',
+        '{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}',
+        '{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}',
+        '{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}',
+    ];
+
+    let scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const body = document.body;
+
+    function openModal(modal) {
+        modal.classList.remove('hidden');
+        body.style.overflow = 'hidden';
+        body.style.paddingRight = `${scrollBarWidth}px`;
     }
-</script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+    function closeModal(modal) {
+        modal.classList.add('hidden');
+        body.style.overflow = '';
+        body.style.paddingRight = '';
+    }
 
-        const observerOptions = {
-            root: null, // Use the viewport as the root
-            rootMargin: '0px',
-            threshold: 0.1 // Trigger when 10% of the element is visible
-        };
+    latestNewsTextContainer.addEventListener('mouseenter', () => {
+        editTextButton.classList.remove('hidden');
+    });
+    latestNewsTextContainer.addEventListener('mouseleave', () => {
+        editTextButton.classList.add('hidden');
+    });
 
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('start-animation');
-                    observer.unobserve(entry.target); // Stop observing once animated
-                }
-            });
-        }, observerOptions);
+    editTextButton.addEventListener('click', () => {
+        editTitleInput.value = latestNewsTitle.innerText.trim();
+        editParagraphInput.value = latestNewsParagraph.innerText.trim();
+        openModal(editTextModal);
+    });
 
-        elementsToAnimate.forEach(element => {
-            observer.observe(element);
-        });
+    saveTextEditBtn.addEventListener('click', () => {
+        latestNewsTitle.innerText = editTitleInput.value;
+        latestNewsParagraph.innerText = editParagraphInput.value;
+        closeModal(editTextModal);
+    });
 
-        // --- JavaScript for Editing Functionality ---
+    cancelTextEditBtn.addEventListener('click', () => {
+        closeModal(editTextModal);
+    });
 
-        // Get elements for the text modal
-        const editTextModal = document.getElementById('edit-text-modal');
-        const editTitleInput = document.getElementById('edit-title');
-        const editParagraphInput = document.getElementById('edit-paragraph');
-        const saveTextEditBtn = document.getElementById('save-text-edit');
-        const cancelTextEditBtn = document.getElementById('cancel-text-edit');
+    const logosContainerWrapper = document.querySelector('.container.mx-auto.px-4.py-6.overflow-x-auto.whitespace-nowrap.scrollbar-hide.animate-on-scroll.relative.group');
+    const actualLogosDiv = document.getElementById('logos-container');
 
-        // Get the display elements for text
-        const latestNewsTitle = document.getElementById('latest-news-title');
-        const latestNewsParagraph = document.getElementById('latest-news-paragraph');
+    logosContainerWrapper.addEventListener('mouseenter', () => {
+        editLogosButton.classList.remove('hidden');
+        editLogosButton.classList.add('block');
+        actualLogosDiv.classList.add('hover-active');
+    });
+    logosContainerWrapper.addEventListener('mouseleave', () => {
+        editLogosButton.classList.add('hidden');
+        actualLogosDiv.classList.remove('hover-active');
+    });
 
-        // Get the combined text edit button and its container
-        const latestNewsTextContainer = document.getElementById('latest-news-text-container');
-        const editTextButton = document.getElementById('edit-text-button');
+    editLogosButton.addEventListener('click', () => {
+        renderLogosInModal();
+        newLogoFileInput.value = '';
+        newLogoPreview.src = '#';
+        logoPreviewContainer.classList.add('hidden');
+        noPreviewText.classList.remove('hidden');
+        openModal(editLogosModal);
+    });
 
-
-        // Get elements for the logos modal
-        const editLogosModal = document.getElementById('edit-logos-modal');
-        const editLogosButton = document.getElementById('edit-logos-button');
-        const newLogoFileInput = document.getElementById('new-logo-file');
-        const newLogoPreview = document.getElementById('new-logo-preview');
-        const logoPreviewContainer = document.getElementById('logo-preview-container');
-        const noPreviewText = document.getElementById('no-preview-text');
-        const addLogoButton = document.getElementById('add-logo-button');
-        const modalLogosList = document.getElementById('modal-logos-list');
-        const cancelLogosEditBtn = document.getElementById('cancel-logos-edit');
-        const logosContainer = document.getElementById('logos-container'); // The div containing the logos on the main page
-
-        // Static data for logos (simulate from backend)
-        let currentLogos = [
-            '{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}',
-            '{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}',
-            '{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}',
-            '{{ asset('storage/images (5) 1.svg') }}',
-            '{{ asset('storage/images 1.svg') }}',
-            '{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}',
-            '{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}',
-            '{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}',
-            '{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}',
-        ];
-
-        // --- Scrollbar Fix Variables ---
-        let scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-        const body = document.body;
-
-        // Function to open a modal
-        function openModal(modal) {
-            modal.classList.remove('hidden');
-            // Prevent scrolling and compensate for scrollbar width
-            body.style.overflow = 'hidden';
-            body.style.paddingRight = `${scrollBarWidth}px`; // Add padding to compensate
-        }
-
-        // Function to close a modal
-        function closeModal(modal) {
-            modal.classList.add('hidden');
-            // Restore scrolling and remove padding
-            body.style.overflow = '';
-            body.style.paddingRight = '';
-        }
-
-        // Handle the combined text edit button
-        latestNewsTextContainer.addEventListener('mouseenter', () => {
-            editTextButton.classList.remove('hidden');
-        });
-        latestNewsTextContainer.addEventListener('mouseleave', () => {
-            editTextButton.classList.add('hidden');
-        });
-
-        editTextButton.addEventListener('click', () => {
-            editTitleInput.value = latestNewsTitle.innerText.trim();
-            editParagraphInput.value = latestNewsParagraph.innerText.trim();
-            openModal(editTextModal);
-        });
-
-        // Text Modal Save and Cancel Handlers
-        saveTextEditBtn.addEventListener('click', () => {
-            latestNewsTitle.innerText = editTitleInput.value;
-            latestNewsParagraph.innerText = editParagraphInput.value;
-            closeModal(editTextModal);
-        });
-
-        cancelTextEditBtn.addEventListener('click', () => {
-            closeModal(editTextModal);
-        });
-
-        // Setup for Edit Logos button
-        const logosContainerWrapper = document.querySelector('.container.mx-auto.px-4.py-6.overflow-x-auto.whitespace-nowrap.scrollbar-hide.animate-on-scroll.relative.group');
-        const actualLogosDiv = document.getElementById('logos-container'); // Get the inner div for logos
-
-        logosContainerWrapper.addEventListener('mouseenter', () => {
-            editLogosButton.classList.remove('hidden');
-            editLogosButton.classList.add('block'); // Ensure it's block to be visible
-            // Add the hover class to the actual logos container
-            actualLogosDiv.classList.add('hover-active');
-        });
-        logosContainerWrapper.addEventListener('mouseleave', () => {
-            editLogosButton.classList.add('hidden');
-            // Remove the hover class from the actual logos container
-            actualLogosDiv.classList.remove('hover-active');
-        });
-
-        editLogosButton.addEventListener('click', () => {
-            renderLogosInModal();
-            // Reset file input and preview when opening modal
-            newLogoFileInput.value = '';
+    newLogoFileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                newLogoPreview.src = e.target.result;
+                logoPreviewContainer.classList.remove('hidden');
+                noPreviewText.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
             newLogoPreview.src = '#';
             logoPreviewContainer.classList.add('hidden');
             noPreviewText.classList.remove('hidden');
-            openModal(editLogosModal);
-        });
+        }
+    });
 
-        // Handle file input change for preview
-        newLogoFileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    newLogoPreview.src = e.target.result;
-                    logoPreviewContainer.classList.remove('hidden');
-                    noPreviewText.classList.add('hidden');
-                };
-                reader.readAsDataURL(file);
-            } else {
+    function renderLogosInModal() {
+        modalLogosList.innerHTML = '';
+        if (currentLogos.length === 0) {
+            modalLogosList.innerHTML = '<p class="text-gray-500 col-span-full text-center">No logos added yet.</p>';
+            return;
+        }
+        currentLogos.forEach((logoUrl, index) => {
+            const logoWrapper = document.createElement('div');
+            logoWrapper.classList.add('relative', 'group', 'bg-gray-100', 'rounded-lg', 'p-2', 'flex', 'flex-col', 'items-center', 'justify-center', 'aspect-square');
+
+            const img = document.createElement('img');
+            img.src = logoUrl;
+            img.alt = `Logo ${index + 1}`;
+            img.classList.add('h-full', 'w-full', 'object-contain', 'rounded-md');
+
+            const removeBtn = document.createElement('button');
+            removeBtn.innerText = 'Remove';
+            removeBtn.classList.add('absolute', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-black', 'bg-opacity-60', 'text-white', 'px-2', 'py-1', 'rounded-lg', 'text-sm', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'duration-200');
+            removeBtn.addEventListener('click', () => {
+                removeLogo(index);
+            });
+
+            logoWrapper.appendChild(img);
+            logoWrapper.appendChild(removeBtn);
+            modalLogosList.appendChild(logoWrapper);
+        });
+    }
+
+    function updateDisplayedLogos() {
+        logosContainer.innerHTML = '';
+        currentLogos.forEach((logoUrl, index) => {
+            const img = document.createElement('img');
+            img.src = logoUrl;
+            img.alt = `Logo ${index + 1}`;
+            img.classList.add('h-16', 'md:h-20', 'w-auto', 'animate-logo-slide');
+            img.style.setProperty('--delay', `${(index + 1) * 0.1}s`);
+            logosContainer.appendChild(img);
+        });
+    }
+
+    addLogoButton.addEventListener('click', () => {
+        const file = newLogoFileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const newUrl = e.target.result;
+                currentLogos.push(newUrl);
+                newLogoFileInput.value = '';
                 newLogoPreview.src = '#';
                 logoPreviewContainer.classList.add('hidden');
                 noPreviewText.classList.remove('hidden');
-            }
-        });
-
-        // Render logos in the modal
-        function renderLogosInModal() {
-            modalLogosList.innerHTML = ''; // Clear existing logos
-            if (currentLogos.length === 0) {
-                modalLogosList.innerHTML = '<p class="text-gray-500 col-span-full text-center">No logos added yet.</p>';
-                return;
-            }
-            currentLogos.forEach((logoUrl, index) => {
-                const logoWrapper = document.createElement('div');
-                logoWrapper.classList.add('relative', 'group', 'bg-gray-100', 'rounded-lg', 'p-2', 'flex', 'flex-col', 'items-center', 'justify-center', 'aspect-square');
-
-                const img = document.createElement('img');
-                img.src = logoUrl;
-                img.alt = `Logo ${index + 1}`;
-                img.classList.add('h-full', 'w-full', 'object-contain', 'rounded-md');
-
-                const removeBtn = document.createElement('button');
-                removeBtn.innerText = 'Remove';
-                removeBtn.classList.add('absolute', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-black', 'bg-opacity-60', 'text-white', 'px-2', 'py-1', 'rounded-lg', 'text-sm', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'duration-200');
-                removeBtn.addEventListener('click', () => {
-                    removeLogo(index);
-                });
-
-                logoWrapper.appendChild(img);
-                logoWrapper.appendChild(removeBtn);
-                modalLogosList.appendChild(logoWrapper);
-            });
+                renderLogosInModal();
+                updateDisplayedLogos();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please select a logo file to upload.');
         }
-
-        // Function to update logos on the main display
-        function updateDisplayedLogos() {
-            logosContainer.innerHTML = ''; // Clear current logos
-            currentLogos.forEach((logoUrl, index) => {
-                const img = document.createElement('img');
-                img.src = logoUrl;
-                img.alt = `Logo ${index + 1}`;
-                // Keep consistent sizing with existing logos
-                img.classList.add('h-16', 'md:h-20', 'w-auto', 'animate-logo-slide');
-                img.style.setProperty('--delay', `${(index + 1) * 0.1}s`);
-                logosContainer.appendChild(img);
-            });
-        }
-
-        // Add Logo functionality to handle file uploads (simulated)
-        addLogoButton.addEventListener('click', async () => {
-            const file = newLogoFileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const newUrl = e.target.result; // This is a Data URL, good for preview
-                    currentLogos.push(newUrl);
-                    newLogoFileInput.value = ''; // Clear input
-                    newLogoPreview.src = '#'; // Clear preview
-                    logoPreviewContainer.classList.add('hidden');
-                    noPreviewText.classList.remove('hidden');
-                    renderLogosInModal();
-                    updateDisplayedLogos(); // Update main display
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Please select a logo file to upload.');
-            }
-        });
-
-        // Remove Logo functionality
-        function removeLogo(indexToRemove) {
-            currentLogos = currentLogos.filter((_, index) => index !== indexToRemove);
-            renderLogosInModal(); // Re-render modal
-            updateDisplayedLogos(); // Update main display
-        }
-
-        // Logos Modal Close Handler
-        cancelLogosEditBtn.addEventListener('click', () => {
-            closeModal(editLogosModal);
-        });
     });
+
+    function removeLogo(indexToRemove) {
+        currentLogos = currentLogos.filter((_, index) => index !== indexToRemove);
+        renderLogosInModal();
+        updateDisplayedLogos();
+    }
+
+    cancelLogosEditBtn.addEventListener('click', () => {
+        closeModal(editLogosModal);
+    });
+});
 </script>
