@@ -30,7 +30,17 @@
                 <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col justify-between transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
                     {{-- Image Section --}}
                     @if($blogfeed->image_path)
-                        <img src="{{ asset('storage/' . $blogfeed->image_path) }}" alt="{{ $blogfeed->title }}" class="w-full h-48 object-cover">
+                        <img 
+                            src="{{ 
+                                $blogfeed->image_path 
+                                    ? (Str::startsWith($blogfeed->image_path, ['http://', 'https://']) 
+                                        ? $blogfeed->image_path 
+                                        : asset('storage/' . $blogfeed->image_path)) 
+                                    : '' 
+                            }}" 
+                            alt="{{ $blogfeed->title }}" 
+                            class="w-full h-48 object-cover"
+                        />
                     @else
                         <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-xl text-gray-500 text-sm">No Image Available</div>
                     @endif
@@ -111,7 +121,13 @@
             <div x-show="selectedBlog" class="blog-details-content">
                 <article>
                     <template x-if="selectedBlog.image_path">
-                        <img :src="'/storage/' + selectedBlog.image_path" :alt="selectedBlog.title" class="mb-8 w-full h-80 sm:h-96 object-cover rounded-xl">
+                        <img 
+                            :src="selectedBlog && (selectedBlog.image_path.startsWith('http://') || selectedBlog.image_path.startsWith('https://')) 
+                                ? selectedBlog.image_path 
+                                : '/storage/' + selectedBlog.image_path" 
+                            :alt="selectedBlog ? selectedBlog.title : ''" 
+                            class="mb-8 w-full h-80 sm:h-96 object-cover rounded-xl"
+                        />
                     </template>
                     <template x-if="!selectedBlog.image_path">
                         <div class="mb-8 w-full h-80 sm:h-96 bg-gray-200 flex items-center justify-center rounded-xl text-gray-500 text-2xl">No Main Image Available</div>
