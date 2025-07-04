@@ -14,7 +14,13 @@
                 <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
                 <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 8">
                 <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 9">
-                
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
+                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
+                <img class="h-16 md:h-28 w-auto" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
+                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
                 <!-- Duplicate set for seamless looping -->
                 <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
                 <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
@@ -97,77 +103,6 @@
     </div>
 </div>
 </div>
-
-<style>
-    /* Logo carousel styles */
-    .logos-container {
-        overflow: hidden;
-        position: relative;
-    }
-    
-    .logos-track {
-        display: flex;
-        position: absolute;
-        animation: scrollLogos 30s linear infinite;
-        will-change: transform;
-    }
-    
-    @keyframes scrollLogos {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-    }
-    
-    .logos-track:hover {
-        animation-play-state: paused;
-    }
-    
-    /* Existing styles */
-    .news-card {
-        transition: box-shadow 0.3s;
-    }
-    .news-card:hover {
-        box-shadow: 0 8px 24px rgba(60,72,88,0.15);
-    }
-    
-    .animate-on-scroll {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    
-    .start-animation {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-    }
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    
-    .animate-logo-slide {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    
-    .animate-title-slide {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    
-    .animate-text-fade {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    
-    .animate-button-pop {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
