@@ -6,7 +6,9 @@ use App\Models\NewsItem;
 use App\Models\PageContent; 
 use App\Models\ContactMessage;
 use App\Models\ProjectDescription;
+use App\Models\PreviewSection2Logo;
 use Illuminate\Support\Facades\Route;
+use App\Models\PreviewSection2Caption;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
@@ -14,7 +16,9 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageContentController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ProjectDescriptionController;
+use App\Http\Controllers\PreviewSection2CaptionController;
+use App\Http\Controllers\PreviewSection2LogoController;
+use App\Http_Controllers\ProjectDescriptionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -52,6 +56,10 @@ Route::get('/cedula', function () {
     return view('User_Side_Screen.cedula');
 })->name('cedula');
 
+Route::get('/about-us', function () {
+    return view('User_Side_Screen.about-us');
+})->name('about-us');
+
 Route::get('/businesspermit', function () {
     return view('User_Side_Screen.businesspermit');
 })->name('businesspermit');
@@ -86,8 +94,10 @@ Route::prefix('admin')->group(function () {
         $blogfeeds = Blogfeed::all();
         $projects = Project::all();
         $description = ProjectDescription::first(); 
+        $logos = PreviewSection2Logo::select('id', 'logo')->get();
+        $caption = PreviewSection2Caption::value('caption');
 
-       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description'));
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
@@ -99,4 +109,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('projects', ProjectController::class);
     Route::get('projects', [ProjectController::class, 'indexAdmin'])->name('projects.indexAdmin');
     Route::post('/project-description/update', [ProjectDescriptionController::class, 'update'])->name('project-description.update');
+    Route::post('/logos', [PreviewSection2LogoController::class, 'store'])->name('logos.store');
+    Route::delete('/logos/{id}', [PreviewSection2LogoController::class, 'destroy'])->name('logos.destroy');
+    Route::post('/caption/update', [PreviewSection2CaptionController::class, 'update'])->name('caption.update');
 });

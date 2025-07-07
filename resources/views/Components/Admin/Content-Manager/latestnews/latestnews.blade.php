@@ -1,20 +1,18 @@
-@props(['newsItems'])
+@props(['newsItems'.'logos', 'caption'])
 
 <div class="bg-gray-100 min-h-screen py-8 z-10">
     {{-- MODIFIED: Added editable-container to the logos wrapper --}}
     <div class="container mx-auto px-4 py-6 overflow-x-auto whitespace-nowrap scrollbar-hide animate-on-scroll relative group">
-        <div class="flex items-center justify-center gap-x-8 md:gap-x-12 animate-on-scroll editable-container-logos" id="logos-container">
-            {{-- Initial Logos - These will be dynamically updated by JS --}}
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.1s" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.2s" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
-            <img class="h-16 md:h-24 w-auto animate-logo-slide" style="--delay: 0.3s" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.4s" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
-            <img class="h-16 md:h-28 w-auto animate-logo-slide" style="--delay: 0.5s" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.6s" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
-            <img class="h-16 md:h-24 w-auto animate-logo-slide" style="--delay: 0.7s" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.8s" src="{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 8">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.9s" src="{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 9">
-        </div>
+            <!--logo-images--> 
+            <div class="flex items-center justify-center gap-x-8 md:gap-x-12 animate-on-scroll editable-container-logos" id="logos-container">
+                @foreach($logos as $index => $logo)
+                    <img 
+                        class="h-16 md:h-20 w-auto animate-logo-slide" 
+                        style="--delay: {{ 0.1 * ($index + 1) }}s" 
+                        src="{{ asset(Str::startsWith($logo->logo, 'storage/') ? $logo->logo : 'storage/' . $logo->logo) }}" 
+                        alt="Logo {{ $index + 1 }}">
+                @endforeach
+            </div>
         {{-- Edit Logos Button --}}
         <button id="edit-logos-button" class="edit-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white px-4 py-2 rounded-full text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden">Edit Logos</button>
     </div>
@@ -26,8 +24,8 @@
             <div class="relative group editable-container" id="latest-news-text-container">
                 <div class="space-y-4">
                     <h2 class="text-indigo-900 text-3xl md:text-4xl font-bold font-['Merriweather'] !text-[18px] animate-title-slide" id="latest-news-title">Latest News</h2>
-                    <p class="text-gray-700 text-sm md:text-base font-light leading-relaxed animate-text-fade" style="--delay: 0.2s" id="latest-news-paragraph">
-                        This page is made to show the latest local news happening here in the Philippines. It provides updates on important events, community stories, government announcements, and other news that matters to Filipinos. Stay informed and connected with what’s going on around the country through this page.
+            <!--caption--> <p class="text-gray-700 text-sm md:text-base font-light leading-relaxed animate-text-fade" style="--delay: 0.2s" id="latest-news-paragraph">
+                        {{ $caption ?? 'initial but not dynamic' }}
                     </p>
                 </div>
                 {{-- Single Edit Button for both title and paragraph --}}
@@ -136,8 +134,9 @@
         <div class="flex-grow overflow-y-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4" id="modal-logos-list">
             {{-- Logos will be rendered here --}}
         </div>
-        <div class="flex justify-end gap-4 mt-6">
-            <button id="cancel-logos-edit" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors">Close</button>
+        <div class="flex justify-end gap-4 mt-6 pt-4 border-t border-gray-200">
+            <button id="cancel-logos-edit" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors">Cancel</button>
+            <button id="save-logos-edit" class="bg-indigo-900 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition-colors">Save Changes</button>
         </div>
     </div>
 </div>
@@ -298,17 +297,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelLogosEditBtn = document.getElementById('cancel-logos-edit');
     const logosContainer = document.getElementById('logos-container');
 
-    let currentLogos = [
-        '{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}',
-        '{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}',
-        '{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}',
-        '{{ asset('storage/images (5) 1.svg') }}',
-        '{{ asset('storage/images 1.svg') }}',
-        '{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}',
-        '{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}',
-        '{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}',
-        '{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}',
-    ];
+        let currentLogos = [
+            @foreach($logos as $logo)
+                { 
+                    id: {{ $logo->id }}, 
+                    url: "{{ asset(Str::startsWith($logo->logo, 'storage/') ? $logo->logo : 'storage/' . $logo->logo) }}", 
+                    isNew: false 
+                },
+            @endforeach
+        ];
+    let logosToAdd = [];
+    let logosToRemove = [];
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     let scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
     const body = document.body;
@@ -338,10 +338,44 @@ document.addEventListener('DOMContentLoaded', () => {
         openModal(editTextModal);
     });
 
-    saveTextEditBtn.addEventListener('click', () => {
-        latestNewsTitle.innerText = editTitleInput.value;
-        latestNewsParagraph.innerText = editParagraphInput.value;
-        closeModal(editTextModal);
+    saveTextEditBtn.addEventListener('click', async () => {
+        const newTitle = editTitleInput.value;
+        const newParagraph = editParagraphInput.value;
+        
+        saveTextEditBtn.disabled = true;
+        saveTextEditBtn.innerText = 'Saving...';
+
+        try {
+            const response = await fetch('/admin/caption/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ caption: newParagraph })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+
+            // Update the UI on success
+            latestNewsTitle.innerText = newTitle; // Title is not saved, just UI
+            latestNewsParagraph.innerText = data.caption;
+            
+            alert('Caption updated successfully!');
+            closeModal(editTextModal);
+
+        } catch (error) {
+            console.error('Error updating caption:', error);
+            alert('An error occurred while saving the caption. Please try again.');
+        } finally {
+            saveTextEditBtn.disabled = false;
+            saveTextEditBtn.innerText = 'Save Changes';
+        }
     });
 
     cancelTextEditBtn.addEventListener('click', () => {
@@ -389,25 +423,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderLogosInModal() {
         modalLogosList.innerHTML = '';
-        if (currentLogos.length === 0) {
-            modalLogosList.innerHTML = '<p class="text-gray-500 col-span-full text-center">No logos added yet.</p>';
+        const allLogos = [
+            ...currentLogos.filter(logo => !logosToRemove.includes(logo.id)),
+            ...logosToAdd.map(file => ({ id: null, url: URL.createObjectURL(file), isNew: true }))
+        ];
+
+        if (allLogos.length === 0) {
+            modalLogosList.innerHTML = '<p class="text-gray-500 col-span-full text-center">No logos to display.</p>';
             return;
         }
-        currentLogos.forEach((logoUrl, index) => {
+
+        allLogos.forEach((logo, index) => {
             const logoWrapper = document.createElement('div');
-            logoWrapper.classList.add('relative', 'group', 'bg-gray-100', 'rounded-lg', 'p-2', 'flex', 'flex-col', 'items-center', 'justify-center', 'aspect-square');
+            logoWrapper.classList.add('relative', 'group', 'bg-gray-100', 'rounded-lg', 'p-2', 'flex', 'items-center', 'justify-center', 'aspect-square');
 
             const img = document.createElement('img');
-            img.src = logoUrl;
-            img.alt = `Logo ${index + 1}`;
+            img.src = logo.url;
+            img.alt = `Logo`;
             img.classList.add('h-full', 'w-full', 'object-contain', 'rounded-md');
 
             const removeBtn = document.createElement('button');
             removeBtn.innerText = 'Remove';
-            removeBtn.classList.add('absolute', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-black', 'bg-opacity-60', 'text-white', 'px-2', 'py-1', 'rounded-lg', 'text-sm', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'duration-200');
-            removeBtn.addEventListener('click', () => {
-                removeLogo(index);
-            });
+            removeBtn.classList.add('absolute', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-red-600', 'bg-opacity-70', 'text-white', 'px-2', 'py-1', 'rounded-lg', 'text-sm', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'duration-200');
+            
+            removeBtn.onclick = () => {
+                if (logo.isNew) {
+                    // If it's a new logo, remove it from the logosToAdd array
+                    logosToAdd = logosToAdd.filter(f => f !== logo.file);
+                } else {
+                    // If it's an existing logo, add its ID to the logosToRemove array
+                    if (!logosToRemove.includes(logo.id)) {
+                        logosToRemove.push(logo.id);
+                    }
+                }
+                // Re-render the modal and the main display
+                renderLogosInModal();
+                updateDisplayedLogos();
+            };
 
             logoWrapper.appendChild(img);
             logoWrapper.appendChild(removeBtn);
@@ -417,12 +469,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateDisplayedLogos() {
         logosContainer.innerHTML = '';
-        currentLogos.forEach((logoUrl, index) => {
+        const allLogos = [
+            ...currentLogos.filter(logo => !logosToRemove.includes(logo.id)),
+            ...logosToAdd.map(file => ({ id: null, url: URL.createObjectURL(file) }))
+        ];
+
+        allLogos.forEach((logo, index) => {
             const img = document.createElement('img');
-            img.src = logoUrl;
+            img.src = logo.url;
             img.alt = `Logo ${index + 1}`;
-            img.classList.add('h-16', 'md:h-20', 'w-auto', 'animate-logo-slide');
-            img.style.setProperty('--delay', `${(index + 1) * 0.1}s`);
+            img.classList.add('h-16', 'md:h-20', 'w-auto');
             logosContainer.appendChild(img);
         });
     }
@@ -430,31 +486,67 @@ document.addEventListener('DOMContentLoaded', () => {
     addLogoButton.addEventListener('click', () => {
         const file = newLogoFileInput.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const newUrl = e.target.result;
-                currentLogos.push(newUrl);
-                newLogoFileInput.value = '';
-                newLogoPreview.src = '#';
-                logoPreviewContainer.classList.add('hidden');
-                noPreviewText.classList.remove('hidden');
-                renderLogosInModal();
-                updateDisplayedLogos();
-            };
-            reader.readAsDataURL(file);
+            logosToAdd.push(file);
+            newLogoFileInput.value = '';
+            logoPreviewContainer.classList.add('hidden');
+            renderLogosInModal();
+            updateDisplayedLogos();
         } else {
-            alert('Please select a logo file to upload.');
+            alert('Please select a file.');
         }
     });
 
-    function removeLogo(indexToRemove) {
-        currentLogos = currentLogos.filter((_, index) => index !== indexToRemove);
-        renderLogosInModal();
-        updateDisplayedLogos();
-    }
-
     cancelLogosEditBtn.addEventListener('click', () => {
+        // Reset state on cancel
+        logosToAdd = [];
+        logosToRemove = [];
         closeModal(editLogosModal);
+        renderLogosInModal(); // rerender to clear selections
+        updateDisplayedLogos();
+    });
+
+    document.getElementById('save-logos-edit').addEventListener('click', async () => {
+        const saveButton = document.getElementById('save-logos-edit');
+        saveButton.disabled = true;
+        saveButton.innerText = 'Saving...';
+
+        try {
+            // Process deletions
+            for (const id of logosToRemove) {
+                await fetch(`/admin/logos/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                });
+            }
+
+            // Process additions
+            const formData = new FormData();
+            for (const file of logosToAdd) {
+                formData.append('logo', file);
+                 await fetch('/admin/logos', {
+                    method: 'POST',
+                    headers: {
+                       'X-CSRF-TOKEN': csrfToken,
+                       'Accept': 'application/json',
+                    },
+                    body: formData,
+                });
+                 // Clear form data for next iteration
+                formData.delete('logo');
+            }
+            
+            // Success
+            alert('Logos updated successfully!');
+            window.location.reload();
+
+        } catch (error) {
+            console.error('Error saving logos:', error);
+            alert('An error occurred while saving. Please check the console and try again.');
+            saveButton.disabled = false;
+            saveButton.innerText = 'Save Changes';
+        }
     });
 });
 </script>
