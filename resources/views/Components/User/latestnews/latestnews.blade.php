@@ -1,19 +1,41 @@
 @props(['newsItems'])
 <div class="bg-gray-100 min-h-screen py-8 z-10">
-    <div class="container mx-auto px-4 py-6 overflow-x-auto whitespace-nowrap scrollbar-hide animate-on-scroll">
-        <div class="flex items-center justify-center gap-x-8 md:gap-x-12 animate-on-scroll">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.1s" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.2s" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
-            <img class="h-16 md:h-24 w-auto animate-logo-slide" style="--delay: 0.3s" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.4s" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
-            <img class="h-16 md:h-28 w-auto animate-logo-slide" style="--delay: 0.5s" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.6s" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
-            <img class="h-16 md:h-24 w-auto animate-logo-slide" style="--delay: 0.7s" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.8s" src="{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 8">
-            <img class="h-16 md:h-20 w-auto animate-logo-slide" style="--delay: 0.9s" src="{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 9">
+    <!-- Logo Carousel Section -->
+    <div class="container mx-auto px-4 py-6 overflow-hidden animate-on-scroll">
+        <div class="relative h-28 md:h-32 overflow-hidden">
+            <div class="logos-track absolute top-0 left-0 flex items-center gap-x-8 md:gap-x-12 animate-scroll">
+                <!-- First set of logos -->
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
+                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
+                <img class="h-16 md:h-28 w-auto" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
+                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 8">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 9">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
+                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
+                <img class="h-16 md:h-28 w-auto" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
+                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
+                <!-- Duplicate set for seamless looping -->
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
+                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
+                <img class="h-16 md:h-28 w-auto" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
+                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 8">
+                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 9">
+            </div>
         </div>
     </div>
 
+    <!-- Rest of the code remains unchanged -->
     <div class="container mx-auto px-4 py-12 flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-10"
       style="height: 500px; min-height: 500px; max-height: 500px; overflow: hidden;">
     <div class="w-full lg:w-1/3 flex flex-col items-start gap-6">
@@ -79,72 +101,79 @@
             </button>
         </div>
     </div>
-
 </div>
-    </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Logo carousel animation
+    const track = document.querySelector('.logos-track');
+    const logos = document.querySelectorAll('.logos-track img');
+    
+    // Calculate total width for proper looping
+    let totalWidth = 0;
+    logos.forEach(logo => {
+        totalWidth += logo.offsetWidth + 32; // 32px for gap (2rem)
+    });
+    totalWidth = totalWidth / 2; // Since we have duplicate set
+    
+    // Set track width to double for seamless looping
+    track.style.width = `${totalWidth * 2}px`;
+    
+    // Existing news carousel code
     const cards = document.querySelectorAll('#news-carousel-inner .news-card');
     const prevBtn = document.getElementById('prev-news-btn');
     const nextBtn = document.getElementById('next-news-btn');
-    const newsCarouselInner = document.getElementById('news-carousel-inner'); // Get the inner container
-    const cardWidth = 320 + 24; // Card width + gap (1.5rem = 24px)
-    const visibleCount = 4; // Let's display 3 full cards + a hint of the next one
+    const newsCarouselInner = document.getElementById('news-carousel-inner');
+    const cardWidth = 320 + 24;
+    const visibleCount = 4;
     let start = 0;
 
     function positionCards() {
-        // Hide all cards initially
         cards.forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateX(0)';
             card.style.zIndex = '1';
-            card.style.pointerEvents = 'none'; // Disable clicks when hidden
+            card.style.pointerEvents = 'none';
         });
 
         const carouselWidth = newsCarouselInner.offsetWidth;
         const totalCardsWidth = visibleCount * cardWidth;
-        const startX = (carouselWidth - totalCardsWidth) / 2; // Center the group of visible cards
+        const startX = (carouselWidth - totalCardsWidth) / 2;
 
         for (let i = 0; i < visibleCount; i++) {
             const cardIndex = (start + i) % cards.length;
             const card = cards[cardIndex];
-
-            // Calculate target X position for the slide-in animation
             const targetX = startX + i * cardWidth;
 
-            card.style.left = `${targetX}px`; // Set the target position
+            card.style.left = `${targetX}px`;
             card.style.opacity = '1';
-            card.style.transform = 'translateX(0)'; // Ensure it's at its final position after animation
-            card.style.zIndex = '10'; // Bring active cards to front
-            card.style.pointerEvents = 'auto'; // Enable clicks for visible cards
+            card.style.transform = 'translateX(0)';
+            card.style.zIndex = '10';
+            card.style.pointerEvents = 'auto';
         }
     }
 
     function animateCarousel(direction) {
-        // 1. Animate current visible cards out
         for (let i = 0; i < visibleCount; i++) {
             const cardIndex = (start + i) % cards.length;
             const card = cards[cardIndex];
             card.style.opacity = '0';
             if (direction === 'next') {
-                card.style.transform = 'translateX(-50px)'; // Slide left out
+                card.style.transform = 'translateX(-50px)';
             } else {
-                card.style.transform = 'translateX(50px)'; // Slide right out
+                card.style.transform = 'translateX(50px)';
             }
             card.style.zIndex = '1';
             card.style.pointerEvents = 'none';
         }
 
-        // Update start index
         if (direction === 'next') {
             start = (start + 1) % cards.length;
         } else {
             start = (start - 1 + cards.length) % cards.length;
         }
 
-        // 2. Animate new visible cards in after a short delay
         setTimeout(() => {
             const carouselWidth = newsCarouselInner.offsetWidth;
             const totalCardsWidth = visibleCount * cardWidth;
@@ -153,19 +182,16 @@ document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < visibleCount; i++) {
                 const cardIndex = (start + i) % cards.length;
                 const card = cards[cardIndex];
-
                 const targetX = startX + i * cardWidth;
 
-                // Initial position for incoming cards (off-screen)
                 if (direction === 'next') {
-                    card.style.left = `${targetX + 50}px`; // Start slightly right
+                    card.style.left = `${targetX + 50}px`;
                 } else {
-                    card.style.left = `${targetX - 50}px`; // Start slightly left
+                    card.style.left = `${targetX - 50}px`;
                 }
-                card.style.opacity = '0'; // Start faded out
-                card.style.zIndex = '10'; // Bring to front before animating in
+                card.style.opacity = '0';
+                card.style.zIndex = '10';
 
-                // Trigger animation
                 requestAnimationFrame(() => {
                     card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out, left 0.5s ease-out';
                     card.style.left = `${targetX}px`; 
@@ -174,9 +200,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     card.style.pointerEvents = 'auto'; 
                 });
             }
-        }, 100); // Small delay to allow old cards to start animating out
+        }, 100);
     }
-
 
     prevBtn.addEventListener('click', function() {
         animateCarousel('prev');
@@ -188,140 +213,66 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial positioning of cards on load
     positionCards();
+    
+    // Existing scroll animations
+    const logoItems = document.querySelectorAll('.animate-logo-slide');
+    const title = document.querySelector('.animate-title-slide');
+    const text = document.querySelector('.animate-text-fade');
+    const button = document.querySelector('.animate-button-pop');
+
+    logoItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            item.style.transition = 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out';
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+        }, parseFloat(item.style.getPropertyValue('--delay')) * 1000);
+    });
+
+    title.style.opacity = '0';
+    title.style.transform = 'translateX(-20px)';
+    setTimeout(() => {
+        title.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
+        title.style.opacity = '1';
+        title.style.transform = 'translateX(0)';
+    }, 200);
+
+    text.style.opacity = '0';
+    text.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+        text.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
+        text.style.opacity = '1';
+        text.style.transform = 'translateY(0)';
+    }, parseFloat(text.style.getPropertyValue('--delay')) * 1000);
+
+    button.style.opacity = '0';
+    button.style.transform = 'scale(0.8)';
+    setTimeout(() => {
+        button.style.transition = 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out';
+        button.style.opacity = '1';
+        button.style.transform = 'scale(1)';
+    }, parseFloat(button.style.getPropertyValue('--delay')) * 1000);
+
+    // Scroll-based animations
+    const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('start-animation');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    elementsToAnimate.forEach(element => {
+        observer.observe(element);
+    });
 });
-</script>
-
-
-<style>
-/* Existing styles for news-card hover */
-.news-card {
-    transition: box-shadow 0.3s;
-}
-.news-card:hover {
-    box-shadow: 0 8px 24px rgba(60,72,88,0.15);
-}
-
-/* Add styles for animation on scroll if not already present */
-.animate-on-scroll {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-}
-
-.start-animation {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Hide scrollbar */
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-/* Initial states for other entrance animations (if they exist) */
-.animate-logo-slide {
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.animate-title-slide {
-    opacity: 0;
-    transform: translateX(-20px);
-}
-
-.animate-text-fade {
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.animate-button-pop {
-    opacity: 0;
-    transform: scale(0.8);
-}
-
-</style>
-
-<script>
-    // This script block should remain for the initial page load animations
-    document.addEventListener('DOMContentLoaded', () => {
-        const logoItems = document.querySelectorAll('.animate-logo-slide');
-        const title = document.querySelector('.animate-title-slide');
-        const text = document.querySelector('.animate-text-fade');
-        const button = document.querySelector('.animate-button-pop');
-
-        logoItems.forEach((item, index) => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                item.style.transition = 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out';
-                item.style.opacity = '1';
-                item.style.transform = 'translateY(0)';
-            }, parseFloat(item.style.getPropertyValue('--delay')) * 1000);
-        });
-
-        title.style.opacity = '0';
-        title.style.transform = 'translateX(-20px)';
-        setTimeout(() => {
-            title.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
-            title.style.opacity = '1';
-            title.style.transform = 'translateX(0)';
-        }, 200);
-
-        text.style.opacity = '0';
-        text.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            text.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out';
-            text.style.opacity = '1';
-            text.style.transform = 'translateY(0)';
-        }, parseFloat(text.style.getPropertyValue('--delay')) * 1000);
-
-        button.style.opacity = '0';
-        button.style.transform = 'scale(0.8)';
-        setTimeout(() => {
-            button.style.transition = 'opacity 0.6s ease-in-out, transform 0.6s ease-in-out';
-            button.style.opacity = '1';
-            button.style.transform = 'scale(1)';
-        }, parseFloat(button.style.getPropertyValue('--delay')) * 1000);
-
-
-    });
-
-
-    function scrollCarousel(id, scrollAmount) {
-        const carousel = document.getElementById(id);
-        carousel.scrollBy({
-            left: scrollAmount,
-            behavior: 'smooth'
-        });
-    }
-</script>
-
-<script>
-    // This script block should remain for the scroll-based animations
-    document.addEventListener('DOMContentLoaded', () => {
-        const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
-
-        const observerOptions = {
-            root: null, // Use the viewport as the root
-            rootMargin: '0px',
-            threshold: 0.1 // Trigger when 10% of the element is visible
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('start-animation');
-                    observer.unobserve(entry.target); // Stop observing once animated
-                }
-            });
-        }, observerOptions);
-
-        elementsToAnimate.forEach(element => {
-            observer.observe(element);
-        });
-    });
 </script>
