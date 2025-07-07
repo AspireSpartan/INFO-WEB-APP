@@ -52,6 +52,10 @@ Route::get('/cedula', function () {
     return view('User_Side_Screen.cedula');
 })->name('cedula');
 
+Route::get('/about-us', function () {
+    return view('User_Side_Screen.about-us');
+})->name('about-us');
+
 Route::get('/businesspermit', function () {
     return view('User_Side_Screen.businesspermit');
 })->name('businesspermit');
