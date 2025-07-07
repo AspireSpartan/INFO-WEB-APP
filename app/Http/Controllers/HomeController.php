@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\PageContent; 
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
 use App\Models\ProjectDescription;
-use App\Models\PageContent; 
+use App\Models\PreviewSection2Logo;
+use App\Models\PreviewSection2Caption;
+use Illuminate\Support\Str;
 
 
 class HomeController extends Controller
@@ -36,6 +39,7 @@ class HomeController extends Controller
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
         $description = ProjectDescription::first();
+        
 
         if (empty($pageContent)) {
             $pageContent = [
@@ -55,10 +59,18 @@ class HomeController extends Controller
                 'footer-paragraph' => 'Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.',
             ];
         }
+        
+        $logos = PreviewSection2Logo::select('logo')->get()->map(function ($logo) {
+            if (!Str::startsWith($logo->logo, 'storage/')) {
+                $logo->logo = 'storage/' . $logo->logo;
+            }
+            return $logo;
+        });
+        $caption = PreviewSection2Caption::value('caption');
 
         // Pass all necessary data to the home view
 
-        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description')); // Pass the pageContent array
+        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption')); // Pass the pageContent array
     }
 
     /**
