@@ -113,7 +113,7 @@
                                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                 </div>
                             </div>
-                            
+
                         <div>
                             <label for="business_phone" class="block text-sm font-medium text-gray-700 mb-1">Business Phone</label>
                             <input type="tel" id="business_phone" name="business_phone"
@@ -191,9 +191,9 @@
 
                 <!-- Submit Button -->
                 <div class="flex justify-end pt-4 gap-2">
-                    <a href="{{ asset('forms/testreport.pdf') }}" download
-                    class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition ease-in-out duration-150 flex items-center justify-center">
-                        Download Form
+                    <a href=" https://drive.google.com/file/d/1bKmYKh4XnEJBLkfYPUYQ40txjq-dAbeW/view?usp=sharing" target="_blank"
+                        class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700">
+                            Download Form
                     </a>
                     <button type="submit"
                         class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">

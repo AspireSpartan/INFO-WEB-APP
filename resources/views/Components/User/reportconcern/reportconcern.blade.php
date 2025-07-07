@@ -148,9 +148,9 @@
 
                 <!-- Submission Button -->
                 <div class="flex justify-end pt-4 gap-2">
-                    <a href="{{ asset('forms/testreport.pdf') }}" download
-                        class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition ease-in-out duration-150 flex items-center justify-center">
-                        Download Form
+                    <a href=" https://drive.google.com/file/d/10hgw59_HPRdK5KqEJW6hgnKgmQ7z2Zrp/view?usp=sharing" target="_blank"
+                        class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700">
+                            Download Form
                     </a>
                     <button type="submit"
                         class="px-6 py-3 bg-red-600 text-white font-semibold rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition ease-in-out duration-150">
