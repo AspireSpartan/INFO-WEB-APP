@@ -1,6 +1,6 @@
 <header style="font-family: 'Merriweather', questrial;"
         class="fixed top-0 left-0 w-full z-50 transition-all duration-300"
-        x-data="{ mobileMenuOpen: false, scrolled: 0, prevScrollPos: window.pageYOffset, showNavbar: true }"
+        x-data="{ mobileMenuOpen: false, scrolled: 0, prevScrollPos: window.pageYOffset, showNavbar: true, isHomePage: window.location.pathname === '/home' || window.location.pathname === '/blog' || window.location.pathname === '/' }"
         x-init="
             window.addEventListener('scroll', () => {
                 scrolled = window.scrollY;
@@ -15,13 +15,13 @@
             });
         "
         :class="{
-            'bg-black/50': scrolled > 0,
-            'bg-transparent': scrolled === 0,
+            'bg-black/50': scrolled > 0 || !isHomePage, /* Solid background if scrolled or not on homepage */
+            'bg-transparent': scrolled === 0 && isHomePage, /* Transparent only on homepage and at top */
             'translate-y-0 opacity-100': showNavbar,
-            '-translate-y-full opacity-0': !showNavbar && !mobileMenuOpen // Don't hide if mobile menu is open
+            '-translate-y-full opacity-0': !showNavbar && !mobileMenuOpen
         }">
 
-    <nav class="container mx-auto px-4 h-20 flex items-center justify-between pt-[20px]">
+    <nav class="container mx-auto px-4 h-20 flex items-center justify-between pt-2">
         {{-- Logo --}}
         <div class="flex items-center">
            <a href="/home">
