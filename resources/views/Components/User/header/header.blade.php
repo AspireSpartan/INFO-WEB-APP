@@ -1,5 +1,27 @@
-<header style="font-family: 'Merriweather', questrial;" class="fixed top-0 left-0 w-full bg-black/50 z-50" x-data="{ mobileMenuOpen: false }">
-    <nav class="container mx-auto px-4 h-20 flex items-center justify-between">
+<header style="font-family: 'Merriweather', questrial;"
+        class="fixed top-0 left-0 w-full z-50 transition-all duration-300"
+        x-data="{ mobileMenuOpen: false, scrolled: 0, prevScrollPos: window.pageYOffset, showNavbar: true }"
+        x-init="
+            window.addEventListener('scroll', () => {
+                scrolled = window.scrollY;
+
+                // Handle hide/show on scroll
+                if (window.pageYOffset > prevScrollPos && window.pageYOffset > 100) { // Scrolled down
+                    showNavbar = false;
+                } else { // Scrolled up or at the very top
+                    showNavbar = true;
+                }
+                prevScrollPos = window.pageYOffset;
+            });
+        "
+        :class="{
+            'bg-black/50': scrolled > 0,
+            'bg-transparent': scrolled === 0,
+            'translate-y-0 opacity-100': showNavbar,
+            '-translate-y-full opacity-0': !showNavbar && !mobileMenuOpen // Don't hide if mobile menu is open
+        }">
+
+    <nav class="container mx-auto px-4 h-20 flex items-center justify-between pt-[20px]">
         {{-- Logo --}}
         <div class="flex items-center">
            <a href="/home">
@@ -9,7 +31,7 @@
 
         {{-- Desktop Navigation --}}
         <div class="hidden lg:flex items-center space-x-8 lg:space-x-12">
-            {{-- Home Dropdown (assuming it needs one based on previous discussions) --}}
+            {{-- Home Dropdown --}}
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button type="button" class="flex items-center gap-x-1 text-white text-base font-normal font-['Questrial'] hover:text-amber-400 cursor-pointer"style="font-size: 15px !important;"
                         @click="open = !open" aria-expanded="false" :aria-expanded="open.toString()">
@@ -30,10 +52,10 @@
                         role="menu" aria-orientation="vertical" aria-labelledby="services-menu-button" tabindex="-1">
                     <div class="py-1" role="none">
                         <a href="/home" data-scroll-percent="0" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Banner</a>
-                        <a href="/home" data-scroll-percent="22" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Latest News</a>
+                        <a href="/home" data-scroll-percent="24.9" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Latest News</a>
                         <a href="/home" data-scroll-percent="36" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Strategic plan</a>
-                        <a href="/home" data-scroll-percent="51" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Projects</a>
-                        <a href="/home" data-scroll-percent="80" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Officials</a>
+                        <a href="/home" data-scroll-percent="56.8" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Projects</a>
+                        <a href="/home" data-scroll-percent="83.5" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Officials</a>
                         <a href="/home" data-scroll-percent="100" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Footer</a>
                     </div>
                 </div>
@@ -61,7 +83,7 @@
                     <div class="py-1" role="none">
                         <a href="/cedula" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Cedula</a>
                         <a href="/businesspermit" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Business Permit</a>
-                        <a href=/reportconcern#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Report Concern</a>
+                        <a href="/reportconcern" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Report Concern</a>
                     </div>
                 </div>
             </div>
@@ -92,6 +114,9 @@
                     </div>
                 </div>
             </div>
+
+            {{-- About Us (No Dropdown) --}}
+            <a href="/about-us" class="text-white text-base font-normal font-['Questrial'] hover:text-amber-400" style="font-size: 15px !important;">About Us</a>
 
             {{-- Contact Us (No Dropdown) --}}
             <a href="/contact-us" class="text-white text-base font-normal font-['Questrial'] hover:text-amber-400"style="font-size: 15px !important;">Contact Us</a>
@@ -126,9 +151,31 @@
             </svg>
         </button>
 
-        <a href="/home" class="text-white text-2xl font-normal font-['Questrial'] hover:text-amber-400" @click="mobileMenuOpen = false">Home</a>
+        {{-- Mobile Home Dropdown --}}
+        <div x-data="{ open: false }" class="w-full text-center">
+            <button class="text-white text-2xl font-normal font-['Questrial'] hover:text-amber-400 flex items-center justify-center mx-auto gap-x-2"
+                    @click="open = !open">
+                Home
+                <svg class="size-6 text-white transition-transform duration-200"
+                     :class="{ 'rotate-180': open }" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                 class="mt-4 flex flex-col space-y-4 text-xl">
+                <a href="/home" data-scroll-percent="0" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Banner</a>
+                <a href="/home" data-scroll-percent="24.9" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Latest News</a>
+                <a href="/home" data-scroll-percent="36" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Strategic plan</a>
+                <a href="/home" data-scroll-percent="56.8" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Projects</a>
+                <a href="/home" data-scroll-percent="83.5" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Officials</a>
+                <a href="/home" data-scroll-percent="100" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Footer</a>
+            </div>
+        </div>
 
-        {{-- Mobile Services Dropdown (simplified for mobile, or could be an accordion) --}}
+        {{-- Mobile Services Dropdown --}}
         <div x-data="{ open: false }" class="w-full text-center">
             <button class="text-white text-2xl font-normal font-['Questrial'] hover:text-amber-400 flex items-center justify-center mx-auto gap-x-2"
                     @click="open = !open">
@@ -143,9 +190,9 @@
                  x-transition:leave="transition ease-in duration-150"
                  x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                  class="mt-4 flex flex-col space-y-4 text-xl">
-                <a href="#" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Web Dev</a>
-                <a href="#" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Mobile Apps</a>
-                <a href="#" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">UI/UX</a>
+                <a href="/cedula" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Cedula</a>
+                <a href="/businesspermit" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Business Permit</a>
+                <a href="/reportconcern" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Report Concern</a>
             </div>
         </div>
 
@@ -164,10 +211,18 @@
                  x-transition:leave="transition ease-in duration-150"
                  x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                  class="mt-4 flex flex-col space-y-4 text-xl">
-                <a href="#" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Latest</a>
-                <a href="#" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Categories</a>
+                <a href="/blog" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Latest Articles</a>
+                <a href="/showallproject" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Projects</a>
+                <a href="#" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Case Studies</a>
             </div>
         </div>
+        
+        {{-- Mobile About Us Link --}}
+        <a href="/about-us" class="text-white text-2xl font-normal font-['Questrial'] hover:text-amber-400" @click="mobileMenuOpen = false">About Us</a>
+
+        {{-- Mobile Contact Us Link --}}
+        <a href="/contact-us" class="text-white text-2xl font-normal font-['Questrial'] hover:text-amber-400" @click="mobileMenuOpen = false">Contact Us</a>
+
         <a href="/sign-in" class="bg-amber-400 text-white text-2xl font-normal font-['Segoe_UI'] py-3 px-10 rounded-[30px] hover:bg-amber-500 transition-colors" @click="mobileMenuOpen = false">Sign In</a>
     </div>
 </header>
