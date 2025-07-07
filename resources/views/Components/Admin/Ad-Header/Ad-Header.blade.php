@@ -1,13 +1,13 @@
 @extends('layouts.admin') {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
 @section('title', 'Admin View')
 @section('content')
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description']) 
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption']) 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
 
          activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
          notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-         screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latest news', 'mission', 'developers', 'links'],
+         screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'mission', 'developers', 'links'],
 
 
          resetNotifications() {
@@ -93,7 +93,7 @@
             <!-- Content Manager dropdown -->
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open"
-                        :class="{'text-amber-400': ['banner', 'latest news', 'mission', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latest news', 'mission', 'developers', 'links'].includes(activeScreen) || open)}"
+                        :class="{'text-amber-400': ['banner', 'latestnews', 'mission', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latestnews', 'mission', 'developers', 'links'].includes(activeScreen) || open)}"
                         class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
                     Content Manager
                     <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -114,7 +114,7 @@
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('banner'); open = false">Banner</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        @click.prevent="switchScreen('latest news'); open = false">Latest News</a>
+                        @click.prevent="switchScreen('latestnews'); open = false">Latest News</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('mission'); open = false">Mission</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -225,8 +225,8 @@
                 <template x-if="screen === 'banner'">
                     <div>@include('Components.Admin.Content-Manager.banner.banner', ['pageContent' => $pageContent ?? []])</div>
                 </template>
-                <template x-if="screen === 'latest news'">
-                    <div>@include('Components.Admin.Content-Manager.latestnews.latestnews')</div>
+                <template x-if="screen === 'latestnews'">
+                    <div>@include('Components.Admin.Content-Manager.latestnews.latestnews', ['newsItems' => $newsItems ?? [], 'logos' => $logos ?? [], 'caption' => $caption ?? []])</div>
                 </template>
                 <template x-if="screen === 'mission'">
                     <div>@include('Components.Admin.Content-Manager.3goals.3goals')</div>
