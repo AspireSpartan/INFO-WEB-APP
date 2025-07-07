@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\ContactMessage;
 use App\Models\ProjectDescription;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -85,8 +86,8 @@ public function index() // user side
     public function destroy(Project $project)
     {
         // Delete the project image from storage if exists
-        if ($project->image_url && \Storage::disk('public')->exists($project->image_url)) {
-            \Storage::disk('public')->delete($project->image_url);
+        if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
+            Storage::disk('public')->delete($project->image_url);
         }
 
         // Delete the project record
@@ -115,8 +116,8 @@ public function index() // user side
     ]);
 
     if ($request->hasFile('image_upload')) {
-        if ($project->image_url && \Storage::disk('public')->exists($project->image_url)) {
-            \Storage::disk('public')->delete($project->image_url);
+        if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
+            Storage::disk('public')->delete($project->image_url);
         }
         $path = $request->file('image_upload')->store('projects_images', 'public'); // changed here
         $validated['image_url'] = $path;
