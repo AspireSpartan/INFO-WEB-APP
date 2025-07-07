@@ -1,36 +1,29 @@
-@props(['newsItems'])
+@props(['newsItems', 'logos', 'caption'])
 <div class="bg-gray-100 min-h-screen py-8 z-10">
     <!-- Logo Carousel Section -->
     <div class="container mx-auto px-4 py-6 overflow-hidden animate-on-scroll">
         <div class="relative h-28 md:h-32 overflow-hidden">
             <div class="logos-track absolute top-0 left-0 flex items-center gap-x-8 md:gap-x-12 animate-scroll">
-                <!-- First set of logos -->
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
-                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
-                <img class="h-16 md:h-28 w-auto" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
-                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 8">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 9">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
-                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
-                <img class="h-16 md:h-28 w-auto" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
-                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
-                <!-- Duplicate set for seamless looping -->
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/coat-of-arms-of-the-philippines-logo-png_seeklogo-311689 1.svg') }}" alt="DILG Logo">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/Department_of_Agriculture_of_the_Philippines.svg 1.svg') }}" alt="Logo 2">
-                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Department_of_the_Interior_and_Local_Government_(DILG)_Seal_-_Logo.svg 1.svg') }}" alt="Logo 3">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images (5) 1.svg') }}" alt="Logo 4">
-                <img class="h-16 md:h-28 w-auto" src="{{ asset('storage/images 1.svg') }}" alt="Logo 5">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/images__1_-removebg-preview (1) 1.svg') }}" alt="Logo 6">
-                <img class="h-16 md:h-24 w-auto" src="{{ asset('storage/Logo_of_the_Bureau_of_Internal_Revenue 1.svg') }}" alt="Logo 7">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-executive-departments-of-the-philippines-department-of-health-health-care-public-health-presidents-problems-emblem-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 8">
-                <img class="h-16 md:h-20 w-auto" src="{{ asset('storage/png-clipart-philippine-national-police-academy-national-police-commission-government-of-the-philippines-police-national-text-logo-thumbnail-removebg-preview 1.svg') }}" alt="Logo 9">
+                @if(isset($logos) && count($logos))
+                    {{-- First set of logos --}}
+                    @foreach($logos as $index => $logo)
+                        <img 
+                            class="h-16 md:h-20 w-auto animate-logo-slide" 
+                            style="--delay: {{ 0.1 * ($index + 1) }}s"
+                            src="{{ asset($logo->logo) }}" 
+                            alt="Logo {{ $index + 1 }}">
+                    @endforeach
+                    {{-- Duplicate set for seamless looping --}}
+                    @foreach($logos as $index => $logo)
+                        <img 
+                            class="h-16 md:h-20 w-auto animate-logo-slide" 
+                            style="--delay: {{ 0.1 * ($index + 1 + count($logos)) }}s"
+                            src="{{ asset($logo->logo) }}" 
+                            alt="Logo {{ $index + 1 }} Duplicate">
+                    @endforeach
+                @else
+                    <span class="text-gray-400">No logos available.</span>
+                @endif
             </div>
         </div>
     </div>
@@ -41,9 +34,9 @@
     <div class="w-full lg:w-1/3 flex flex-col items-start gap-6">
         <div class="space-y-4">
             <h2 class="text-indigo-900 text-3xl md:text-4xl font-bold font-['Merriweather'] font-size: 18px !important animate-title-slide">Latest News</h2>
-            <p class="text-gray-700 text-sm md:text-base font-light leading-relaxed animate-text-fade" style="--delay: 0.2s">
-                This page is made to show the latest local news happening here in the Philippines. It provides updates on important events, community stories, government announcements, and other news that matters to Filipinos. Stay informed and connected with what’s going on around the country through this page.
-            </p>
+                <p class="text-gray-700 text-sm md:text-base font-light leading-relaxed animate-text-fade" style="--delay: 0.2s">
+                    {{ $caption ?? 'This page is made to show the latest local news happening here in the Philippines. It provides updates on important events, community stories, government announcements, and other news that matters to Filipinos. Stay informed and connected with what’s going on around the country through this page.' }}
+                </p>
         </div>
         <a href="/morenews" class="w-48 md:w-56 h-12 md:h-14 flex items-center justify-center rounded-full border-2 border-indigo-900 text-indigo-900 text-lg font-medium hover:bg-indigo-900 hover:text-white transition-colors duration-300 animate-button-pop" style="--delay: 0.4s">
             MORE NEWS
