@@ -406,7 +406,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     newLogoFileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
+        const maxSize = 8049 * 1024; // 8049 KB in bytes
+
+        // Remove any previous warning
+        let warning = document.getElementById('logo-size-warning');
+        if (warning) warning.remove();
+
         if (file) {
+            if (file.size > maxSize) {
+                // Show warning message
+                const warningMsg = document.createElement('p');
+                warningMsg.id = 'logo-size-warning';
+                warningMsg.className = 'text-red-600 text-sm mt-2';
+                warningMsg.innerText = 'Selected image exceeds the 8MB size limit. Please choose a smaller file.';
+                newLogoFileInput.parentNode.appendChild(warningMsg);
+
+                // Reset file input and preview
+                newLogoFileInput.value = '';
+                newLogoPreview.src = '#';
+                logoPreviewContainer.classList.add('hidden');
+                noPreviewText.classList.remove('hidden');
+                return;
+            }
             const reader = new FileReader();
             reader.onload = (e) => {
                 newLogoPreview.src = e.target.result;
