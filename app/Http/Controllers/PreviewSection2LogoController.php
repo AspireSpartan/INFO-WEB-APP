@@ -27,7 +27,7 @@ class PreviewSection2LogoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:8049',
         ]);
 
         // Store the file in storage/app/public/logos using the 'public' disk explicitly
