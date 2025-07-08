@@ -12,13 +12,15 @@ use App\Models\PreviewSection2Caption;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
+use App\Models\ContentManagerLogosImage;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageContentController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PreviewSection2CaptionController;
+use App\Http\Controllers\ProjectDescriptionController;
 use App\Http\Controllers\PreviewSection2LogoController;
-use App\Http_Controllers\ProjectDescriptionController;
+use App\Http\Controllers\PreviewSection2CaptionController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -96,13 +98,14 @@ Route::prefix('admin')->group(function () {
         $description = ProjectDescription::first(); 
         $logos = PreviewSection2Logo::select('id', 'logo')->get();
         $caption = PreviewSection2Caption::value('caption');
+        $contentMlogos = ContentManagerLogosImage::all();
 
-       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption'));
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
-
+    
     Route::resource('blogs', BlogController::class)->parameters([
         'blogs' => 'blogfeed'
     ]);

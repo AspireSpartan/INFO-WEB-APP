@@ -1,4 +1,5 @@
 {{-- resources/views/Components/Admin/newss/news_content.blade.php --}}
+
 <main class="flex-grow p-4 md:p-8 lg:p-12"
       x-data="{ showUploadModal: false }" {{-- showUploadModal state is now managed here --}}
       x-init="
