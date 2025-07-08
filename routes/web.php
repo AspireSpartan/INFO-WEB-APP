@@ -20,6 +20,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectDescriptionController;
 use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\PreviewSection2CaptionController;
+use App\Models\StrategicPlan;
 
 
 Route::get('/', function () {
@@ -99,8 +100,9 @@ Route::prefix('admin')->group(function () {
         $logos = PreviewSection2Logo::select('id', 'logo')->get();
         $caption = PreviewSection2Caption::value('caption');
         $contentMlogos = ContentManagerLogosImage::all();
+        $strategicPlans = StrategicPlan::all();
 
-       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'strategicPlans'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);

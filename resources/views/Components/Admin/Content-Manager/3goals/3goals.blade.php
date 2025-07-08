@@ -100,7 +100,7 @@
         }
     </style>
 </head>
-@props(['contentMlogos'])
+@props(['contentMlogos', 'vmgEditableContentData', 'strategicPlans'])
 <body class="font-['Source_Sans_Pro']">
     <div class="relative w-full overflow-hidden min-h-screen" id="vmgVisionMissionGoalSection">
         {{-- Background Image (Philippine Flag) with fade-in animation --}}
@@ -181,20 +181,20 @@
         // Unique variables for page content and modal interaction
         const vmgEditableContentData = {
             vision: {
-                icon: '{{ asset($visionIconPath ?? "storage/Vision.svg") }}',
-                title: 'Vision',
-                paragraph: 'A digitally connected and responsive local government that ensures inclusive participation, promotes transparency, and delivers high-quality public services for a better, sustainable community.'
+                icon: asset($visionIconPath ?? "storage/Vision.svg"),
+                title: $vision->title,
+                paragraph: $vision->paragraph,
             },
             mission: {
-                icon: '{{ asset($missionIconPath ?? "storage/Mission.svg") }}',
-                title: 'Mission',
-                paragraph: 'To provide transparent, accessible, and efficient digital services that empower citizens, support local development, and strengthen public trust through innovative governance and community engagement.'
+                icon: asset($missionIconPath ?? "storage/Mission.svg"),
+                title: $mission->title,
+                paragraph: $mission->paragraph,
             },
             goal: {
-                icon: '{{ asset($goalIconPath ?? "storage/goal.svg") }}',
-                title: 'Goal',
-                paragraph: 'To create a centralized digital platform that enhances public service delivery, promotes transparency, and fosters active citizen participation in local governance.'
-            }
+                icon: asset($goalIconPath ?? "storage/goal.svg"),
+                title: $goal->title,
+                paragraph: $goal->paragraph,
+            },
         };
 
         // Global variable to store the Data URL of the newly selected icon
