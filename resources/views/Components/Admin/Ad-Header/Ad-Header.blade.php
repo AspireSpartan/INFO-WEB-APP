@@ -1,7 +1,7 @@
 @extends('layouts.admin') {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
 @section('title', 'Admin View')
 @section('content')
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption']) 
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos']) 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
 
@@ -229,13 +229,13 @@
                     <div>@include('Components.Admin.Content-Manager.latestnews.latestnews', ['newsItems' => $newsItems ?? [], 'logos' => $logos ?? [], 'caption' => $caption ?? []])</div>
                 </template>
                 <template x-if="screen === 'mission'">
-                    <div>@include('Components.Admin.Content-Manager.3goals.3goals')</div>
+                    <div>@include('Components.Admin.Content-Manager.3goals.3goals', ['contentMlogos' => $contentMlogos ?? []])</div>
                 </template>
                 <template x-if="screen === 'developers'">
-                    <div>@include('Components.Admin.Content-Manager.teamdev.teamdev')</div>
+                    <div>@include('Components.Admin.Content-Manager.teamdev.teamdev', ['contentMlogos' => $contentMlogos ?? []])</div>
                 </template>
                 <template x-if="screen === 'links'">
-                    <div>@include('Components.Admin.Content-Manager.footer.footer')</div>
+                    <div>@include('Components.Admin.Content-Manager.footer.footer', ['contentMlogos' => $contentMlogos ?? []])</div>
                 </template>
                 <template x-if="screen === 'notifications'">
                     <div>@include('Components.Admin.notification.notification', ['contactMessages' => $contactMessages ?? []])</div>

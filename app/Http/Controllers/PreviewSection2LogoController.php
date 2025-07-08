@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PreviewSection2Logo;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\PreviewSection2Logo;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PreviewSection2LogoController extends Controller
 {
@@ -19,7 +19,8 @@ class PreviewSection2LogoController extends Controller
             }
             return $logo;
         });
-
+        
+        session()->flash('activeAdminScreen', 'latestnews');
         return view('Components.Admin.Ad-Header.Ad-Header', compact('logos'));
     }
 
@@ -36,6 +37,7 @@ class PreviewSection2LogoController extends Controller
         $logo = PreviewSection2Logo::create([
             'logo' => 'storage/' . $path
         ]);
+        session()->flash('activeAdminScreen', 'latestnews');
 
         return response()->json($logo, 201);
     }
@@ -52,12 +54,13 @@ class PreviewSection2LogoController extends Controller
         }
 
         $logo->delete();
-
+        session()->flash('activeAdminScreen', 'latestnews');
         return response()->json(null, 204);
     }
 
     public function update(Request $request, $id)
     {
+        session()->flash('activeAdminScreen', 'latestnews');
         $logo = PreviewSection2Logo::findOrFail($id);
         $logo->update($request->only('logo'));
         return response()->json($logo);

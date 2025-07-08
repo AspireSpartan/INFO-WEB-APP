@@ -1,4 +1,4 @@
-@props(['newsItems'.'logos', 'caption'])
+@props(['newsItems', 'logos', 'caption'])
 
 <div class="bg-gray-100 min-h-screen py-8 z-10">
     {{-- MODIFIED: Added editable-container to the logos wrapper --}}
@@ -25,7 +25,7 @@
                 <div class="space-y-4">
                     <h2 class="text-indigo-900 text-3xl md:text-4xl font-bold font-['Merriweather'] !text-[18px] animate-title-slide" id="latest-news-title">Latest News</h2>
             <!--caption--> <p class="text-gray-700 text-sm md:text-base font-light leading-relaxed animate-text-fade" style="--delay: 0.2s" id="latest-news-paragraph">
-                        {{ $caption ?? 'initial but not dynamic' }}
+                        {{ is_array($caption) ? implode(', ', $caption) : ($caption ?? 'initial but not dynamic') }}
                     </p>
                 </div>
                 {{-- Single Edit Button for both title and paragraph --}}
