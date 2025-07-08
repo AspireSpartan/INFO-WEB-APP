@@ -35,20 +35,10 @@ public function index() // user side
 }
 
     public function indexAdmin(Request $request){ //admin side on project_content
-        $query = Project::query();
+        $projects = Project::query()
+            ->search($request->input('search'))
+            ->get();
 
-        if ($search = $request->input('search')) {
-            $query->where(function($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                ->orWhere('site', 'like', "%{$search}%")
-                ->orWhere('scope', 'like', "%{$search}%")
-                ->orWhere('outcome', 'like', "%{$search}%");
-            });
-    }
-
-        // Remove sorting by views and date, no sorting applied now
-
-        $projects = $query->get();
         $description = ProjectDescription::first();
         $newsItems = NewsItem::all(); // Correctly fetch news items
         $pageContent = PageContent::pluck('value', 'key')->toArray();
@@ -63,7 +53,7 @@ public function index() // user side
         $caption = PreviewSection2Caption::value('caption');
         $contentMlogos = ContentManagerLogosImage::all();
         
-        session()->flash('activeAdminScreen', 'latestnews');
+        session()->flash('activeAdminScreen', 'projects');
         return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
     }
 
@@ -90,7 +80,7 @@ public function index() // user side
     }
 
     Project::create($validated);
-    session()->flash('activeAdminScreen', 'latestnews');
+    session()->flash('activeAdminScreen', 'projects');
     return redirect()->back()->with('success', 'Project created successfully.');
     }
 
@@ -103,7 +93,7 @@ public function index() // user side
 
         // Delete the project record
         $project->delete();
-        session()->flash('activeAdminScreen', 'latestnews');
+        session()->flash('activeAdminScreen', 'projects');
         // Redirect back with success message
         return redirect()->back()->with('success', 'Project deleted successfully.');
     }
@@ -135,7 +125,7 @@ public function index() // user side
     }
 
     $project->update($validated);
-    session()->flash('activeAdminScreen', 'latestnews');
+    session()->flash('activeAdminScreen', 'projects');
     return redirect()->route('admin.dashboard')->with('success', 'Project updated successfully.');
     }
 
