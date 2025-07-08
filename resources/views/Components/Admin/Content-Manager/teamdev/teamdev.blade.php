@@ -64,7 +64,7 @@
             display: block;
         }
     </style>
-
+@props(['logos'])
     <div class="w-full min-h-screen bg-zinc-100 relative overflow-hidden">
 
         <div id="header-section" class="max-w-[1531px] mx-auto pt-20 px-4 flex flex-col lg:flex-row justify-between items-start lg:items-center relative group">
@@ -140,7 +140,12 @@
 
         </div>
 
-        <img class="absolute bottom-[-50px] right-0 w-[736px] h-64 object-contain mb-10" src="storage/miniflagv2.svg" alt="Philippine Flag Colors Decoration" />
+        @foreach($contentMlogos as $logo)
+            @if($logo->id == 6) {{-- Assuming id 2 is miniFlag --}}
+                <img class="absolute bottom-[-50px] right-0 w-[736px] h-64 object-contain mb-10" src="{{ asset($logo->image_path) }}" alt="Philippine Flag Colors Decoration" />
+                @break
+            @endif
+        @endforeach
 
     </div>
 

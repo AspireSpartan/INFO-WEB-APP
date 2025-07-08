@@ -1,10 +1,16 @@
+@props(['logos'])
 <div class="w-full min-h-[579px] h-auto bg-black flex justify-center items-start py-24 px-8 md:px-16 lg:px-32 relative overflow-x-hidden group">
     <button id="footer_master_edit_button" class="absolute top-4 right-4 bg-orange-500 text-white px-5 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-orange-600 z-40">Edit All Data</button>
 
     <div class="w-full max-w-[1400px] flex flex-col md:flex-row justify-between items-start gap-16">
         {{-- Main Logo Section --}}
         <div class="flex flex-col items-center justify-start gap-4 flex-shrink-0 mx-auto md:mx-0 md:mr-24 mb-16 md:mb-0 relative" id="footer_main_logo_container">
-            <img src="storage/CorDev_footer.svg" alt="CoreDev Logo" class="w-[auto] h-[200px] object-cover" id="footer_main_logo_img" />
+                @foreach($contentMlogos as $logo)
+                    @if($logo->id == 7)
+                        <img src="{{ asset($logo->image_path) }}" alt="CoreDev Logo" class="w-[auto] h-[200px] object-cover" id="footer_main_logo_img" />
+                        @break
+                    @endif
+                @endforeach
         </div>
 
         <div class="flex flex-col md:flex-row justify-start items-start gap-16 md:gap-36 flex-shrink-0 w-full md:w-auto">
@@ -341,7 +347,7 @@
         // --- Footer Data Storage (Static for now) ---
         let footer_static_data = {
             mainLogo: {
-                src: "storage/CorDev_footer.svg" // This will temporarily hold base64 or a local URL after upload
+                src: '{{ asset($mainLogoPath ?? "storage/CorDev_footer.svg") }}' // This will temporarily hold base64 or a local URL after upload
             },
             keepInTouch: {
                 title: "KEEP IN TOUCH",

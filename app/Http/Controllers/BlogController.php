@@ -7,10 +7,14 @@ use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
 use App\Models\PageContent;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ContactMessage;
 use App\Models\ProjectDescription;
+use App\Models\PreviewSection2Logo;
+use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ContentManagerLogosImage;
 use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
@@ -30,11 +34,18 @@ class BlogController extends Controller
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         $contactMessages = ContactMessage::all(); // Or filter if you only need unread messages
         $isViewportPresent = request()->has('viewport'); // Adjust this condition as needed
-
+        $logos = PreviewSection2Logo::select('id', 'logo')->get()->map(function ($logo) {
+            if (!Str::startsWith($logo->logo, 'storage/')) {
+                $logo->logo = 'storage/' . $logo->logo;
+            }
+            return $logo;
+        });
+        $caption = PreviewSection2Caption::value('caption');
+        $contentMlogos = ContentManagerLogosImage::all();
         if ($isViewportPresent) {
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
     }
 
     /**
