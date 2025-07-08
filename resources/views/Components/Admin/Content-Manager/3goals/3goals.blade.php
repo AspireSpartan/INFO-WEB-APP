@@ -100,13 +100,22 @@
         }
     </style>
 </head>
+@props(['contentMlogos'])
 <body class="font-['Source_Sans_Pro']">
     <div class="relative w-full overflow-hidden min-h-screen" id="vmgVisionMissionGoalSection">
         {{-- Background Image (Philippine Flag) with fade-in animation --}}
-        <img src="storage/Ph_flag.svg" class="absolute inset-0 w-full h-full object-cover opacity-90 transition-opacity duration-1500 ease-in-out lazy-animate" data-animation-class="opacity-90">
+            @foreach($contentMlogos as $logo)
+                @if($logo->id == 1)
+                    <img src="{{ asset($logo->image_path) }}" class="absolute inset-0 w-full h-full object-cover opacity-90 transition-opacity duration-1500 ease-in-out lazy-animate" data-animation-class="opacity-90">
+                @endif
+            @endforeach
 
-        {{-- Sun Emblem with scale-in animation --}}
-        <img src="storage/miniflag.svg" class="absolute top-[-30px] right-[50px] w-[300px] h-auto transition-all duration-1000 ease-in-out lazy-animate" style="z-index: 0;" data-animation-class="opacity-80 translate-x-0 scale-100" data-initial-class="opacity-0 translate-x-10 scale-80" data-delay="300">
+            {{-- Sun Emblem with scale-in animation --}}
+            @foreach($contentMlogos as $logo)
+                @if($logo->id == 2)
+                    <img src="{{ asset($logo->image_path) }}" class="absolute top-[-30px] right-[50px] w-[300px] h-auto transition-all duration-1000 ease-in-out lazy-animate" style="z-index: 0;" data-animation-class="opacity-80 translate-x-0 scale-100" data-initial-class="opacity-0 translate-x-10 scale-80" data-delay="300">
+                @endif
+            @endforeach
 
         {{-- Content Container (Vision, Mission, Goal) --}}
         <div class="relative z-10 px-[100px] py-20">
@@ -172,17 +181,17 @@
         // Unique variables for page content and modal interaction
         const vmgEditableContentData = {
             vision: {
-                icon: 'storage/Vision.svg',
+                icon: '{{ asset($visionIconPath ?? "storage/Vision.svg") }}',
                 title: 'Vision',
                 paragraph: 'A digitally connected and responsive local government that ensures inclusive participation, promotes transparency, and delivers high-quality public services for a better, sustainable community.'
             },
             mission: {
-                icon: 'storage/Mission.svg',
+                icon: '{{ asset($missionIconPath ?? "storage/Mission.svg") }}',
                 title: 'Mission',
                 paragraph: 'To provide transparent, accessible, and efficient digital services that empower citizens, support local development, and strengthen public trust through innovative governance and community engagement.'
             },
             goal: {
-                icon: 'storage/goal.svg',
+                icon: '{{ asset($goalIconPath ?? "storage/goal.svg") }}',
                 title: 'Goal',
                 paragraph: 'To create a centralized digital platform that enhances public service delivery, promotes transparency, and fosters active citizen participation in local governance.'
             }
