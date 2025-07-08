@@ -1,4 +1,5 @@
 {{-- resources/views/Components/Admin/newss/news_content.blade.php --}}
+
 <main class="flex-grow p-4 md:p-8 lg:p-12"
       x-data="{ showUploadModal: false }" {{-- showUploadModal state is now managed here --}}
       x-init="
@@ -13,7 +14,7 @@
     <!-- Search & Upload Bar with Filtering -->
     <div class="flex flex-col md:flex-row justify-between items-center bg-transparent gap-4 mb-8">
         {{-- We'll use a form for search, filter, and sort for proper GET requests --}}
-        <form action="{{ route('news.index') }}" method="GET" class="relative w-full md:w-auto flex-grow max-w-xl flex items-center">
+        <form action="{{ route('news.indexFilter') }}" method="GET" class="relative w-full md:w-auto flex-grow max-w-xl flex items-center">
             {{-- Hidden input to ensure 'news' screen remains active after search --}}
             <input type="hidden" name="screen" value="news">
             {{-- Search Input --}}
@@ -47,9 +48,9 @@
                     role="menu">
                     <div class="py-1">
                         {{-- Ensure 'screen' parameter is included in filter links --}}
-                        <a href="{{ route('news.index', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'all', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter', 'all') == 'all' ? 'bg-gray-100 font-semibold' : '' }}">All</a>
-                        <a href="{{ route('news.index', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'sponsored', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Sponsored</a>
-                        <a href="{{ route('news.index', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'non-sponsored', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'non-sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Non-Sponsored</a>
+                        <a href="{{ route('news.indexFilter', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'all', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter', 'all') == 'all' ? 'bg-gray-100 font-semibold' : '' }}">All</a>
+                        <a href="{{ route('news.indexFilter', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'sponsored', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Sponsored</a>
+                        <a href="{{ route('news.indexFilter', array_merge(request()->except('sponsored_filter', 'screen'), ['sponsored_filter' => 'non-sponsored', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sponsored_filter') == 'non-sponsored' ? 'bg-gray-100 font-semibold' : '' }}">Non-Sponsored</a>
                     </div>
                 </div>
             </div>
@@ -72,10 +73,10 @@
                     role="menu">
                     <div class="py-1">
                         {{-- Ensure 'screen' parameter is included in sort links --}}
-                        <a href="{{ route('news.index', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'date_desc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by', 'date_desc') == 'date_desc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Newest)</a>
-                        <a href="{{ route('news.index', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'date_asc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'date_asc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Oldest)</a>
-                        <a href="{{ route('news.index', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'views_desc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_desc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Most)</a>
-                        <a href="{{ route('news.index', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'views_asc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_asc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Least)</a>
+                        <a href="{{ route('news.indexFilter', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'date_desc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by', 'date_desc') == 'date_desc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Newest)</a>
+                        <a href="{{ route('news.indexFilter', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'date_asc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'date_asc' ? 'bg-gray-100 font-semibold' : '' }}">Date (Oldest)</a>
+                        <a href="{{ route('news.indexFilter', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'views_desc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_desc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Most)</a>
+                        <a href="{{ route('news.indexFilter', array_merge(request()->except('sort_by', 'screen'), ['sort_by' => 'views_asc', 'screen' => 'news'])) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('sort_by') == 'views_asc' ? 'bg-gray-100 font-semibold' : '' }}">Views (Least)</a>
                     </div>
                 </div>
             </div>

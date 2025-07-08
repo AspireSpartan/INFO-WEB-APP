@@ -1,9 +1,18 @@
-@props(['project', 'indexContent'])
+@props(['project', 'indexContent']) <!--resources\views\Components\Admin\blog\projects\project_cards.blade.php-->
 
 <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col justify-between transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
     {{-- Image --}}
     @if($project->image_url)
-        <img src="{{ asset('storage/' . $project->image_url) }}" alt="{{ $project->title }}" class="w-full h-48 object-cover rounded-t-xl">
+        <img 
+            src="{{ 
+                (Str::startsWith($project->image_url, ['http', 'storage/'])) 
+                    ? asset($project->image_url) 
+                    : asset('storage/' . $project->image_url) 
+            }}" 
+            alt="{{ $project->title }}" 
+            onerror="this.onerror=null;this.src='{{ asset('storage/sampling.jpg') }}';"
+            class="w-full h-48 object-cover rounded-t-xl"
+        >
     @else
         <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-xl text-gray-500 text-sm">No Image Available</div>
     @endif

@@ -1,5 +1,5 @@
 <?php
-
+//app\Http\Controllers\ProjectController.php
 namespace App\Http\Controllers;
 
 use App\Models\News;
@@ -7,11 +7,14 @@ use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
 use App\Models\PageContent;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ContactMessage;
 use App\Models\ProjectDescription;
-use Illuminate\Support\Str;
+use App\Models\PreviewSection2Logo;
+use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ContentManagerLogosImage;
 
 class ProjectController extends Controller
 {
@@ -51,9 +54,17 @@ public function index() // user side
         $pageContent = PageContent::pluck('value', 'key')->toArray();
         $contactMessages = ContactMessage::latest()->get();
         $blogfeeds = Blogfeed::all();
-        session()->flash('activeAdminScreen', 'projects');
-
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description'));
+        $logos = PreviewSection2Logo::select('id', 'logo')->get()->map(function ($logo) {
+            if (!Str::startsWith($logo->logo, 'storage/')) {
+                $logo->logo = 'storage/' . $logo->logo;
+            }
+            return $logo;
+        });
+        $caption = PreviewSection2Caption::value('caption');
+        $contentMlogos = ContentManagerLogosImage::all();
+        
+        session()->flash('activeAdminScreen', 'latestnews');
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
     }
 
     
@@ -79,7 +90,7 @@ public function index() // user side
     }
 
     Project::create($validated);
-    session()->flash('activeAdminScreen', 'projects');
+    session()->flash('activeAdminScreen', 'latestnews');
     return redirect()->back()->with('success', 'Project created successfully.');
     }
 
@@ -92,7 +103,7 @@ public function index() // user side
 
         // Delete the project record
         $project->delete();
-        session()->flash('activeAdminScreen', 'projects');
+        session()->flash('activeAdminScreen', 'latestnews');
         // Redirect back with success message
         return redirect()->back()->with('success', 'Project deleted successfully.');
     }
@@ -124,7 +135,7 @@ public function index() // user side
     }
 
     $project->update($validated);
-    session()->flash('activeAdminScreen', 'projects');
+    session()->flash('activeAdminScreen', 'latestnews');
     return redirect()->route('admin.dashboard')->with('success', 'Project updated successfully.');
     }
 

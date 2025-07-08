@@ -9,7 +9,11 @@ use App\Models\PageContent;
 use Illuminate\Http\Request;
 use App\Models\ContactMessage;
 use App\Models\ProjectDescription;
+use App\Models\PreviewSection2Logo;
+use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ContentManagerLogosImage;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log; // Added for logging
 use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
 
@@ -19,6 +23,7 @@ class NewsController extends Controller
      * Display a listing of the news items (for admin dashboard).
      * This function now serves as the index for news items in the admin area.
      */
+
     public function index(Request $request)
     {
         $query = NewsItem::query();
@@ -66,9 +71,17 @@ class NewsController extends Controller
         $pageContent = PageContent::pluck('value', 'key')->toArray();
         $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
         $blogfeeds = Blogfeed::all();
+        $logos = PreviewSection2Logo::select('id', 'logo')->get()->map(function ($logo) {
+            if (!Str::startsWith($logo->logo, 'storage/')) {
+                $logo->logo = 'storage/' . $logo->logo;
+            }
+            return $logo;
+        });
+        $caption = PreviewSection2Caption::value('caption');
+        $contentMlogos = ContentManagerLogosImage::all();
 
         // This method just loads the view with data. The active screen logic is in Ad-Header.blade.php
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
     }
 
     /**
@@ -187,10 +200,7 @@ class NewsController extends Controller
     /**
      * Display the specified news item (for public view).
      */
-    public function show(NewsItem $newsItem) // Using route model binding
-    {
-        return view('User_Side_Screen.single_news', compact('newsItem')); // Assuming you have a view for a single news item
-    }
+    
 
     /**
      * Show the form for editing the specified news item.

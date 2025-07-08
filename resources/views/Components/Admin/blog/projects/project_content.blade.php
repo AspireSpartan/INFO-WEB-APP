@@ -1,27 +1,31 @@
-@props(['projects', 'description'])
+@props(['projects', 'description']) <!--resources\views\Components\Admin\blog\projects\project_content.blade.php-->
+
 <div class="bg-neutral-100 rounded-xl shadow-inner p-4 md:p-6 lg:p-8 mt-4 mx-4 md:mx-8 lg:mx-12 overflow-y-auto"
      x-data="{ showUploadModal: false }"> {{-- Added outer gray container with padding and rounded corners and Alpine.js data --}}
 
     <div class="min-h-screen bg-white font-sans text-gray-800 rounded-lg shadow-sm p-6"> {{-- Main white container with rounded corners and shadow --}}
 
         <div class="container mx-auto px-4 pt-20 pb-10 text-center relative"
-            x-data="{ hover: false, openModal: false }" {{-- openModal controls the editDescriptionModal --}}
+            x-data="{ hover: false, openModal: false }"
             @mouseenter="hover = true"
-            @mouseleave="hover = false">
-
+            @mouseleave="hover = false"
+            id="description-container" {{-- added id for JS targeting --}}
+        >
             <h1 class="text-5xl font-bold font-['Merriweather'] mb-8">
                 Our <span class="text-amber-500">Complete Projects</span>
             </h1>
             <p class="text-xl font-light font-['Source_Sans_Pro'] leading-relaxed max-w-8xl mx-auto">
-                {{ $description->description ?? '' }}
+-                {{ $description->description ?? 'this text is not from the database' }}
++                {{ is_array($description->description) ? implode(', ', $description->description) : ($description->description ?? '') }}
             </p>
 
             <!-- Edit button shown on hover, centered overlay -->
             <button
                 x-show="hover"
-                @click="openModal = true" {{-- This correctly sets openModal to true --}}
+                @click="openModal = true"
                 class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white text-lg font-semibold rounded transition opacity-0 hover:opacity-100"
                 aria-label="Edit description"
+                id="edit-description-btn" {{-- added id for JS targeting --}}
             >
                 Edit
             </button>
@@ -29,11 +33,13 @@
             <!-- edit description modal component -->
             <x-Admin.blog.projects.editDescription
                 :description="$description"
-                x-show="openModal" 
-                @close="openModal = false" 
+                x-show="openModal"
+                @close="openModal = false"
                 x-transition
+                id="edit-description-modal" {{-- added id for JS targeting --}}
             ></x-Admin.blog.projects.editDescription>
         </div>
+        
 
         {{-- Container for Search, Upload, and Sort buttons --}}
         <div class="container mx-auto px-12 my-14 flex flex-col md:flex-row justify-between items-center gap-4 z-10">
@@ -110,3 +116,19 @@
     @include('Components.Admin.blog.projects.projUpload_modal') {{-- This line is added --}}
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const editBtn = document.getElementById('edit-description-btn');
+        const modal = document.getElementById('edit-description-modal');
+
+        if (editBtn && modal) {
+            editBtn.addEventListener('click', function () {
+                // Show the modal by setting Alpine.js openModal to true
+                // Since Alpine controls visibility, we can dispatch an event or toggle a class
+                // Here we toggle the x-show attribute manually by dispatching a custom event
+                modal.__x.$data.openModal = true; // Access Alpine component data directly
+            });
+        }
+    });
+</script>
