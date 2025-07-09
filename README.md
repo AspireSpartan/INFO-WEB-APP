@@ -102,6 +102,14 @@ upload_max_filesize = 50M
 post_max_size = 50M
 memory_limit = 128M
 
+## clear cached commands
+php artisan cache:clear          # Clear application cache
+php artisan config:clear         # Clear configuration cache
+php artisan route:clear          # Clear route cache
+php artisan view:clear           # Clear compiled view files
+php artisan optimize:clear       # Clear all caches (config, route, view)
+php artisan optimize             # Cache config and routes for optimization
+
 *************************************************************************
 
 ▶️ Running the Application
