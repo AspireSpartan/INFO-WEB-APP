@@ -1,4 +1,22 @@
+
 <style>
+    /* Add this to your existing CSS or a new style block */
+    .edit-button {
+        transition: transform 0.2s ease-in-out;
+    }
+    .edit-button:hover {
+        transform: scale(1.1);
+    }
+    .add-developer-card {
+        background-color: rgba(249, 115, 22, 0.2); /* A subtle orange tint for the add card */
+        border: 2px dashed rgba(249, 115, 22, 0.5); /* Dashed border */
+        min-height: 300px; /* Ensure consistent height with other cards */
+    }
+    .add-developer-card:hover {
+        background-color: rgba(249, 115, 22, 0.3);
+    }
+    /* Existing styles remain unchanged */
+    
     /*section 4*/
         /* Base styles */
         * {
@@ -349,3 +367,4 @@
             }
         }
     </style>
+    
