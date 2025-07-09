@@ -1,19 +1,12 @@
 <?php
 
 use App\Models\Project;
-use App\Models\Blogfeed;
 use App\Models\NewsItem;
-use App\Models\PageContent; 
-use App\Models\StrategicPlan;
-use App\Models\ContactMessage;
 use App\Models\ProjectDescription;
-use App\Models\PreviewSection2Logo;
 use Illuminate\Support\Facades\Route;
-use App\Models\PreviewSection2Caption;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
-use App\Models\ContentManagerLogosImage;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageContentController;
@@ -88,7 +81,6 @@ Route::get('/admin/notifications/{message}/show', [NotificationController::class
 Route::get('/page-content', [PageContentController::class, 'show'])->name('page.content.show');
 Route::post('/page-content', [PageContentController::class, 'update'])->name('page.content.update');
 
-
 // Admin Routes (Grouped for clarity and potential middleware)
 Route::prefix('admin')->group(function () {
 
@@ -96,10 +88,6 @@ Route::prefix('admin')->group(function () {
 
     Route::resource('news', NewsController::class);
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
-    
-    Route::resource('blogs', BlogController::class)->parameters([
-        'blogs' => 'blogfeed'
-    ]);
     Route::resource('projects', ProjectController::class);
     Route::get('projects', [ProjectController::class, 'indexAdmin'])->name('projects.indexAdmin');
     Route::post('/project-description/update', [ProjectDescriptionController::class, 'update'])->name('project-description.update');
@@ -108,4 +96,5 @@ Route::prefix('admin')->group(function () {
     Route::post('/caption/update', [PreviewSection2CaptionController::class, 'update'])->name('caption.update');
     Route::post('/admin/strategic-plan/update', [StrategicPlanController::class, 'update'])->name('strategic-plan.update');
     Route::post('/admin/content-manager/update', [ContentManagerLogosImageController::class, 'update'])->name('content-manager.update');
+    Route::resource('blogs', BlogController::class)->parameters(['blogs' => 'blogfeed']);
 });
