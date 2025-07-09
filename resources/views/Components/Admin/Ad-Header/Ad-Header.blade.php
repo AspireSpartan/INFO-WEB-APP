@@ -1,7 +1,7 @@
 @extends('layouts.admin') {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
 @section('title', 'Admin View')
 @section('content')
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos']) 
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans']) 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
      x-data="{
 
@@ -229,7 +229,7 @@
                     <div>@include('Components.Admin.Content-Manager.latestnews.latestnews', ['newsItems' => $newsItems ?? [], 'logos' => $logos ?? [], 'caption' => $caption ?? []])</div>
                 </template>
                 <template x-if="screen === 'mission'">
-                    <div>@include('Components.Admin.Content-Manager.3goals.3goals', ['contentMlogos' => $contentMlogos ?? []])</div>
+                    <div>@include('Components.Admin.Content-Manager.3goals.3goals', ['contentMlogos' => $contentMlogos ?? [], 'vmgEditableContentData' => $vmgEditableContentData ?? [], 'strategicPlans' => $strategicPlans ?? []])</div>
                 </template>
                 <template x-if="screen === 'developers'">
                     <div>@include('Components.Admin.Content-Manager.teamdev.teamdev', ['contentMlogos' => $contentMlogos ?? []])</div>
