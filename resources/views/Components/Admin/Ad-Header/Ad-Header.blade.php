@@ -8,7 +8,7 @@
          x-data="{
              activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
              notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'mission', 'developers', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4'],
+             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'developers', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4'],
 
              resetNotifications() {
                  this.notificationCount = 0;
@@ -91,7 +91,7 @@
 
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open"
-                        :class="{'text-amber-400': ['banner', 'latestnews', 'mission', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latestnews', 'mission', 'developers', 'links'].includes(activeScreen) || open)}"
+                        :class="{'text-amber-400': ['banner', 'latestnews', 'announcement', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latestnews', 'announcement', 'developers', 'links'].includes(activeScreen) || open)}"
                         class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
                     Content Manager
                     <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -114,7 +114,7 @@
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('latestnews'); open = false">Latest News</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        @click.prevent="switchScreen('mission'); open = false">Mission</a>
+                        @click.prevent="switchScreen('announcement'); open = false">Announcement</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('developers'); open = false">Developers</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -258,8 +258,8 @@
                 <template x-if="screen === 'latestnews'">
                     <div>@include('Components.Admin.Content-Manager.latestnews.latestnews', ['newsItems' => $newsItems ?? [], 'logos' => $logos ?? [], 'caption' => $caption ?? []])</div>
                 </template>
-                <template x-if="screen === 'mission'">
-                    <div>@include('Components.Admin.Content-Manager.3goals.3goals', ['contentMlogos' => $contentMlogos ?? [], 'vmgEditableContentData' => $vmgEditableContentData ?? [], 'strategicPlans' => $strategicPlans ?? []])</div>
+                <template x-if="screen === 'announcement'">
+                    <div>@include('Components.Admin.Content-Manager.announcement.announcement')</div>
                 </template>
                 <template x-if="screen === 'developers'">
                     <div>@include('Components.Admin.Content-Manager.teamdev.teamdev', ['contentMlogos' => $contentMlogos ?? []])</div>
@@ -277,7 +277,7 @@
                     <div>@include('Components.Admin.about-us.section-1')</div>
                 </template>
                 <template x-if="screen === 'about-section-2'">
-                    <div>@include('Components.Admin.about-us.section-2')</div>
+                    <div>@include('Components.Admin.about-us.3goals.3goals', ['contentMlogos' => $contentMlogos ?? [], 'vmgEditableContentData' => $vmgEditableContentData ?? [], 'strategicPlans' => $strategicPlans ?? []])</div>
                 </template>
                 <template x-if="screen === 'about-section-3'">
                     <div>@include('Components.Admin.about-us.section-3')</div>
