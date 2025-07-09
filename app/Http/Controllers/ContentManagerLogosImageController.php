@@ -9,61 +9,47 @@ use Illuminate\Support\Facades\Storage;
 class ContentManagerLogosImageController extends Controller
 {
 
-
     public function indexAdmin()
     {
         $contentMlogos = ContentManagerLogosImage::all();
 
-        $phFlag = ContentManagerLogosImage::find(1);
-        $miniFIconPath = ContentManagerLogosImage::find(2);
-        $visionIcon = ContentManagerLogosImage::find(3);
-        $missionIcon = ContentManagerLogosImage::find(4);
-        $goalIcon = ContentManagerLogosImage::find(5);
-        $miniFlagPath = ContentManagerLogosImage::find(6);
-        $mainIcon = ContentManagerLogosImage::find(7);
+        // Fetch all logos with ids 1 to 7
+        $logos = ContentManagerLogosImage::whereIn('id', range(1, 7))->get()->keyBy('id');
 
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('contentMlogos'))//storage/Ph_flag.svg
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('contentMlogos'))
             ->with([
-                'phFlagPath' => $phFlag ? $phFlag->image_path : 'storage/Ph_flag.svg',
-                'miniFIconPath' => $miniFIcon ? $miniFIcon->image_path : 'storage/miniflag.svg',
-                'visionIconPath' => $visionIcon ? $visionIcon->image_path : 'storage/Vision.svg',
-                'missionIconPath' => $missionIcon ? $missionIcon->image_path : 'storage/Mission.svg',
-                'goalIconPath' => $goalIcon ? $goalIcon->image_path : 'storage/goal.svg',
-                'miniFlagPath' => $miniFlag ? $miniFlag->image_path : 'storage/miniflagv2.svg',
-                'mainIconPath' => $mainIcon ? $mainIcon->image_path : 'storage/CorDev_footer.svg',
+                'phFlagPath' => isset($logos[1]) ? asset('storage/' . str_replace('icons/', 'icons/', $logos[1]->image_path)) : null,
+                'miniFIconPath' => isset($logos[2]) ? asset('storage/' . str_replace('icons/', 'icons/', $logos[2]->image_path)) : asset('storage/miniflag.svg'),
+                'visionIconPath' => isset($logos[3]) ? asset('storage/' . str_replace('icons/', 'icons/', $logos[3]->image_path)) : asset('storage/Vision.svg'),
+                'missionIconPath' => isset($logos[4]) ? asset('storage/' . str_replace('icons/', 'icons/', $logos[4]->image_path)) : asset('storage/Mission.svg'),
+                'goalIconPath' => isset($logos[5]) ? asset('storage/' . str_replace('icons/', 'icons/', $logos[5]->image_path)) : asset('storage/goal.svg'),
+                'miniFlagPath' => isset($logos[6]) ? asset('storage/' . str_replace('icons/', 'icons/', $logos[6]->image_path)) : asset('storage/miniflagv2.svg'),
+                'mainIconPath' => isset($logos[7]) ? asset('storage/' . str_replace('icons/', 'icons/', $logos[7]->image_path)) : asset('storage/CorDev_footer.svg'),
             ]);
     }
 
-    public function create()
+    public function update(Request $request)
     {
-        return view('admin.content_manager_logos.create');
-    }
+    try {
+            $request->validate([
+                'id' => 'required|integer|exists:content_manager_logos_images,id',
+                'icon' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+            $logo = ContentManagerLogosImage::find($request->id);
+            if (!$logo) {
+                return response()->json(['error' => 'Logo not found.'], 404);
+            }
 
-        $path = $request->file('image')->store('content_manager_logos', 'public');
+            $iconFile = $request->file('icon');
+            $path = $iconFile->store('icons', 'public');
 
-        ContentManagerLogosImage::create([
-            'image_path' => $path,
-        ]);
+            $logo->image_path = 'storage/' . $path;
+            $logo->save();
 
-        return redirect()->route('content_manager_logos.index')->with('success', 'contentMlogos image uploaded successfully.');
-    }
-
-    public function destroy($id)
-    {
-        $contentMlogos = ContentManagerLogosImage::findOrFail($id);
-
-        if (Storage::disk('public')->exists($contentMlogos->image_path)) {
-            Storage::disk('public')->delete($contentMlogos->image_path);
+            return response()->json(['success' => true, 'message' => 'Icon updated successfully.', 'image_path' => asset($logo->image_path)]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Server error: ' . $e->getMessage()], 500);
         }
-
-        $contentMlogos->delete();
-
-        return redirect()->route('content_manager_logos.index')->with('success', 'contentMlogos image deleted successfully.');
     }
 }

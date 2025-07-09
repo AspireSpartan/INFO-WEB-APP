@@ -100,7 +100,7 @@
         }
     </style>
 </head>
-@props(['contentMlogos', 'vmgEditableContentData', 'strategicPlans'])
+@props(['contentMlogos', 'vmgEditableContentData'])
 <body class="font-['Source_Sans_Pro']">
     <div class="relative w-full overflow-hidden min-h-screen" id="vmgVisionMissionGoalSection">
         {{-- Background Image (Philippine Flag) with fade-in animation --}}
@@ -179,23 +179,7 @@
 
     <script>
         // Unique variables for page content and modal interaction
-        const vmgEditableContentData = {
-            vision: {
-                icon: asset($visionIconPath ?? "storage/Vision.svg"),
-                title: $vision->title,
-                paragraph: $vision->paragraph,
-            },
-            mission: {
-                icon: asset($missionIconPath ?? "storage/Mission.svg"),
-                title: $mission->title,
-                paragraph: $mission->paragraph,
-            },
-            goal: {
-                icon: asset($goalIconPath ?? "storage/goal.svg"),
-                title: $goal->title,
-                paragraph: $goal->paragraph,
-            },
-        };
+        const vmgEditableContentData = @json($vmgEditableContentData);
 
         // Global variable to store the Data URL of the newly selected icon
         let vmgSelectedIconDataUrl = null;
@@ -232,6 +216,103 @@
             // Re-attach event listeners for newly rendered edit buttons
             vmgAttachEditButtonListeners();
         }
+        //vmgSaveButton
+        vmgSaveButton.addEventListener('click', () => {
+            const type = vmgCurrentEditType.charAt(0).toUpperCase() + vmgCurrentEditType.slice(1); // e.g. Vision
+            const title = document.getElementById('vmgEditTitle').value;
+            const paragraph = document.getElementById('vmgEditParagraph').value;
+            const iconInput = document.getElementById('vmgEditIcon');
+
+            // First update VMG text
+            const textFormData = new FormData();
+            textFormData.append('type', type);
+            textFormData.append('title', title);
+            textFormData.append('paragraph', paragraph);
+
+            fetch("{{ route('strategic-plan.update') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: textFormData,
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    let errorMessage = 'Network response was not ok';
+                    try {
+                        const errorData = await response.json();
+                        if (errorData && errorData.error) {
+                            errorMessage = errorData.error;
+                        }
+                    } catch {}
+                    throw new Error(errorMessage);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.success) {
+                    throw new Error('Update failed.');
+                }
+
+                // If no icon to upload, finish here
+                if (iconInput.files.length === 0) {
+                    return Promise.resolve(null);
+                }
+
+                // Upload icon separately
+                const logoIdMap = {
+                    'Vision': 3,
+                    'Mission': 4,
+                    'Goal': 5,
+                };
+                const logoId = logoIdMap[type];
+
+                const iconFormData = new FormData();
+                iconFormData.append('id', logoId);
+                iconFormData.append('icon', iconInput.files[0]);
+
+                return fetch("{{ route('content-manager.update') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: iconFormData,
+                })
+                .then(async iconResponse => {
+                    if (!iconResponse.ok) {
+                        let errorMessage = 'Icon upload failed';
+                        try {
+                            const errorData = await iconResponse.json();
+                            if (errorData && errorData.error) {
+                                errorMessage = errorData.error;
+                            }
+                        } catch {}
+                        throw new Error(errorMessage);
+                    }
+                    return iconResponse.json();
+                });
+            })
+            .then(iconData => {
+                alert('Strategic plan updated successfully.');
+
+                const lowerType = type.toLowerCase();
+                vmgEditableContentData[lowerType].title = title;
+                vmgEditableContentData[lowerType].paragraph = paragraph;
+
+                if (iconData && iconData.success && iconData.image_path) {
+                    vmgEditableContentData[lowerType].icon = iconData.image_path;
+                }
+
+                vmgRenderPageContent();
+                vmgCloseEditModal();
+            })
+            .catch(error => {
+                alert('An error occurred: ' + error.message);
+            });
+        });
+
+
+        
 
         /**
          * Handles the change event for the icon file input, showing a preview.

@@ -4,6 +4,7 @@ use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
 use App\Models\PageContent; 
+use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
@@ -17,10 +18,11 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageContentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\ProjectDescriptionController;
 use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\PreviewSection2CaptionController;
-use App\Models\StrategicPlan;
+use App\Http\Controllers\ContentManagerLogosImageController;
 
 
 Route::get('/', function () {
@@ -69,7 +71,7 @@ Route::get('/businesspermit', function () {
 
 Route::get('/reportconcern', function () {
     return view('User_Side_Screen.reportconcern');
-})->name('reportconcern');
+})->name('reportconcern');  
 
 Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
     ->name('news.incrementViews');
@@ -102,7 +104,33 @@ Route::prefix('admin')->group(function () {
         $contentMlogos = ContentManagerLogosImage::all();
         $strategicPlans = StrategicPlan::all();
 
-       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'strategicPlans'));
+        $vision = $strategicPlans->where('id', 1)->first();
+        $mission = $strategicPlans->where('id', 2)->first();
+        $goal = $strategicPlans->where('id', 3)->first();
+
+        $visionIcon = ContentManagerLogosImage::find(3);
+        $missionIcon = ContentManagerLogosImage::find(4);
+        $goalIcon = ContentManagerLogosImage::find(5);
+
+        $vmgEditableContentData = [
+            'vision' => [
+                'icon' => $visionIcon ? asset($visionIcon->image_path) : asset('storage/Vision.svg'),
+                'title' => $vision ? $vision->title : '',
+                'paragraph' => $vision ? $vision->paragraph : '',
+            ],
+            'mission' => [
+                'icon' => $missionIcon ? asset($missionIcon->image_path) : asset('storage/Mission.svg'),
+                'title' => $mission ? $mission->title : '',
+                'paragraph' => $mission ? $mission->paragraph : '',
+            ],
+            'goal' => [
+                'icon' => $goalIcon ? asset($goalIcon->image_path) : asset('storage/goal.svg'),
+                'title' => $goal ? $goal->title : '',
+                'paragraph' => $goal ? $goal->paragraph : '',
+            ],
+        ];
+
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
@@ -117,4 +145,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/logos', [PreviewSection2LogoController::class, 'store'])->name('logos.store');
     Route::delete('/logos/{id}', [PreviewSection2LogoController::class, 'destroy'])->name('logos.destroy');
     Route::post('/caption/update', [PreviewSection2CaptionController::class, 'update'])->name('caption.update');
+    Route::post('/admin/strategic-plan/update', [StrategicPlanController::class, 'update'])->name('strategic-plan.update');
+    Route::post('/admin/content-manager/update', [ContentManagerLogosImageController::class, 'update'])->name('content-manager.update');
 });
