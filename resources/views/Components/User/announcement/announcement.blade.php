@@ -6,14 +6,31 @@
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100">
 
-        <div class="bg-gray-800 text-white rounded-2xl py-10 px-6 text-center mb-12 mx-auto w-full">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 flex items-center justify-center gap-3">
-                <i class="fas fa-bullhorn"></i> ANNOUNCEMENTS !! <i class="fas fa-bell"></i>
-            </h1>
-            <p class="text-indigo-100 text-lg max-w-2xl mx-auto">
-                Track the status of your online requests and know when they are ready for claim.
-            </p>
-        </div>
+            <div class="rounded-2xl py-10 px-6 pl-[200px] mb-12 w-full bg-white text-left">
+                <div class="flex items-start gap-8">
+                    <!-- Icon -->
+                    <div class="text-orange-500 text-5xl">
+                    <!-- Sample icon (Bullhorn/Announcement) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-20 h-20" viewBox="0 0 24 24">
+                        <path d="M20 3.01 4 7v4.18a3 3 0 0 0 1.64 2.68l2.27 1.14a4 4 0 1 0 7.73 1H16a1 1 0 0 0 1-1V14l3-.75a1 1 0 0 0 .76-.97V4a1 1 0 0 0-1.24-.99zM10 18a2 2 0 0 1-1.85-2.78l1.64.82A1.98 1.98 0 0 1 10 18zm6-4.5h-.92a4.03 4.03 0 0 0-1.58-.8L8 10.87V8.14l8-2v8.36z"/>
+                    </svg>
+                    </div>
+
+                    <!-- Text -->
+                    <div>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4 text-black leading-tight">
+                        <span class="text-orange-500">Official</span> <br />
+                        Announcements!!
+                    </h1>
+                    <p class="text-lg text-black">
+                        Track the status of your online requests and know when they are ready for claim.
+                    </p>
+                    </div>
+                </div>
+            </div>
+
+
+
 
         <main class="max-w-7xl mx-auto w-full">
             <div x-data="{
