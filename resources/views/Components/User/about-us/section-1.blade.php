@@ -80,6 +80,7 @@
                             hover:ring-4 hover:ring-[#F18018] hover:ring-opacity-70">
                     <div class="w-16 h-16 md:w-20 md:h-20 bg-zinc-300 rounded-full flex-shrink-0 flex items-center justify-center">
                         {{-- Icon for LGU News --}}
+                        <i class="fas fa-newspaper text-white text-2xl"></i>
                     </div>
                     <div class="flex flex-col items-start gap-2 text-left">
                         <h3 class="text-black text-lg md:text-xl font-bold font-roboto">Real-Time LGU News</h3>
