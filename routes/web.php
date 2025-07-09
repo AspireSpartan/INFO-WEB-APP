@@ -24,6 +24,8 @@ use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 
+use App\Http\Controllers\ReportConcern;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -85,9 +87,6 @@ Route::get('/admin/notifications/{message}/show', [NotificationController::class
 Route::get('/page-content', [PageContentController::class, 'show'])->name('page.content.show');
 Route::post('/page-content', [PageContentController::class, 'update'])->name('page.content.update');
 
-Route::get('/cedula', function () {
-    return view('User_Side_Screen.cedula');
-})->name('cedula');
 
 // Admin Routes (Grouped for clarity and potential middleware)
 Route::prefix('admin')->group(function () {
