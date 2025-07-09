@@ -1,48 +1,46 @@
 @extends('layouts.admin') {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
 @section('title', 'Admin View')
 @section('content')
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects']) 
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos'])
     <div class="bg-neutral-200 min-h-screen flex flex-col"
-     x-data="{
+         x-data="{
+             activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
+             notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
+             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'mission', 'developers', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4'],
 
-         activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
-         notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-         screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latest news', 'mission', 'developers', 'links'],
+             resetNotifications() {
+                 this.notificationCount = 0;
+                 localStorage.setItem('unreadNotifications', 0);
+             },
 
-
-         resetNotifications() {
-             this.notificationCount = 0;
-             localStorage.setItem('unreadNotifications', 0);
-         },
-
-         switchScreen(screenName) {
-             this.activeScreen = screenName;
-             const url = new URL(window.location);
-             url.searchParams.set('screen', screenName);
-             history.pushState({ screen: screenName }, '', url.toString()); // Pass state for popstate
-         }
-     }"
-     x-init="
-         const initialScreenFromUrl = new URLSearchParams(window.location.search).get('screen');
-         if (initialScreenFromUrl && screens.includes(initialScreenFromUrl) && activeScreen === 'dashboard') {
-             // Only override if the activeScreen hasn't been set by a session flash already
-             activeScreen = initialScreenFromUrl;
-         }
-
-         window.addEventListener('popstate', (event) => {
-             const popUrlParams = new URLSearchParams(window.location.search);
-             const popScreen = popUrlParams.get('screen');
-             if (popScreen && screens.includes(popScreen)) {
-                 activeScreen = popScreen;
-             } else if (!popScreen && activeScreen !== 'dashboard') { // If no screen param, go to dashboard
-                 activeScreen = 'dashboard';
+             switchScreen(screenName) {
+                 this.activeScreen = screenName;
+                 const url = new URL(window.location);
+                 url.searchParams.set('screen', screenName);
+                 history.pushState({ screen: screenName }, '', url.toString()); // Pass state for popstate
              }
-         });
+         }"
+         x-init="
+             const initialScreenFromUrl = new URLSearchParams(window.location.search).get('screen');
+             if (initialScreenFromUrl && screens.includes(initialScreenFromUrl) && activeScreen === 'dashboard') {
+                 // Only override if the activeScreen hasn't been set by a session flash already
+                 activeScreen = initialScreenFromUrl;
+             }
 
-         @if ($errors->any() && session('showCreateBlogModal'))
+             window.addEventListener('popstate', (event) => {
+                 const popUrlParams = new URLSearchParams(window.location.search);
+                 const popScreen = popUrlParams.get('screen');
+                 if (popScreen && screens.includes(popScreen)) {
+                     activeScreen = popScreen;
+                 } else if (!popScreen && activeScreen !== 'dashboard') { // If no screen param, go to dashboard
+                     activeScreen = 'dashboard';
+                 }
+             });
 
-         @endif
-     ">
+             @if ($errors->any() && session('showCreateBlogModal'))
+
+             @endif
+         ">
 
     <div class="relative w-full bg-gray-700 py-4 px-6 md:px-12 lg:px-20 flex items-center justify-between z-20">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -54,14 +52,13 @@
         <nav class="hidden lg:flex items-center gap-x-8">
             <template x-for="screen in ['dashboard', 'news']" :key="screen">
                 <a href="#"
-                @click.prevent="switchScreen(screen)"
-                :class="{'text-amber-400': activeScreen === screen, 'text-white': activeScreen !== screen}"
-                class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize"
-                x-text="screen">
+                   @click.prevent="switchScreen(screen)"
+                   :class="{'text-amber-400': activeScreen === screen, 'text-white': activeScreen !== screen}"
+                   class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize"
+                   x-text="screen">
                 </a>
             </template>
 
-            <!-- Blog dropdown -->
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open"
                         :class="{'text-amber-400': ['blog', 'projects'].includes(activeScreen) || open, 'text-white': !(['blog', 'projects'].includes(activeScreen) || open)}"
@@ -73,27 +70,26 @@
                 </button>
 
                     <div x-show="open"
-                    x-transition:enter="transition ease-out duration-100"
-                    x-transition:enter-start="transform opacity-0 scale-95"
-                    x-transition:enter-end="transform opacity-100 scale-100"
-                    x-transition:leave="transition ease-in duration-75"
-                    x-transition:leave-start="transform opacity-100 scale-100"
-                    x-transition:leave-end="transform opacity-0 scale-95"
-                    class="origin-top-left absolute top-full left-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
-                    role="menu">
-                    <div class="py-1">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        @click.prevent="switchScreen('blog'); open = false">Latest Articles</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        @click.prevent="switchScreen('projects'); open = false">Projects</a>
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="origin-top-left absolute top-full left-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
+                         role="menu">
+                        <div class="py-1">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            @click.prevent="switchScreen('blog'); open = false">Latest Articles</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            @click.prevent="switchScreen('projects'); open = false">Projects</a>
+                        </div>
                     </div>
-                </div>
             </div>
 
-            <!-- Content Manager dropdown -->
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open"
-                        :class="{'text-amber-400': ['banner', 'latest news', 'mission', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latest news', 'mission', 'developers', 'links'].includes(activeScreen) || open)}"
+                        :class="{'text-amber-400': ['banner', 'latestnews', 'mission', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latestnews', 'mission', 'developers', 'links'].includes(activeScreen) || open)}"
                         class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
                     Content Manager
                     <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,25 +98,57 @@
                 </button>
 
                 <div x-show="open"
-                    x-transition:enter="transition ease-out duration-100"
-                    x-transition:enter-start="transform opacity-0 scale-95"
-                    x-transition:enter-end="transform opacity-100 scale-100"
-                    x-transition:leave="transition ease-in duration-75"
-                    x-transition:leave-start="transform opacity-100 scale-100"
-                    x-transition:leave-end="transform opacity-0 scale-95"
-                    class="origin-top-left absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
-                    role="menu">
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="transform opacity-0 scale-95"
+                     x-transition:enter-end="transform opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="transform opacity-100 scale-100"
+                     x-transition:leave-end="transform opacity-0 scale-95"
+                     class="origin-top-left absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
+                     role="menu">
                     <div class="py-1">
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('banner'); open = false">Banner</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        @click.prevent="switchScreen('latest news'); open = false">Latest News</a>
+                        @click.prevent="switchScreen('latestnews'); open = false">Latest News</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('mission'); open = false">Mission</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('developers'); open = false">Developers</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('links'); open = false">Links</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                <button @click="open = !open"
+                        :class="{'text-amber-400': ['about-section-1', 'about-section-2', 'about-section-3', 'about-section-4'].includes(activeScreen) || open, 'text-white': !(['about-section-1', 'about-section-2', 'about-section-3', 'about-section-4'].includes(activeScreen) || open)}"
+                        class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
+                    About Section
+                    <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <div x-show="open"
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="transform opacity-0 scale-95"
+                     x-transition:enter-end="transform opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="transform opacity-100 scale-100"
+                     x-transition:leave-end="transform opacity-0 scale-95"
+                     class="origin-top-left absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-30"
+                     role="menu">
+                    <div class="py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click.prevent="switchScreen('about-section-1'); open = false">Who we are/Offer</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click.prevent="switchScreen('about-section-2'); open = false">Goals</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click.prevent="switchScreen('about-section-3'); open = false">Documentation</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click.prevent="switchScreen('about-section-4'); open = false">Developers</a>
                     </div>
                 </div>
             </div>
@@ -220,28 +248,40 @@
                     <div>@include('Components.Admin.blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
                 </template>
                 <template x-if="screen === 'projects'">
-                    <div>@include('Components.Admin.blog.projects.project_content', ['projects' => $projects ?? []])</div>
+                    <div>@include('Components.Admin.blog.projects.project_content', ['projects' => $projects ?? [], 'description' => $description ?? []])</div>
                 </template>
                 <template x-if="screen === 'banner'">
                     <div>@include('Components.Admin.Content-Manager.banner.banner', ['pageContent' => $pageContent ?? []])</div>
                 </template>
-                <template x-if="screen === 'latest news'">
-                    <div><h1>Latest News Content</h1></div>
+                <template x-if="screen === 'latestnews'">
+                    <div>@include('Components.Admin.Content-Manager.latestnews.latestnews', ['newsItems' => $newsItems ?? [], 'logos' => $logos ?? [], 'caption' => $caption ?? []])</div>
                 </template>
                 <template x-if="screen === 'mission'">
-                    <div><h1>Mission Content</h1></div>
+                    <div>@include('Components.Admin.Content-Manager.3goals.3goals', ['contentMlogos' => $contentMlogos ?? []])</div>
                 </template>
                 <template x-if="screen === 'developers'">
-                    <div><h1>Developers Content</h1></div>
+                    <div>@include('Components.Admin.Content-Manager.teamdev.teamdev', ['contentMlogos' => $contentMlogos ?? []])</div>
                 </template>
                 <template x-if="screen === 'links'">
-                    <div><h1>Links Content</h1></div>
+                    <div>@include('Components.Admin.Content-Manager.footer.footer', ['contentMlogos' => $contentMlogos ?? []])</div>
                 </template>
                 <template x-if="screen === 'notifications'">
                     <div>@include('Components.Admin.notification.notification', ['contactMessages' => $contactMessages ?? []])</div>
                 </template>
                 <template x-if="screen === 'content manager'">
                     <div class="p-8 text-center text-gray-500">Select an item from the "Content Manager" dropdown.</div>
+                </template>
+                <template x-if="screen === 'about-section-1'">
+                    <div>@include('Components.Admin.about-us.section-1')</div>
+                </template>
+                <template x-if="screen === 'about-section-2'">
+                    <div>@include('Components.Admin.about-us.section-2')</div>
+                </template>
+                <template x-if="screen === 'about-section-3'">
+                    <div>@include('Components.Admin.about-us.section-3')</div>
+                </template>
+                <template x-if="screen === 'about-section-4'">
+                    <div>@include('Components.Admin.about-us.section-4')</div>
                 </template>
             </div>
         </template>
@@ -287,7 +327,7 @@
                 csrfInput.value = '{{ csrf_token() }}';
                 form.appendChild(csrfInput);
 
-                // This is the crucial part for spoofing the DELETE m   ethod
+                // This is the crucial part for spoofing the DELETE method
                 const methodInput = document.createElement('input');
                 methodInput.type = 'hidden';
                 methodInput.name = '_method';
@@ -308,5 +348,3 @@
         }
     </script>
 @endsection
-
-

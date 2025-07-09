@@ -14,13 +14,41 @@ class NewsItemSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        for ($i = 0; $i < 5; $i++) {
+        $filipinoNewsSamples = [
+            [
+                'title' => 'Pagsisimula ng Bakuna sa mga Barangay sa Maynila',
+                'author' => 'Juan Dela Cruz',
+                'picture' => 'https://media.istockphoto.com/id/1973365581/vector/sample-ink-rubber-stamp.jpg?s=612x612&w=0&k=20&c=_m6hNbFtLdulg3LK5LRjJiH6boCb_gcxPvRLytIz0Ws=',
+            ],
+            [
+                'title' => 'Bagyong Odette Nagdulot ng Malawakang Pagbaha sa Visayas',
+                'author' => 'Maria Clara',
+                'picture' => 'https://media.istockphoto.com/id/1973365581/vector/sample-ink-rubber-stamp.jpg?s=612x612&w=0&k=20&c=_m6hNbFtLdulg3LK5LRjJiH6boCb_gcxPvRLytIz0Ws=',
+            ],
+            [
+                'title' => 'Pagdiriwang ng Araw ng Kalayaan sa Maynila',
+                'author' => 'Jose Rizal',
+                'picture' => 'https://media.istockphoto.com/id/1973365581/vector/sample-ink-rubber-stamp.jpg?s=612x612&w=0&k=20&c=_m6hNbFtLdulg3LK5LRjJiH6boCb_gcxPvRLytIz0Ws=',
+            ],
+            [
+                'title' => 'Pagtaas ng Ekonomiya ng Pilipinas sa Ikalawang Quarter',
+                'author' => 'Liza Soberano',
+                'picture' => 'https://media.istockphoto.com/id/1973365581/vector/sample-ink-rubber-stamp.jpg?s=612x612&w=0&k=20&c=_m6hNbFtLdulg3LK5LRjJiH6boCb_gcxPvRLytIz0Ws=',
+            ],
+            [
+                'title' => 'Pagsisimula ng Online Classes sa mga Paaralan sa Luzon',
+                'author' => 'Anne Curtis',
+                'picture' => 'https://media.istockphoto.com/id/1973365581/vector/sample-ink-rubber-stamp.jpg?s=612x612&w=0&k=20&c=_m6hNbFtLdulg3LK5LRjJiH6boCb_gcxPvRLytIz0Ws=',
+            ],
+        ];
+
+        foreach ($filipinoNewsSamples as $news) {
             DB::connection('mysql')->table('news_items')->insert([
-                'picture' => 'https://media.istockphoto.com/id/1973365581/vector/sample-ink-rubber-stamp.jpg?s=612x612&w=0&k=20&c=_m6hNbFtLdulg3LK5LRjJiH6boCb_gcxPvRLytIz0Ws=', // All records will use 0.jpg
-                'author' => $faker->name(),
+                'picture' => $news['picture'],
+                'author' => $news['author'],
                 'date' => $faker->date(),
-                'title' => $faker->sentence(6),
-                'sponsored' => $faker->boolean(20), // 20% chance to be sponsored
+                'title' => $news['title'],
+                'sponsored' => $faker->boolean(20),
                 'views' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PageContent;
-use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
+use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\PageContent;
 use Illuminate\Http\Request;
 use App\Models\ContactMessage;
+use App\Models\ProjectDescription;
+use App\Models\PreviewSection2Logo;
+use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ContentManagerLogosImage;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log; // Added for logging
+use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
 
 class NewsController extends Controller
 {
@@ -17,55 +23,30 @@ class NewsController extends Controller
      * Display a listing of the news items (for admin dashboard).
      * This function now serves as the index for news items in the admin area.
      */
+
     public function index(Request $request)
     {
-        $query = NewsItem::query();
+        $newsItems = NewsItem::query()
+            ->search($request->input('search'))
+            ->filterBySponsored($request->input('sponsored_filter', 'all'))
+            ->sortBy($request->input('sort_by', 'date_desc'))
+            ->get();
 
-        // --- Search Functionality ---
-        if ($request->has('search') && $request->input('search') != '') {
-            $searchTerm = $request->input('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('title', 'like', '%' . $searchTerm . '%')
-                ->orWhere('author', 'like', '%' . $searchTerm . '%')
-                ->orWhere('url', 'like', '%' . $searchTerm . '%');
-            });
-        }
-
-        // --- Filter by Sponsored Functionality ---
-        if ($request->has('sponsored_filter') && $request->input('sponsored_filter') != 'all') {
-            if ($request->input('sponsored_filter') == 'sponsored') {
-                $query->where('sponsored', true);
-            } elseif ($request->input('sponsored_filter') == 'non-sponsored') {
-                $query->where('sponsored', false);
-            }
-        }
-
-        // --- Sort By Functionality ---
-        $sortBy = $request->input('sort_by', 'date_desc'); // Default sort: date (newest)
-        switch ($sortBy) {
-            case 'date_asc':
-                $query->orderBy('date', 'asc');
-                break;
-            case 'views_desc':
-                $query->orderBy('views', 'desc');
-                break;
-            case 'views_asc':
-                $query->orderBy('views', 'asc');
-                break;
-            case 'date_desc': // Default case
-            default:
-                $query->orderBy('date', 'desc');
-                break;
-        }
-        
         $projects = Project::all();
-        $newsItems = $query->get();
+        $description = ProjectDescription::first();
         $pageContent = PageContent::pluck('value', 'key')->toArray();
-        $contactMessages = ContactMessage::latest()->get(); // Fetch contact messages
+        $contactMessages = ContactMessage::latest()->get();
         $blogfeeds = Blogfeed::all();
+        $logos = PreviewSection2Logo::select('id', 'logo')->get()->map(function ($logo) {
+            if (!Str::startsWith($logo->logo, 'storage/')) {
+                $logo->logo = 'storage/' . $logo->logo;
+            }
+            return $logo;
+        });
+        $caption = PreviewSection2Caption::value('caption');
+        $contentMlogos = ContentManagerLogosImage::all();
 
-        // This method just loads the view with data. The active screen logic is in Ad-Header.blade.php
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
     }
 
     /**
@@ -184,10 +165,7 @@ class NewsController extends Controller
     /**
      * Display the specified news item (for public view).
      */
-    public function show(NewsItem $newsItem) // Using route model binding
-    {
-        return view('User_Side_Screen.single_news', compact('newsItem')); // Assuming you have a view for a single news item
-    }
+    
 
     /**
      * Show the form for editing the specified news item.

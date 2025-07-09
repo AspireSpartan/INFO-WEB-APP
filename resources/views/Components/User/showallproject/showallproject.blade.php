@@ -5,7 +5,7 @@
             Our <span class="text-amber-500">Complete Projects</span>
         </h1>
         <p class="text-xl font-light font-['Source_Sans_Pro'] leading-relaxed max-w-8xl mx-auto">
-            The government proudly presents a collection of completed projects that embody progress, resilience, and service to the Filipino people. From modern infrastructure and safer roads to revitalized heritage sites and sustainable community spaces, these accomplishments reflect our unwavering commitment to national development and inclusive growth. Explore how each project contributes to a stronger, more connected, and culturally enriched Philippines.
+            {{ $description->description ?? '' }}
         </p>
     </div>
     <div class="container mx-auto px-4 pb-20 grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-24">
@@ -17,8 +17,16 @@
             
             {{-- Image Container --}}
             <div class="flex-shrink-0 w-full lg:w-1/2 flex justify-center items-center">
-                <img src="{{ $project->image_url }}" alt="{{ $project->title }}" 
-                     class="max-w-full h-auto max-h-96 rounded-xl shadow-lg object-contain"> {{-- Dynamic sizing --}}
+                <img 
+                    src="{{ 
+                        (Str::startsWith($project->image_url, ['http', 'storage/'])) 
+                            ? asset($project->image_url) 
+                            : asset('storage/' . $project->image_url) 
+                    }}" 
+                    alt="{{ $project->title }}" 
+                    onerror="this.onerror=null;this.src='{{ asset('storage/sampling.jpg') }}';"
+                    class="max-w-full h-auto max-h-96 rounded-xl shadow-lg object-contain"
+                />
             </div>
 
             {{-- Text Content --}}
@@ -34,7 +42,7 @@
                     <p><span class="font-['Merriweather'] font-bold text-amber-500">Outcome:</span> {{ $project->outcome }}</p>
                 </div>
                 <!--READ MORE BUTTON-->
-                <a href="{{ $project->url }}" class="inline-block mt-4 px-6 py-2 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition">
+                <a href="{{ $project->url }}" target="_blank" class="inline-block mt-4 px-6 py-2 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition">
                     Read More
                 </a>
             </div>

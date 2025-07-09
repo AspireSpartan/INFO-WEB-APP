@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Blogfeed;
-use App\Models\PageContent; // IMPORTANT: Changed from SectionBanner to PageContent
+use App\Models\NewsItem;
+use App\Models\PageContent; 
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
-use App\Models\Project;
-
-use App\Models\NewsItem;
+use App\Models\ProjectDescription;
+use App\Models\PreviewSection2Logo;
+use App\Models\PreviewSection2Caption;
+use Illuminate\Support\Str;
 
 
 class HomeController extends Controller
@@ -23,13 +26,21 @@ class HomeController extends Controller
     public function index()
     {
         $projects = Project::all();
+        $projects->transform(function ($project) {
+           
+            if (str_contains($project->image_url, 'storage/')) {
+                $project->image_url = asset($project->image_url);
+            } else {
+                
+                $project->image_url = asset('storage/' . $project->image_url);
+            }
+            return $project;
+        });
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
-        // Fetch all key-value pairs from the 'page_contents' table
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
+        $description = ProjectDescription::first();
+        
 
-        // Provide a fallback if no content is found in the database.
-        // These defaults should match what your PageContentSeeder provides
-        // to ensure content displays correctly even if the table is empty.
         if (empty($pageContent)) {
             $pageContent = [
                 'hero-subtitle-1' => '“DRIVEN BY INNOVATION',
@@ -48,10 +59,18 @@ class HomeController extends Controller
                 'footer-paragraph' => 'Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.',
             ];
         }
+        
+        $logos = PreviewSection2Logo::select('logo')->get()->map(function ($logo) {
+            if (!Str::startsWith($logo->logo, 'storage/')) {
+                $logo->logo = 'storage/' . $logo->logo;
+            }
+            return $logo;
+        });
+        $caption = PreviewSection2Caption::value('caption');
 
         // Pass all necessary data to the home view
 
-        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects')); // Pass the pageContent array
+        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption')); // Pass the pageContent array
     }
 
     /**
@@ -67,8 +86,6 @@ class HomeController extends Controller
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
 
 
-        // If your blog page also uses pageContent or a banner, you might fetch it here too.
-        // For simplicity, it's not included by default in blogIndex unless specified.
         return view('User_Side_Screen.blog', compact('blogfeeds', 'pageContent'));
 
     }

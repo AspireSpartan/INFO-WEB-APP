@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Blogfeed;
 use App\Models\Project;
-use Illuminate\Http\Request;
-use App\Models\PageContent;
+use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\PageContent;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\ContactMessage;
+use App\Models\ProjectDescription;
+use App\Models\PreviewSection2Logo;
+use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ContentManagerLogosImage;
 use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
@@ -23,16 +28,24 @@ class BlogController extends Controller
     public function index()
     {
         $projects = Project::all();
+        $description = ProjectDescription::first();
         $pageContent = PageContent::pluck('value', 'key')->toArray();
         $blogfeeds = Blogfeed::orderBy('published_at', 'desc')->get();
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         $contactMessages = ContactMessage::all(); // Or filter if you only need unread messages
         $isViewportPresent = request()->has('viewport'); // Adjust this condition as needed
-
+        $logos = PreviewSection2Logo::select('id', 'logo')->get()->map(function ($logo) {
+            if (!Str::startsWith($logo->logo, 'storage/')) {
+                $logo->logo = 'storage/' . $logo->logo;
+            }
+            return $logo;
+        });
+        $caption = PreviewSection2Caption::value('caption');
+        $contentMlogos = ContentManagerLogosImage::all();
         if ($isViewportPresent) {
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
     }
 
     /**
@@ -112,13 +125,6 @@ class BlogController extends Controller
                         ->with('activeAdminScreen', 'blog'); // Added this line
     }
 
-    /**
-     * Display the specified resource (a single blog post).
-     * This method uses Route Model Binding to automatically fetch the Blogfeed instance.
-     *
-     * @param  \App\Models\Blogfeed  $blogfeed
-     * @return \Illuminate\View\View
-     */
     public function show(Blogfeed $blogfeed)
     {
         // This view path might also need adjustment if it's not directly in resources/views/blogs/show.blade.php

@@ -1,17 +1,27 @@
 <?php
 
-use App\Models\Blogfeed;
 use App\Models\Project;
+use App\Models\Blogfeed;
 use App\Models\NewsItem;
-use App\Models\ContactMessage;
 use App\Models\PageContent; 
+use App\Models\ContactMessage;
+use App\Models\ProjectDescription;
+use App\Models\PreviewSection2Logo;
 use Illuminate\Support\Facades\Route;
+use App\Models\PreviewSection2Caption;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
+use App\Models\ContentManagerLogosImage;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageContentController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProjectDescriptionController;
+use App\Http\Controllers\PreviewSection2LogoController;
+use App\Http\Controllers\PreviewSection2CaptionController;
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -40,12 +50,17 @@ Route::get('/contact-us', function () {
 
 Route::get('/showallproject', function () {
     $projects = Project::all();
-    return view('User_Side_Screen.showallproject', compact('projects'));
+    $description = ProjectDescription::first(); // Fetch the single description row
+    return view('User_Side_Screen.showallproject', compact('projects', 'description'));
 })->name('showallproject');
 
 Route::get('/cedula', function () {
     return view('User_Side_Screen.cedula');
 })->name('cedula');
+
+Route::get('/about-us', function () {
+    return view('User_Side_Screen.about-us');
+})->name('about-us');
 
 Route::get('/businesspermit', function () {
     return view('User_Side_Screen.businesspermit');
@@ -80,14 +95,24 @@ Route::prefix('admin')->group(function () {
         $contactMessages = ContactMessage::all();
         $blogfeeds = Blogfeed::all();
         $projects = Project::all();
+        $description = ProjectDescription::first(); 
+        $logos = PreviewSection2Logo::select('id', 'logo')->get();
+        $caption = PreviewSection2Caption::value('caption');
+        $contentMlogos = ContentManagerLogosImage::all();
 
-       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects'));
+       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
     })->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
-
+    
     Route::resource('blogs', BlogController::class)->parameters([
         'blogs' => 'blogfeed'
     ]);
+    Route::resource('projects', ProjectController::class);
+    Route::get('projects', [ProjectController::class, 'indexAdmin'])->name('projects.indexAdmin');
+    Route::post('/project-description/update', [ProjectDescriptionController::class, 'update'])->name('project-description.update');
+    Route::post('/logos', [PreviewSection2LogoController::class, 'store'])->name('logos.store');
+    Route::delete('/logos/{id}', [PreviewSection2LogoController::class, 'destroy'])->name('logos.destroy');
+    Route::post('/caption/update', [PreviewSection2CaptionController::class, 'update'])->name('caption.update');
 });
