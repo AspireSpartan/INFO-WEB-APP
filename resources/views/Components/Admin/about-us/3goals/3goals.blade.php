@@ -70,6 +70,7 @@
             font-size: 1rem;
             resize: vertical;
             box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            color: black; /* Add this line to make text black */
         }
 
         .vmg-modal-content input[type="file"] {
