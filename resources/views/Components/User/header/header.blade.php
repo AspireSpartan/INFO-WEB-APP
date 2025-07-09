@@ -1,6 +1,6 @@
 <header style="font-family: 'Merriweather', questrial;"
         class="fixed top-0 left-0 w-full z-50 transition-all duration-300"
-        x-data="{ mobileMenuOpen: false, scrolled: 0, prevScrollPos: window.pageYOffset, showNavbar: true, isHomePage: window.location.pathname === '/home' || window.location.pathname === '/blog' || window.location.pathname === '/' }"
+        x-data="{ mobileMenuOpen: false, scrolled: 0, prevScrollPos: window.pageYOffset, showNavbar: true, isHomePage: window.location.pathname === '/home' || window.location.pathname === '/blog' || window.location.pathname === '/about-us' || window.location.pathname === '/' }"
         x-init="
             window.addEventListener('scroll', () => {
                 scrolled = window.scrollY;
@@ -53,7 +53,7 @@
                     <div class="py-1" role="none">
                         <a href="/home" data-scroll-percent="0" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Banner</a>
                         <a href="/home" data-scroll-percent="24.9" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Latest News</a>
-                        <a href="/home" data-scroll-percent="36" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Strategic plan</a>
+                        <a href="/home" data-scroll-percent="38" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Strategic plan</a>
                         <a href="/home" data-scroll-percent="56.8" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Projects</a>
                         <a href="/home" data-scroll-percent="83.5" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Officials</a>
                         <a href="/home" data-scroll-percent="100" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Footer</a>
