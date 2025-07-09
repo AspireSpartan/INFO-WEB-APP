@@ -19,6 +19,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageContentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StrategicPlanController;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProjectDescriptionController;
 use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\PreviewSection2CaptionController;
@@ -92,46 +93,7 @@ Route::get('/cedula', function () {
 // Admin Routes (Grouped for clarity and potential middleware)
 Route::prefix('admin')->group(function () {
 
-    Route::get('/', function () {
-        $pageContent = PageContent::pluck('value', 'key')->toArray(); 
-        $newsItems = NewsItem::all();
-        $contactMessages = ContactMessage::all();
-        $blogfeeds = Blogfeed::all();
-        $projects = Project::all();
-        $description = ProjectDescription::first(); 
-        $logos = PreviewSection2Logo::select('id', 'logo')->get();
-        $caption = PreviewSection2Caption::value('caption');
-        $contentMlogos = ContentManagerLogosImage::all();
-        $strategicPlans = StrategicPlan::all();
-
-        $vision = $strategicPlans->where('id', 1)->first();
-        $mission = $strategicPlans->where('id', 2)->first();
-        $goal = $strategicPlans->where('id', 3)->first();
-
-        $visionIcon = ContentManagerLogosImage::find(3);
-        $missionIcon = ContentManagerLogosImage::find(4);
-        $goalIcon = ContentManagerLogosImage::find(5);
-
-        $vmgEditableContentData = [
-            'vision' => [
-                'icon' => $visionIcon ? asset($visionIcon->image_path) : asset('storage/Vision.svg'),
-                'title' => $vision ? $vision->title : '',
-                'paragraph' => $vision ? $vision->paragraph : '',
-            ],
-            'mission' => [
-                'icon' => $missionIcon ? asset($missionIcon->image_path) : asset('storage/Mission.svg'),
-                'title' => $mission ? $mission->title : '',
-                'paragraph' => $mission ? $mission->paragraph : '',
-            ],
-            'goal' => [
-                'icon' => $goalIcon ? asset($goalIcon->image_path) : asset('storage/goal.svg'),
-                'title' => $goal ? $goal->title : '',
-                'paragraph' => $goal ? $goal->paragraph : '',
-            ],
-        ];
-
-       return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData'));
-    })->name('admin.dashboard');
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     Route::resource('news', NewsController::class);
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
