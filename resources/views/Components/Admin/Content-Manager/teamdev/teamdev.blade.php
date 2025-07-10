@@ -70,11 +70,23 @@
         <div id="header-section" class="max-w-[1531px] mx-auto pt-20 px-4 flex flex-col lg:flex-row justify-between items-start lg:items-center relative group">
             <!-- Padding 'p-4' is now always applied to prevent layout shift on hover -->
             <div class="mb-10 lg:mb-0 p-4 rounded-lg transition-all duration-300 group-hover:bg-blue-100 group-hover:bg-opacity-50 group-hover:ring-2 group-hover:ring-blue-500 group-hover:border-dashed group-hover:border-2 group-hover:border-blue-500">
-                        <h1 id="mainTitle" class="text-black text-5xl font-bold font-['Merriweather'] leading-tight">{!! nl2br(e($publicOfficialCaption->title)) !!}</h1>
+                <h1 id="mainTitle" class="text-black text-5xl font-bold font-['Merriweather'] leading-tight">
+                    {!! nl2br(e(
+                        is_array($publicOfficialCaption) && array_key_exists('title', $publicOfficialCaption)
+                            ? $publicOfficialCaption['title']
+                            : (isset($publicOfficialCaption->title) ? $publicOfficialCaption->title : '')
+                    )) !!}
+                </h1>
             </div>
             <!-- Padding 'p-4' is now always applied to prevent layout shift on hover -->
             <div class="max-w-[673.50px] text-center lg:text-left text-black text-xl font-light leading-relaxed p-4 rounded-lg transition-all duration-300 group-hover:bg-blue-100 group-hover:bg-opacity-50 group-hover:ring-2 group-hover:ring-blue-500 group-hover:border-dashed group-hover:border-2 group-hover:border-blue-500">
-                <p id="mainParagraph">{{ $publicOfficialCaption->caption }}</p>
+                <p id="mainParagraph">
+                    {!! nl2br(e(
+                        is_array($publicOfficialCaption) && array_key_exists('caption', $publicOfficialCaption)
+                            ? $publicOfficialCaption['caption']
+                            : (isset($publicOfficialCaption->caption) ? $publicOfficialCaption->caption : '')
+                    )) !!}
+                </p>
             </div>
             <button class="edit-button absolute top-4 right-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-base shadow-md" data-edit-type="header">Edit Content</button>
         </div>
@@ -125,9 +137,21 @@
 <script>
     // Unique variables for page content and modal interaction
     const editablePageData = {
-        pageMainTitle: {!! json_encode($publicOfficialCaption->title) !!},
-        pageMainParagraph: {!! json_encode($publicOfficialCaption->caption) !!},
-        pageTitleColor: {!! json_encode($publicOfficialCaption->titleColor ?? '#000000') !!}
+    pageMainTitle: {!! json_encode(
+        is_array($publicOfficialCaption) 
+            ? ($publicOfficialCaption['title'] ?? '') 
+            : ($publicOfficialCaption->title ?? '')
+    ) !!},
+    pageMainParagraph: {!! json_encode(
+        is_array($publicOfficialCaption) 
+            ? ($publicOfficialCaption['caption'] ?? '') 
+            : ($publicOfficialCaption->caption ?? '')
+    ) !!},
+    pageTitleColor: {!! json_encode(
+        is_array($publicOfficialCaption) 
+            ? ($publicOfficialCaption['titleColor'] ?? '#000000') 
+            : ($publicOfficialCaption->titleColor ?? '#000000')
+    ) !!}
     };
 
     // Get references to DOM elements
