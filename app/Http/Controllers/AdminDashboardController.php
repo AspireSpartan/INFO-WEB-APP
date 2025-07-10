@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PageContent;
-use App\Models\NewsItem;
-use App\Models\ContactMessage;
-use App\Models\Blogfeed;
 use App\Models\Project;
+use App\Models\Blogfeed;
+use App\Models\NewsItem;
+use App\Models\PageContent;
+use App\Models\StrategicPlan;
+use App\Models\ContactMessage;
+use App\Models\PublicOfficial;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
+use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
-use App\Models\StrategicPlan;
 
 class AdminDashboardController extends Controller
 {
@@ -53,6 +55,8 @@ class AdminDashboardController extends Controller
                 'paragraph' => $goal ? $goal->paragraph : '',
             ],
         ];
+        $publicOfficialCaption = PublicOfficialCaption::find(1);
+        $officials = PublicOfficial::all();
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -65,7 +69,9 @@ class AdminDashboardController extends Controller
             'caption',
             'contentMlogos',
             'strategicPlans',
-            'vmgEditableContentData'
+            'vmgEditableContentData',
+            'publicOfficialCaption',
+            'officials',
         ));
     }
 }

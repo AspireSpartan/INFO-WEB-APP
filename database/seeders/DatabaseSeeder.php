@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PreviewSection2LogoSeeder::class);
         $this->call(ContentManagerLogosImageSeeder::class);
         $this->call(StrategicPlanSeeder::class);
+        $this->call(PublicOfficialCaptionSeeder::class);
+        $this->call(PublicOfficialsTableSeeder::class);
 
         // Your existing User factory call is retained here
         User::factory()->create([
