@@ -64,17 +64,17 @@
             display: block;
         }
     </style>
-@props(['logos'])
+@props(['logos', 'publicOfficialCaption'])
     <div class="w-full min-h-screen bg-zinc-100 relative overflow-hidden">
 
         <div id="header-section" class="max-w-[1531px] mx-auto pt-20 px-4 flex flex-col lg:flex-row justify-between items-start lg:items-center relative group">
             <!-- Padding 'p-4' is now always applied to prevent layout shift on hover -->
             <div class="mb-10 lg:mb-0 p-4 rounded-lg transition-all duration-300 group-hover:bg-blue-100 group-hover:bg-opacity-50 group-hover:ring-2 group-hover:ring-blue-500 group-hover:border-dashed group-hover:border-2 group-hover:border-blue-500">
-                <h1 id="mainTitle" class="text-black text-5xl font-bold font-['Merriweather'] leading-tight">Meet the faces<br/><span class="text-amber-400">Behind the Structures</span></h1>
+                        <h1 id="mainTitle" class="text-black text-5xl font-bold font-['Merriweather'] leading-tight">{!! nl2br(e($publicOfficialCaption->title)) !!}</h1>
             </div>
             <!-- Padding 'p-4' is now always applied to prevent layout shift on hover -->
             <div class="max-w-[673.50px] text-center lg:text-left text-black text-xl font-light leading-relaxed p-4 rounded-lg transition-all duration-300 group-hover:bg-blue-100 group-hover:bg-opacity-50 group-hover:ring-2 group-hover:ring-blue-500 group-hover:border-dashed group-hover:border-2 group-hover:border-blue-500">
-                <p id="mainParagraph">Honoring the Minds Behind the Milestones<br/>Behind every successful project is a team of visionary leaders and committed public servants who turn blueprints into lasting impact. Meet the dedicated governors who have championed development, guided progress, and ensured that every structure stands as a symbol of service, innovation, and hope for the Filipino people.</p>
+                <p id="mainParagraph">{{ $publicOfficialCaption->caption }}</p>
             </div>
             <button class="edit-button absolute top-4 right-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-base shadow-md" data-edit-type="header">Edit Content</button>
         </div>
@@ -151,8 +151,8 @@
 
     <div id="editModal" class="modal-overlay hidden">
         <div class="modal-content">
-            <h2 id="modalTitle" class="text-2xl font-bold mb-4">Edit Content</h2>
-            <div id="modalInputs" class="mb-6">
+            <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-black">Edit Content</h2>
+            <div id="modalInputs" class="mb-6 text-black">
                 </div>
             <div class="flex justify-end gap-4">
                 <button id="saveButton" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow-md">Save</button>
@@ -161,77 +161,103 @@
         </div>
     </div>
 
-    <script>
-        // Unique variables for page content and modal interaction
-        const editablePageData = {
-            pageMainTitle: "Meet the faces<br/><span class='text-amber-400'>Behind the Structures</span>",
-            pageMainParagraph: "Honoring the Minds Behind the Milestones<br/>Behind every successful project is a team of visionary leaders and committed public servants who turn blueprints into lasting impact. Meet the dedicated governors who have championed development, guided progress, and ensured that every structure stands as a symbol of service, innovation, and hope for the Filipino people.",
-        };
+<script>
+    // Unique variables for page content and modal interaction
+    const editablePageData = {
+        pageMainTitle: {!! json_encode($publicOfficialCaption->title) !!},
+        pageMainParagraph: {!! json_encode($publicOfficialCaption->caption) !!},
+    };
 
-        // Get references to DOM elements
-        const pageTitleElement = document.getElementById('mainTitle');
-        const pageParagraphElement = document.getElementById('mainParagraph');
-        const headerEditButton = document.querySelector('#header-section .edit-button');
+    // Get references to DOM elements
+    const pageTitleElement = document.getElementById('mainTitle');
+    const pageParagraphElement = document.getElementById('mainParagraph');
+    const headerEditButton = document.querySelector('#header-section .edit-button');
 
-        const pageEditModal = document.getElementById('editModal');
-        const pageModalTitle = document.getElementById('modalTitle');
-        const pageModalInputs = document.getElementById('modalInputs');
-        const pageSaveButton = document.getElementById('saveButton');
-        const pageCancelButton = document.getElementById('cancelButton');
+    const pageEditModal = document.getElementById('editModal');
+    const pageModalTitle = document.getElementById('modalTitle');
+    const pageModalInputs = document.getElementById('modalInputs');
+    const pageSaveButton = document.getElementById('saveButton');
+    const pageCancelButton = document.getElementById('cancelButton');
 
-        /**
-         * Renders the main page content from the editablePageData object.
-         */
-        function renderMainPageContent() {
-            pageTitleElement.innerHTML = editablePageData.pageMainTitle;
-            pageParagraphElement.innerHTML = editablePageData.pageMainParagraph;
+    /**
+     * Renders the main page content from the editablePageData object.
+     */
+    function renderMainPageContent() {
+        pageTitleElement.innerHTML = editablePageData.pageMainTitle.replace(/\n/g, '<br>');
+        pageParagraphElement.innerHTML = editablePageData.pageMainParagraph;
+    }
+
+    /**
+     * Opens the edit modal and populates it with the current title and paragraph.
+     */
+    function openMainEditModal() {
+        pageModalTitle.textContent = 'Edit Header Content';
+        pageModalInputs.innerHTML = `
+            <label for="editPageTitle">Main Title (HTML allowed for span):</label>
+            <textarea id="editPageTitle" rows="3">${editablePageData.pageMainTitle}</textarea>
+            <label for="editPageParagraph">Main Paragraph:</label>
+            <textarea id="editPageParagraph" rows="5">${editablePageData.pageMainParagraph}</textarea>
+        `;
+        pageEditModal.classList.add('show');
+    }
+
+    /**
+     * Closes the edit modal.
+     */
+    function closeMainEditModal() {
+        pageEditModal.classList.remove('show');
+        pageModalInputs.innerHTML = ''; // Clear inputs after closing
+    }
+
+    /**
+     * Saves the edited content from the modal to the database via AJAX,
+     * updates the UI, and closes the modal.
+     */
+    async function saveMainEditedContent() {
+        const updatedTitle = document.getElementById('editPageTitle').value;
+        const updatedParagraph = document.getElementById('editPageParagraph').value;
+
+        try {
+            const response = await fetch("{{ route('teamdev.update') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    title: updatedTitle,
+                    caption: updatedParagraph
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+
+            // Update local editablePageData and UI
+            editablePageData.pageMainTitle = result.data.title;
+            editablePageData.pageMainParagraph = result.data.caption;
+            renderMainPageContent();
+            closeMainEditModal();
+
+            alert(result.message);
+        } catch (error) {
+            alert('Failed to update content: ' + error.message);
         }
+    }
 
-        /**
-         * Opens the edit modal and populates it with the current title and paragraph.
-         */
-        function openMainEditModal() {
-            pageModalTitle.textContent = 'Edit Header Content';
-            pageModalInputs.innerHTML = `
-                <label for="editPageTitle">Main Title (HTML allowed for span):</label>
-                <textarea id="editPageTitle" rows="3">${editablePageData.pageMainTitle}</textarea>
-                <label for="editPageParagraph">Main Paragraph:</label>
-                <textarea id="editPageParagraph" rows="5">${editablePageData.pageMainParagraph}</textarea>
-            `;
-            pageEditModal.classList.add('show');
-        }
-
-        /**
-         * Closes the edit modal.
-         */
-        function closeMainEditModal() {
-            pageEditModal.classList.remove('show');
-            pageModalInputs.innerHTML = ''; // Clear inputs after closing
-        }
-
-        /**
-         * Saves the edited content from the modal to the editablePageData object
-         * and updates the page content.
-         */
-        function saveMainEditedContent() {
-            editablePageData.pageMainTitle = document.getElementById('editPageTitle').value;
-            editablePageData.pageMainParagraph = document.getElementById('editPageParagraph').value;
-            renderMainPageContent(); // Update the displayed content
+    // Event Listeners
+    headerEditButton.addEventListener('click', openMainEditModal);
+    pageSaveButton.addEventListener('click', saveMainEditedContent);
+    pageCancelButton.addEventListener('click', closeMainEditModal);
+    pageEditModal.addEventListener('click', (event) => {
+        if (event.target === pageEditModal) {
             closeMainEditModal();
         }
+    });
 
-        // Event Listeners
-        headerEditButton.addEventListener('click', openMainEditModal);
-        pageSaveButton.addEventListener('click', saveMainEditedContent);
-        pageCancelButton.addEventListener('click', closeMainEditModal);
-        pageEditModal.addEventListener('click', (event) => {
-            // Close modal if clicking on the overlay (outside the content)
-            if (event.target === pageEditModal) {
-                closeMainEditModal();
-            }
-        });
-
-        // Initialize page content on DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', renderMainPageContent);
-
-    </script>
+    // Initialize page content on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', renderMainPageContent);
+</script>
