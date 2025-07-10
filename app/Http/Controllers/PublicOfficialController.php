@@ -13,7 +13,7 @@ class PublicOfficialController extends Controller
     public function index()
     {
         $officials = PublicOfficial::all();
-        return view('Components.Admin.Content-Manager.teamdev.teamdev', compact('officials'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('officials'));
     }
 
 }

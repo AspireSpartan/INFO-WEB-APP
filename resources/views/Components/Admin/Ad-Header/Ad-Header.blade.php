@@ -2,7 +2,7 @@
 @section('title', 'Admin View')
 @section('content')
 
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans', 'publicOfficialCaption', 'officials']) 
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans']) 
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
          x-data="{
