@@ -2,7 +2,7 @@
 @section('title', 'Admin View')
 @section('content')
 
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans']) 
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans', 'publicOfficialCaption']) 
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
          x-data="{
@@ -262,7 +262,7 @@
                     <div>@include('Components.Admin.Content-Manager.announcement.announcement')</div>
                 </template>
                 <template x-if="screen === 'developers'">
-                    <div>@include('Components.Admin.Content-Manager.teamdev.teamdev', ['contentMlogos' => $contentMlogos ?? []])</div>
+                    <div>@include('Components.Admin.Content-Manager.teamdev.teamdev', ['contentMlogos' => $contentMlogos ?? [], 'publicOfficialCaption' => $publicOfficialCaption ?? []])</div>
                 </template>
                 <template x-if="screen === 'links'">
                     <div>@include('Components.Admin.Content-Manager.footer.footer', ['contentMlogos' => $contentMlogos ?? []])</div>

@@ -4,6 +4,7 @@ use App\Models\Project;
 use App\Models\NewsItem;
 use App\Models\ProjectDescription;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportConcern;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
@@ -15,10 +16,10 @@ use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProjectDescriptionController;
 use App\Http\Controllers\PreviewSection2LogoController;
+use App\Http\Controllers\PublicOfficialCaptionController;
+
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
-
-use App\Http\Controllers\ReportConcern;
 
 
 Route::get('/', function () {
@@ -86,6 +87,8 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
+    Route::post('/teamdev/update', [PublicOfficialCaptionController::class, 'update'])->name('teamdev.update');
+    Route::get('/teamdev', [PublicOfficialCaptionController::class, 'index'])->name('teamdev.index');
     Route::resource('news', NewsController::class);
     Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
     Route::resource('projects', ProjectController::class);
