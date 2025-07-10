@@ -18,10 +18,15 @@ class PublicOfficialCaptionController extends Controller
         $validated = $request->validate([
             'title' => 'required|string',
             'caption' => 'required|string',
+            'titleColor' => 'nullable|string',
         ]);
 
-        $caption = PublicOfficialCaption::findOrFail(1); // assuming id=1
-        $caption->update($validated);
+        $caption = PublicOfficialCaption::findOrFail(1);
+        $caption->update([
+            'title' => $validated['title'],
+            'caption' => $validated['caption'],
+            'titleColor' => $validated['titleColor'] ?? '#000000',
+        ]);
 
         return response()->json([
             'message' => 'Public Official Caption updated successfully',

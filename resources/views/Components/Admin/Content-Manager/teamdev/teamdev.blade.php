@@ -166,6 +166,7 @@
     const editablePageData = {
         pageMainTitle: {!! json_encode($publicOfficialCaption->title) !!},
         pageMainParagraph: {!! json_encode($publicOfficialCaption->caption) !!},
+        pageTitleColor: {!! json_encode($publicOfficialCaption->titleColor ?? '#000000') !!}
     };
 
     // Get references to DOM elements
@@ -184,25 +185,32 @@
      */
     function renderMainPageContent() {
         pageTitleElement.innerHTML = editablePageData.pageMainTitle.replace(/\n/g, '<br>');
+        pageTitleElement.style.color = editablePageData.pageTitleColor || '#000000';
         pageParagraphElement.innerHTML = editablePageData.pageMainParagraph;
     }
 
     /**
-     * Opens the edit modal and populates it with the current title and paragraph.
+     * Opens the edit modal and populates inputs with current data.
      */
     function openMainEditModal() {
         pageModalTitle.textContent = 'Edit Header Content';
+
+        // Build the modal input HTML content
         pageModalInputs.innerHTML = `
             <label for="editPageTitle">Main Title (HTML allowed for span):</label>
             <textarea id="editPageTitle" rows="3">${editablePageData.pageMainTitle}</textarea>
+            <label for="titleColorPicker">Title Color:</label>
+            <input type="color" id="titleColorPicker" value="${editablePageData.pageTitleColor || '#000000'}" />
             <label for="editPageParagraph">Main Paragraph:</label>
             <textarea id="editPageParagraph" rows="5">${editablePageData.pageMainParagraph}</textarea>
         `;
+
+        // Show the modal by adding the 'show' class
         pageEditModal.classList.add('show');
     }
 
     /**
-     * Closes the edit modal.
+     * Closes the edit modal and clears inputs.
      */
     function closeMainEditModal() {
         pageEditModal.classList.remove('show');
@@ -216,6 +224,7 @@
     async function saveMainEditedContent() {
         const updatedTitle = document.getElementById('editPageTitle').value;
         const updatedParagraph = document.getElementById('editPageParagraph').value;
+        const updatedTitleColor = document.getElementById('titleColorPicker').value;
 
         try {
             const response = await fetch("{{ route('teamdev.update') }}", {
@@ -226,7 +235,8 @@
                 },
                 body: JSON.stringify({
                     title: updatedTitle,
-                    caption: updatedParagraph
+                    caption: updatedParagraph,
+                    titleColor: updatedTitleColor
                 })
             });
 
@@ -239,6 +249,8 @@
             // Update local editablePageData and UI
             editablePageData.pageMainTitle = result.data.title;
             editablePageData.pageMainParagraph = result.data.caption;
+            editablePageData.pageTitleColor = result.data.titleColor || '#000000';
+
             renderMainPageContent();
             closeMainEditModal();
 
