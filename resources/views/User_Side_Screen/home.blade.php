@@ -10,5 +10,5 @@
     <x-User.latestnews.latestnews :newsItems="$newsItems" :logos="$logos" :caption="$caption"></x-User.latestnews.latestnews>
     <x-User.announcement.announcement></x-User.announcement.announcement>
     <x-User.completeproj.completeproj :projects="$projects" :description="$description"></x-User.completeproj.completeproj>
-    <x-User.teamdev.teamdev></x-User.teamdev.teamdev>
+    <x-User.teamdev.teamdev :officials="$officials" :publicOfficialCaption="$publicOfficialCaption"></x-User.teamdev.teamdev>
 @endsection
