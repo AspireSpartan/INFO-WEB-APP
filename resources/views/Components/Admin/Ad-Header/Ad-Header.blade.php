@@ -2,13 +2,13 @@
 @section('title', 'Admin View')
 @section('content')
 
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans', 'publicOfficialCaption']) 
+@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans', 'publicOfficialCaption', 'officials']) 
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
          x-data="{
              activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
              notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'developers', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4'],
+             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4'],
 
              resetNotifications() {
                  this.notificationCount = 0;
@@ -91,7 +91,7 @@
 
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open"
-                        :class="{'text-amber-400': ['banner', 'latestnews', 'announcement', 'developers', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latestnews', 'announcement', 'developers', 'links'].includes(activeScreen) || open)}"
+                        :class="{'text-amber-400': ['banner', 'latestnews', 'announcement', 'publicofficials', 'links'].includes(activeScreen) || open, 'text-white': !(['banner', 'latestnews', 'announcement', 'publicofficials', 'links'].includes(activeScreen) || open)}"
                         class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
                     Content Manager
                     <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -116,7 +116,7 @@
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('announcement'); open = false">Announcement</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        @click.prevent="switchScreen('developers'); open = false">Developers</a>
+                        @click.prevent="switchScreen('publicofficials'); open = false">Public Officials</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('links'); open = false">Links</a>
                     </div>
@@ -150,7 +150,7 @@
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         @click.prevent="switchScreen('about-section-3'); open = false">Documentation</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        @click.prevent="switchScreen('about-section-4'); open = false">Developers</a>
+                        @click.prevent="switchScreen('about-section-4'); open = false">Public Officials</a>
                     </div>
                 </div>
             </div>
@@ -261,8 +261,8 @@
                 <template x-if="screen === 'announcement'">
                     <div>@include('Components.Admin.Content-Manager.announcement.announcement')</div>
                 </template>
-                <template x-if="screen === 'developers'">
-                    <div>@include('Components.Admin.Content-Manager.teamdev.teamdev', ['contentMlogos' => $contentMlogos ?? [], 'publicOfficialCaption' => $publicOfficialCaption ?? []])</div>
+                <template x-if="screen === 'publicofficials'">
+                    <div>@include('Components.Admin.Content-Manager.teamdev.teamdev', ['contentMlogos' => $contentMlogos ?? [], 'publicOfficialCaption' => $publicOfficialCaption ?? [], 'officials' => $officials ?? []])</div>
                 </template>
                 <template x-if="screen === 'links'">
                     <div>@include('Components.Admin.Content-Manager.footer.footer', ['contentMlogos' => $contentMlogos ?? []])</div>

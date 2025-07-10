@@ -8,6 +8,7 @@ use App\Models\NewsItem;
 use App\Models\PageContent;
 use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
+use App\Models\PublicOfficial;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
 use App\Models\PublicOfficialCaption;
@@ -55,6 +56,7 @@ class AdminDashboardController extends Controller
             ],
         ];
         $publicOfficialCaption = PublicOfficialCaption::find(1);
+        $officials = PublicOfficial::all();
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -68,7 +70,8 @@ class AdminDashboardController extends Controller
             'contentMlogos',
             'strategicPlans',
             'vmgEditableContentData',
-            'publicOfficialCaption'
+            'publicOfficialCaption',
+            'officials',
         ));
     }
 }

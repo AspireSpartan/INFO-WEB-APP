@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use Illuminate\Support\Str;
 use App\Models\PageContent; 
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
+use App\Models\PublicOfficial;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
+use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
-use Illuminate\Support\Str;
 
 
 class HomeController extends Controller
@@ -24,7 +26,9 @@ class HomeController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
-    {
+    {   
+        $publicOfficialCaption = PublicOfficialCaption::find(1);
+        $officials = PublicOfficial::all();
         $projects = Project::all();
         $projects->transform(function ($project) {
            
@@ -68,9 +72,11 @@ class HomeController extends Controller
         });
         $caption = PreviewSection2Caption::value('caption');
 
+        
+
         // Pass all necessary data to the home view
 
-        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption')); // Pass the pageContent array
+        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption', 'officials', 'publicOfficialCaption')); // Pass the pageContent array
     }
 
     /**
