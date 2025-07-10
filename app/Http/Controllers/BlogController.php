@@ -9,9 +9,12 @@ use App\Models\NewsItem;
 use App\Models\PageContent;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
+use App\Models\PublicOfficial;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
+use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
@@ -27,6 +30,36 @@ class BlogController extends Controller
      */
     public function index()
     {
+        $strategicPlans = StrategicPlan::all();
+
+        $vision = $strategicPlans->where('id', 1)->first();
+        $mission = $strategicPlans->where('id', 2)->first();
+        $goal = $strategicPlans->where('id', 3)->first();
+
+        $visionIcon = ContentManagerLogosImage::find(3);
+        $missionIcon = ContentManagerLogosImage::find(4);
+        $goalIcon = ContentManagerLogosImage::find(5);
+
+        $vmgEditableContentData = [
+            'vision' => [
+                'icon' => $visionIcon ? asset($visionIcon->image_path) : asset('storage/Vision.svg'),
+                'title' => $vision ? $vision->title : '',
+                'paragraph' => $vision ? $vision->paragraph : '',
+            ],
+            'mission' => [
+                'icon' => $missionIcon ? asset($missionIcon->image_path) : asset('storage/Mission.svg'),
+                'title' => $mission ? $mission->title : '',
+                'paragraph' => $mission ? $mission->paragraph : '',
+            ],
+            'goal' => [
+                'icon' => $goalIcon ? asset($goalIcon->image_path) : asset('storage/goal.svg'),
+                'title' => $goal ? $goal->title : '',
+                'paragraph' => $goal ? $goal->paragraph : '',
+            ],
+        ];
+
+        $publicOfficialCaption = PublicOfficialCaption::find(1);
+        $officials = PublicOfficial::all();
         $projects = Project::all();
         $description = ProjectDescription::first();
         $pageContent = PageContent::pluck('value', 'key')->toArray();
@@ -45,7 +78,7 @@ class BlogController extends Controller
         if ($isViewportPresent) {
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData'));
     }
 
     /**
