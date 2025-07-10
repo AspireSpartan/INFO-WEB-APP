@@ -10,7 +10,7 @@ class PublicOfficialCaptionController extends Controller
     public function index()
     {
         $publicOfficialCaption = PublicOfficialCaption::find(1);
-        return view('Components.Admin.Content-Manager.teamdev.teamdev', compact('publicOfficialCaption'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('publicOfficialCaption'));
     }
 
     public function update(Request $request)
