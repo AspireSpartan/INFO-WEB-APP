@@ -22,6 +22,9 @@ use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 
 
+use App\Http\Controllers\ReportedConcernController;
+use App\Http\Controllers\AdminReportedConcernController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -100,4 +103,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/admin/strategic-plan/update', [StrategicPlanController::class, 'update'])->name('strategic-plan.update');
     Route::post('/admin/content-manager/update', [ContentManagerLogosImageController::class, 'update'])->name('content-manager.update');
     Route::resource('blogs', BlogController::class)->parameters(['blogs' => 'blogfeed']);
+    Route::get('/reported-concerns', [AdminReportedConcernController::class, 'index'])->name('admin.reportedconcerns.index');
+    Route::get('/reported-concerns/{id}/edit', [AdminReportedConcernController::class, 'edit'])->name('admin.reportedconcerns.edit');
+    Route::put('/reported-concerns/{id}', [AdminReportedConcernController::class, 'update'])->name('admin.reportedconcerns.update');
+    Route::delete('/reported-concerns/{id}', [AdminReportedConcernController::class, 'destroy'])->name('admin.reportedconcerns.destroy');
 });
+
+Route::post('/reportconcern', [ReportedConcernController::class, 'store'])->name('reportconcern.store');
+
