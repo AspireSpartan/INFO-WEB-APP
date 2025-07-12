@@ -18,6 +18,10 @@ use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
+use App\Models\GovphLink;
+use App\Models\AboutGovph;
+use App\Models\FooterLogo;
+use App\Models\KeepInTouch;
 
 class ProjectController extends Controller
 {
@@ -67,6 +71,10 @@ public function index() // user side
         $visionIcon = ContentManagerLogosImage::find(3);
         $missionIcon = ContentManagerLogosImage::find(4);
         $goalIcon = ContentManagerLogosImage::find(5);
+        $keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail();
+        $footerLogo = FooterLogo::first();
+        $aboutGovph = AboutGovph::first();
+        $govphLinks = GovphLink::all();
 
         $vmgEditableContentData = [
             'vision' => [
@@ -87,7 +95,7 @@ public function index() // user side
         ];
         
         session()->flash('activeAdminScreen', 'projects');
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials','vmgEditableContentData', 'strategicPlans'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials','vmgEditableContentData', 'strategicPlans', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks'));
     }
 
     
