@@ -17,6 +17,10 @@ use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
+use App\Models\GovphLink;
+use App\Models\AboutGovph;
+use App\Models\FooterLogo;
+use App\Models\KeepInTouch;
 use Illuminate\Support\Facades\Log; // Added for logging
 use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
 
@@ -59,6 +63,10 @@ class NewsController extends Controller
         $visionIcon = ContentManagerLogosImage::find(3);
         $missionIcon = ContentManagerLogosImage::find(4);
         $goalIcon = ContentManagerLogosImage::find(5);
+        $keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail();
+        $footerLogo = FooterLogo::first();
+        $aboutGovph = AboutGovph::first();
+        $govphLinks = GovphLink::all();
 
         $vmgEditableContentData = [
             'vision' => [
@@ -78,7 +86,8 @@ class NewsController extends Controller
             ],
         ];
 
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData'));
+        $footerLogo = FooterLogo::first();
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch' , 'aboutGovph' , 'footerLogo', 'govphLinks'));
     }
 
     /**
