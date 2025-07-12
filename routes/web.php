@@ -10,16 +10,19 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\FooterLogoController;
+use App\Http\Controllers\KeepInTouchController;
 use App\Http\Controllers\PageContentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProjectDescriptionController;
+
 use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\PublicOfficialCaptionController;
-
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
+use App\Http\Controllers\AboutGovphController;
 
 
 use App\Http\Controllers\ReportedConcernController;
@@ -90,6 +93,9 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
+    Route::get('/keep-in-touch/edit', [KeepInTouchController::class, 'edit'])->name('keep-in-touch.edit');
+    Route::post('/keep-in-touch/update', [KeepInTouchController::class, 'update'])->name('keep-in-touch.update');
+    Route::post('/footer-logo/update', [FooterLogoController::class, 'update'])->name('footer.logo.update');
     Route::post('/teamdev/update', [PublicOfficialCaptionController::class, 'update'])->name('teamdev.update');
     Route::get('/teamdev', [PublicOfficialCaptionController::class, 'index'])->name('teamdev.index');
     Route::resource('news', NewsController::class);
@@ -103,6 +109,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/admin/strategic-plan/update', [StrategicPlanController::class, 'update'])->name('strategic-plan.update');
     Route::post('/admin/content-manager/update', [ContentManagerLogosImageController::class, 'update'])->name('content-manager.update');
     Route::resource('blogs', BlogController::class)->parameters(['blogs' => 'blogfeed']);
+    Route::post('/about-govph/update', [AboutGovphController::class, 'update'])->name('about-govph.update');
     Route::get('/reported-concerns', [AdminReportedConcernController::class, 'index'])->name('admin.reportedconcerns.index');
     Route::get('/reported-concerns/{id}/edit', [AdminReportedConcernController::class, 'edit'])->name('admin.reportedconcerns.edit');
     Route::put('/reported-concerns/{id}', [AdminReportedConcernController::class, 'update'])->name('admin.reportedconcerns.update');
