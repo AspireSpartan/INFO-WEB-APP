@@ -22,6 +22,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Alpine.js (Load ONLY ONCE, and preferably the CDN version) -->
+    
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{{ asset('js/screentransition.js') }}" defer></script>
 
@@ -29,7 +30,7 @@
 
     @include('Components.Admin.Content-Manager.banner.banner-styles')
     @include('Components.Admin.Content-Manager.latestnews.latestnews-styles')
-    @include('Components.Admin.Content-Manager.footer.footer-styles')
+
     @include('Components.Admin.Content-Manager.teamdev.teamdev-styles')
     @include('Components.Admin.about-us.3goals.3goals-styles')
     @include('Components.Admin.about-us.styles')

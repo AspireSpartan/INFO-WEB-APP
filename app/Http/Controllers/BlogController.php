@@ -6,6 +6,10 @@ use Carbon\Carbon;
 use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\GovphLink;
+use App\Models\AboutGovph;
+use App\Models\FooterLogo;
+use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -39,6 +43,10 @@ class BlogController extends Controller
         $visionIcon = ContentManagerLogosImage::find(3);
         $missionIcon = ContentManagerLogosImage::find(4);
         $goalIcon = ContentManagerLogosImage::find(5);
+        $keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail();
+        $footerLogo = FooterLogo::first();
+        $aboutGovph = AboutGovph::first();
+        $govphLinks = GovphLink::all();
 
         $vmgEditableContentData = [
             'vision' => [
@@ -78,7 +86,7 @@ class BlogController extends Controller
         if ($isViewportPresent) {
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks',));
     }
 
     /**
