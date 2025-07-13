@@ -32,9 +32,12 @@ class AdminReportedConcernController extends Controller
     {
         $concern = ReportedConcern::findOrFail($id);
         $request->validate([
-            'status' => 'required|string',
+            'status' => 'required|in:pending,in_progress,resolved',
+            'action' => 'required|in:normal,priority,urgent',
         ]);
-        $concern->status = $request->status;
+
+        $concern->status = $request->status === 'working' ? 'in_progress' : $request->status;
+        $concern->action = $request->action;
         $concern->save();
 
         return redirect()->route('admin.reportedconcerns.index')->with('success', 'Concern updated successfully.');

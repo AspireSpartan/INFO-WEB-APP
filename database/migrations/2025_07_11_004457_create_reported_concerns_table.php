@@ -22,7 +22,8 @@ return new class extends Migration
         $table->string('concern_barangay');
         $table->text('concern_barangay_details')->nullable();
         $table->text('concern_description');
-        $table->enum('status', ['pending', 'in_progress', 'resolved'])->default('pending');
+        $table->enum('status', ['pending', 'in_progress', 'resolved']);;
+        $table->enum('action', ['normal', 'priority', 'urgent']);   
         $table->timestamps();
     });
 }

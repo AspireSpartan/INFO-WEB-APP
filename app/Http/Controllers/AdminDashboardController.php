@@ -14,6 +14,7 @@ use App\Models\PreviewSection2Logo;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
+use App\Models\ReportedConcern;
 
 class AdminDashboardController extends Controller
 {
@@ -57,6 +58,7 @@ class AdminDashboardController extends Controller
         ];
         $publicOfficialCaption = PublicOfficialCaption::find(1);
         $officials = PublicOfficial::all();
+        $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -72,6 +74,7 @@ class AdminDashboardController extends Controller
             'vmgEditableContentData',
             'publicOfficialCaption',
             'officials',
+            'concerns',
         ));
     }
 }

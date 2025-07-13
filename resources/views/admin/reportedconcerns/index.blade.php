@@ -8,7 +8,7 @@
         </div>
     @endif
 
-    <div class="overflow-x-auto">
+    <div class="overflow-x-full">
         <table class="min-w-full bg-white border border-gray-300">
             <thead>
                 <tr>
