@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\GovphLink;
+use App\Models\AboutGovph;
+use App\Models\FooterLogo;
+use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
@@ -38,6 +42,10 @@ class AdminDashboardController extends Controller
         $visionIcon = ContentManagerLogosImage::find(3);
         $missionIcon = ContentManagerLogosImage::find(4);
         $goalIcon = ContentManagerLogosImage::find(5);
+        $keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail();
+        $footerLogo = FooterLogo::first();
+        $aboutGovph = AboutGovph::first();
+        $govphLinks = GovphLink::all();
 
         $vmgEditableContentData = [
             'vision' => [
@@ -74,7 +82,14 @@ class AdminDashboardController extends Controller
             'vmgEditableContentData',
             'publicOfficialCaption',
             'officials',
+<<<<<<< HEAD
             'concerns',
+=======
+            'keepInTouch',
+            'footerLogo',
+            'aboutGovph', 
+            'govphLinks',
+>>>>>>> 4bb0353b2b4f08e080f9a22202e4e0b1bb469ea3
         ));
     }
 }
