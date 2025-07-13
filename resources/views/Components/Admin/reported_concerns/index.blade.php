@@ -1,6 +1,3 @@
-@extends('layouts.admin')
-
-@section('content')
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6">Manage Reported Concerns</h1>
 
@@ -55,7 +52,12 @@
     </div>
     
     <div class="mt-4">
-        {{ $concerns->links() }}
+        @if ($concerns instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            {{ $concerns->links() }}
+        @else
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">The concerns variable is not a paginator instance.</span>
+            </div>
+        @endif
     </div>
 </div>
-@endsection
