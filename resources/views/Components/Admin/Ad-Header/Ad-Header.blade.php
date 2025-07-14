@@ -2,7 +2,14 @@
 @section('title', 'Admin View')
 @section('content')
 
-@props(['newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans']) 
+{{-- Add contentManager and contentOffer to the props if they are needed directly in this layout for other purposes --}}
+@props([
+    'newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description',
+    'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans',
+    // Add these if they are passed to the admin layout directly
+    'contentManager',
+    'contentOffer'
+])
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
          x-data="{
@@ -279,7 +286,12 @@
                     <div class="p-8 text-center text-gray-500">Select an item from the "Content Manager" dropdown.</div>
                 </template>
                 <template x-if="screen === 'about-section-1'">
-                    <div>@include('Components.Admin.about-us.section-1')</div>
+                    <div>
+                        @include('Components.Admin.about-us.section-1', [
+                            'contentManager' => $contentManager ?? [],
+                            'contentOffer' => $contentOffer ?? []
+                        ])
+                    </div>
                 </template>
                 <template x-if="screen === 'about-section-2'">
                     <div>@include('Components.Admin.about-us.3goals.3goals', ['contentMlogos' => $contentMlogos ?? [], 'vmgEditableContentData' => $vmgEditableContentData ?? [], 'strategicPlans' => $strategicPlans ?? []])</div>
