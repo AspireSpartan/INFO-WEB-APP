@@ -19,6 +19,8 @@ use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
 use App\Models\ReportedConcern;
+use App\Models\AboutUsContentManager;
+use App\Models\AboutUsOffer;
 
 class AdminDashboardController extends Controller
 {
@@ -46,6 +48,9 @@ class AdminDashboardController extends Controller
         $footerLogo = FooterLogo::first();
         $aboutGovph = AboutGovph::first();
         $govphLinks = GovphLink::all();
+
+        $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray();
+        $contentOffer = AboutUsOffer::all();
 
         $vmgEditableContentData = [
             'vision' => [
@@ -86,6 +91,8 @@ class AdminDashboardController extends Controller
             'footerLogo',
             'aboutGovph', 
             'govphLinks',
+            'contentManager',      // <-- add this
+            'contentOffer'   
             'concerns',
         ));
     }
