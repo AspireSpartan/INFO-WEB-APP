@@ -28,7 +28,6 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #0a0a0a;
-            color: #f5f5f5;
             overflow-x: hidden;
             min-height: 100vh;
         }
