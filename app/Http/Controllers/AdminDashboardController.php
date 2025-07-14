@@ -8,19 +8,21 @@ use App\Models\NewsItem;
 use App\Models\GovphLink;
 use App\Models\AboutGovph;
 use App\Models\FooterLogo;
+use App\Models\FooterTitle;
 use App\Models\KeepInTouch;
 use App\Models\PageContent;
+use App\Models\AboutUsOffer;
 use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
+use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
+use App\Models\ReportedConcern;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
+use App\Models\AboutUsContentManager;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
-use App\Models\ReportedConcern;
-use App\Models\AboutUsContentManager;
-use App\Models\AboutUsOffer;
 
 class AdminDashboardController extends Controller
 {
@@ -72,6 +74,8 @@ class AdminDashboardController extends Controller
         $publicOfficialCaption = PublicOfficialCaption::find(1);
         $officials = PublicOfficial::all();
         $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
+        $governmentlinks = GovernmentLink::all();
+        $footertitle = FooterTitle::first();
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -94,6 +98,8 @@ class AdminDashboardController extends Controller
             'contentManager',      
             'contentOffer',
             'concerns',
+            'governmentlinks',
+            'footertitle'
         ));
     }
 }
