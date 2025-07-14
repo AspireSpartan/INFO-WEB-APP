@@ -91,8 +91,8 @@ class AdminDashboardController extends Controller
             'footerLogo',
             'aboutGovph', 
             'govphLinks',
-            'contentManager',      // <-- add this
-            'contentOffer'   
+            'contentManager',      
+            'contentOffer',
             'concerns',
         ));
     }
