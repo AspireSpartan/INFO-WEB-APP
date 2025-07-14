@@ -30,6 +30,10 @@ class DatabaseSeeder extends Seeder
         $this->call(FooterLogoSeeder::class);
         $this->call(AboutGovphSeeder::class);
         $this->call(GovphLinkSeeder::class);
+        $this->call([
+            AboutUsContentSeeder::class,
+            AboutUsOfferSeeder::class,
+        ]);
 
         // Your existing User factory call is retained here
         User::factory()->create([
