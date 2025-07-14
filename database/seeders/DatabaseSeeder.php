@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AboutUsContentSeeder::class,
             AboutUsOfferSeeder::class,
+            GovernmentLinksSeeder::class,
+            FooterTitleSeeder::class,
         ]);
 
         // Your existing User factory call is retained here

@@ -9,11 +9,12 @@
         class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 p-4"
         @click.self="activeSubModal = ''"
         x-cloak
-        x-data="keepInTouchComponent({
-            title: '{{ $keepInTouch->title }}', 
-            text_content: '{{ $keepInTouch->text_content }}',
-            social_links: {{ Js::from($keepInTouch->socialLinks) }}
-        })"
+        x-data="keepInTouchComponent({{ Js::from($keepInTouch) }})"
+        @init-kit-modal.window="
+            modalTitle = $event.detail.title;
+            textContent = $event.detail.text_content;
+            socialLinks = JSON.parse(JSON.stringify($event.detail.social_links || []));
+        "
     >
         <div
             class="bg-white rounded-2xl shadow-2xl max-w-lg w-full m-4 relative flex flex-col max-h-[90vh]"
@@ -21,7 +22,7 @@
             x-trap.noscroll
         >
             <div class="flex items-center justify-between p-6 pb-4 border-b border-gray-200">
-                <h2 class="text-xl font-medium text-gray-900" x-text="`Edit ${title} Area`"></h2>
+                <h2 class="text-xl font-medium text-gray-900" x-text="`Edit ${modalTitle} Area`"></h2>
                 <button
                     @click="activeSubModal = ''"
                     class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full p-1 transition-colors duration-200"
@@ -46,7 +47,7 @@
                         id="keepInTouchTitle"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         placeholder="e.g., Keep In Touch"
-                        x-model="title"
+                        x-model="modalTitle"
                         style="color: black;"
                     />
                 </div>
@@ -145,13 +146,13 @@
     function keepInTouchComponent(initialData) {
         return {
             // Initialize state from the data passed from Laravel
-            title: initialData.title || '',
+            modalTitle: initialData.title || '',
             textContent: initialData.text_content || '',
             // Create a deep copy to avoid modifying the original data directly
-            socialLinks: JSON.parse(JSON.stringify(initialData.social_links || [])), 
+            socialLinks: JSON.parse(JSON.stringify(initialData.social_links || [])),
             // Calculate the next ID to avoid collisions
-            nextSocialId: initialData.social_links.length > 0
-                ? Math.max(...initialData.social_links.map(l => l.id)) + 1 
+            nextSocialId: initialData.social_links && initialData.social_links.length > 0
+                ? Math.max(...initialData.social_links.map(l => l.id)) + 1
                 : 1,
 
             addSocialLink() {
@@ -168,7 +169,7 @@
 
                 // Prepare the payload in the format expected by the Laravel controller
                 const payload = {
-                    title: this.title,
+                    title: this.modalTitle,
                     text_content: this.textContent,
                     // Ensure the social_links array doesn't contain the 'id' field
                     social_links: this.socialLinks.map(({ platform, url }) => ({ platform, url }))

@@ -6,22 +6,23 @@ use App\Models\News;
 use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\GovphLink;
+use App\Models\AboutGovph;
+use App\Models\FooterLogo;
+use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
 use App\Models\PublicOfficial;
+use App\Models\ReportedConcern;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
-use App\Models\GovphLink;
-use App\Models\AboutGovph;
-use App\Models\FooterLogo;
-use App\Models\KeepInTouch;
 
 class ProjectController extends Controller
 {
@@ -75,6 +76,7 @@ public function index() // user side
         $footerLogo = FooterLogo::first();
         $aboutGovph = AboutGovph::first();
         $govphLinks = GovphLink::all();
+        $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
 
         $vmgEditableContentData = [
             'vision' => [
@@ -95,7 +97,7 @@ public function index() // user side
         ];
         
         session()->flash('activeAdminScreen', 'projects');
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials','vmgEditableContentData', 'strategicPlans', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials','vmgEditableContentData', 'strategicPlans', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns'));
     }
 
     
