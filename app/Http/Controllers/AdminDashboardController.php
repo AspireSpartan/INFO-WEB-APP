@@ -18,6 +18,7 @@ use App\Models\PreviewSection2Logo;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
+use App\Models\ReportedConcern;
 use App\Models\AboutUsContentManager;
 use App\Models\AboutUsOffer;
 
@@ -70,6 +71,7 @@ class AdminDashboardController extends Controller
         ];
         $publicOfficialCaption = PublicOfficialCaption::find(1);
         $officials = PublicOfficial::all();
+        $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -89,8 +91,9 @@ class AdminDashboardController extends Controller
             'footerLogo',
             'aboutGovph', 
             'govphLinks',
-            'contentManager',      // <-- add this
-            'contentOffer'   
+            'contentManager',      
+            'contentOffer',
+            'concerns',
         ));
     }
 }

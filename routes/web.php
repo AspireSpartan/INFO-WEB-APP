@@ -3,8 +3,7 @@
 use App\Models\Project;
 use App\Models\NewsItem;
 use App\Models\ProjectDescription;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReportConcern;
+use Illuminate\Support\Facades\Route;      
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
@@ -25,8 +24,6 @@ use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\AboutGovphController;
 use App\Http\Controllers\AboutUsController;
 
-
-use App\Http\Controllers\ReportedConcernController;
 use App\Http\Controllers\AdminReportedConcernController;
 
 Route::get('/', function () {
@@ -109,11 +106,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/admin/content-manager/update', [ContentManagerLogosImageController::class, 'update'])->name('content-manager.update');
     Route::resource('blogs', BlogController::class)->parameters(['blogs' => 'blogfeed']);
     Route::post('/about-govph/update', [AboutGovphController::class, 'update'])->name('about-govph.update');
-    Route::get('/reported-concerns', [AdminReportedConcernController::class, 'index'])->name('admin.reportedconcerns.index');
-    Route::get('/reported-concerns/{id}/edit', [AdminReportedConcernController::class, 'edit'])->name('admin.reportedconcerns.edit');
-    Route::put('/reported-concerns/{id}', [AdminReportedConcernController::class, 'update'])->name('admin.reportedconcerns.update');
-    Route::delete('/reported-concerns/{id}', [AdminReportedConcernController::class, 'destroy'])->name('admin.reportedconcerns.destroy');
-
     // ABOUT US ADMIN ROUTES - UPDATED/ADDED HERE
     Route::get('/about-us', [AboutUsController::class, 'index'])->name('admin.about-us.index');
     Route::post('/about-us/update-content', [AboutUsController::class, 'updateContent'])->name('admin.about-us.updateContent');
@@ -121,6 +113,8 @@ Route::prefix('admin')->group(function () {
     Route::delete('/about-us/delete-offer/{id}', [AboutUsController::class, 'deleteOffer'])->name('admin.about-us.deleteOffer');
     Route::get('/about-us/offers-json', [AboutUsController::class, 'getOffersJson'])->name('admin.about-us.offersJson'); // This route is no longer strictly needed by Alpine.js for the save logic but can remain for debugging or other uses.
 
+    Route::get('/reported_concerns', [AdminReportedConcernController::class, 'index'])->name('reported_concerns.index');
+    Route::get('/reported_concerns/{id}/edit', [AdminReportedConcernController::class, 'edit'])->name('reported_concerns.edit');
+    Route::put('/reported_concerns/{id}', [AdminReportedConcernController::class, 'update'])->name('reported_concerns.update');
+    Route::post('/reportconcern', [AdminReportedConcernController::class, 'store'])->name('reportconcern.store');
 });
-
-Route::post('/reportconcern', [ReportedConcernController::class, 'store'])->name('reportconcern.store');
