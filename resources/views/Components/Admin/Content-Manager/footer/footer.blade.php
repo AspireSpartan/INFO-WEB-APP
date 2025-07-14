@@ -1,41 +1,51 @@
-
-<div 
+<div
     class="w-full min-h-[579px] h-auto bg-black flex justify-center items-start py-24 px-8 md:px-16 lg:px-32 relative overflow-x-hidden"
     x-data="{ showEditButton: false, showMainModal: false, activeSubModal: null }"
     @mouseenter="showEditButton = true" @mouseleave="showEditButton = false"
     @open-sub-modal.window="activeSubModal = $event.detail; showMainModal = false"
     @close-modal.window="showMainModal = false; activeSubModal = null"
+    x-init="$watch('activeSubModal', value => {
+        if (value === 'keepInTouch') {
+            $dispatch('init-kit-modal', keepInTouch);
+        }
+    })"
 >
     <!-- Edit Button -->
-    <button 
-        x-show="showEditButton" 
-        @click="showMainModal = true" 
+    <button
+        x-show="showEditButton"
+        @click="showMainModal = true"
         class="absolute top-4 right-4 bg-gray-800 text-white px-3 py-1 rounded opacity-75 hover:opacity-100 transition"
         style="display: none;"
     >
         Edit
     </button>
 
-    <div 
+    <div
         class="w-full max-w-[1400px] flex flex-col md:flex-row justify-between items-start gap-16"
         x-data="{
             keepInTouch: {{ Js::from($keepInTouch) }},
             footerLogo: '{{ $footerLogo && $footerLogo->logo_path ? Illuminate\Support\Facades\Storage::url($footerLogo->logo_path) : asset('storage/CorDev_footer.svg')}}',
             aboutGovph: {{ Js::from($aboutGovph) }},
-            govphLinks: {{ Js::from($govphLinks) }}
+            govphLinks: {{ Js::from($govphLinks) }},
+            governmentlinks: {{ Js::from($governmentlinks) }},
+            governmentLinksTitle: '{{ $footertitle->government_links_title ?? 'GOVERNMENT LINKS' }}',
         }"
-        @keep-in-touch-updated.window="keepInTouch = $event.detail"
+        @keep-in-touch-updated.window="Object.assign(keepInTouch, $event.detail)"
         @logo-updated.window="footerLogo = $event.detail.logo_path"
         @about-govph-updated.window="() => {
-            aboutGovph = $event.detail.aboutGovph;
-            govphLinks = $event.detail.links;
+            if ($event.detail.aboutGovph) aboutGovph = $event.detail.aboutGovph;
+            if ($event.detail.links) govphLinks = $event.detail.links;
         }"
+        @government-links-updated.window="
+            governmentlinks = $event.detail.governmentlinks;
+            governmentLinksTitle = $event.detail.governmentLinksTitle;
+        "
     >
         <div class="flex flex-col items-center justify-start gap-4 flex-shrink-0 mx-auto md:mx-0 md:mr-24 mb-16 md:mb-0">
-            <img 
-                :src="footerLogo" 
-                alt="Footer Logo" 
-                class="w-[auto] h-[200px] object-cover" 
+            <img
+                :src="footerLogo"
+                alt="Footer Logo"
+                class="w-[auto] h-[200px] object-cover"
             />
         </div>
 
@@ -64,7 +74,7 @@
                         </template>
                     </div>
                 </div>
-                
+
                 <div class="self-stretch flex flex-col justify-start items-start gap-6">
                     <div class="self-stretch text-white text-xl font-normal font-['Microsoft_Sans_Serif']" x-text="aboutGovph.title"></div>
                     <div class="w-auto md:w-[300px]">
@@ -83,8 +93,17 @@
 
             <div class="w-full md:w-96 flex flex-col justify-start items-start gap-24 flex-shrink-0">
                 <div class="self-stretch flex flex-col justify-start items-start gap-6">
-                    <div class="self-stretch text-white text-xl font-normal font-['Microsoft_Sans_Serif']">GOVERNMENT LINKS</div>
-                    <div class="self-stretch text-stone-300 text-xs font-normal font-['Source_Sans_Pro']">Office of the President<br/>Office of the Vice-President<br/>Senate of the Philippines<br/>House of Representatives<br/>Supreme Court<br/>Court of Appeals<br/>Sandiganbayan</div>
+                    <div class="self-stretch text-white text-xl font-normal font-['Microsoft_Sans_Serif']" x-text="governmentLinksTitle"></div>
+                    <div class="self-stretch text-stone-300 text-xs font-normal font-['Source_Sans_Pro']">
+                        <template x-for="link in governmentlinks" :key="link.id">
+                            <div>
+                                <a :href="link.url" target="_blank" rel="noopener noreferrer" class="hover:underline" x-text="link.title"></a>
+                            </div>
+                        </template>
+                        <template x-if="!governmentlinks || governmentlinks.length === 0">
+                            <div>No government links available.</div>
+                        </template>
+                    </div>
                 </div>
                 <div class="self-stretch flex flex-col justify-start items-start gap-8">
                     <div class="self-stretch text-white text-xl font-normal font-['Microsoft_Sans_Serif']">CONTACT US!</div>
@@ -103,33 +122,35 @@
                         </div>
 
                         <!-- Main Edit Content Modal -->
-                        <x-admin.content-manager.footer.edit-content-modal 
-                            x-show="showMainModal" 
-                            @close-modal.window="showMainModal = false; activeSubModal = null" 
+                        <x-admin.content-manager.footer.edit-content-modal
+                            x-show="showMainModal"
+                            @close-modal.window="showMainModal = false; activeSubModal = null"
                             @open-sub-modal.window="activeSubModal = $event.detail; showMainModal = false"/>
-                        
+
                             <!-- Sub Modals -->
-                        <x-admin.content-manager.footer.edit-modals.edit-keep-in-touch-modal 
-                            x-show="activeSubModal === 'keepInTouch'" 
-                            @close-modal.window="activeSubModal = null" 
+                        <x-admin.content-manager.footer.edit-modals.edit-keep-in-touch-modal
+                            x-show="activeSubModal === 'keepInTouch'"
+                            @close-modal.window="activeSubModal = null"
                             :keepInTouch="$keepInTouch"/>
 
-                        <x-admin.content-manager.footer.edit-modals.edit-about-govph-modal 
-                            x-show="activeSubModal === 'aboutGovph'" 
+                        <x-admin.content-manager.footer.edit-modals.edit-about-govph-modal
+                            x-show="activeSubModal === 'aboutGovph'"
                             @close-modal.window="activeSubModal = null"
                             :aboutGovph="$aboutGovph"
                             :govphLinks="$govphLinks" />
 
-                        <x-admin.content-manager.footer.edit-modals.edit-government-links-modal 
-                            x-show="activeSubModal === 'governmentLinks'" 
+                        <x-admin.content-manager.footer.edit-modals.edit-government-links-modal
+                            x-show="activeSubModal === 'governmentLinks'"
+                            @close-modal.window="activeSubModal = null"
+                            :governmentlinks="$governmentlinks"
+                            :footertitle="$footertitle"/>
+
+                        <x-admin.content-manager.footer.edit-modals.edit-contact-us-modal
+                            x-show="activeSubModal === 'contactUs'"
                             @close-modal.window="activeSubModal = null" />
 
-                        <x-admin.content-manager.footer.edit-modals.edit-contact-us-modal 
-                            x-show="activeSubModal === 'contactUs'" 
-                            @close-modal.window="activeSubModal = null" />
-
-                        <x-admin.content-manager.footer.edit-modals.edit-logo-modal 
-                            x-show="activeSubModal === 'logo'" 
+                        <x-admin.content-manager.footer.edit-modals.edit-logo-modal
+                            x-show="activeSubModal === 'logo'"
                             @close-modal.window="activeSubModal = null"
                             :footerLogo="$footerLogo"/>
 
