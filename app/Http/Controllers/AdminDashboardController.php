@@ -82,14 +82,11 @@ class AdminDashboardController extends Controller
             'vmgEditableContentData',
             'publicOfficialCaption',
             'officials',
-<<<<<<< HEAD
-            'concerns',
-=======
             'keepInTouch',
             'footerLogo',
             'aboutGovph', 
             'govphLinks',
->>>>>>> 4bb0353b2b4f08e080f9a22202e4e0b1bb469ea3
+            'concerns',
         ));
     }
 }
