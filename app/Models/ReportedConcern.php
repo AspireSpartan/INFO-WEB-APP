@@ -9,7 +9,7 @@ class ReportedConcern extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+    public $fillable = [
         'reporter_name',
         'reporter_email',
         'reporter_phone',
