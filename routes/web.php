@@ -23,6 +23,8 @@ use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\AboutGovphController;
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\GovernmentLinkController;
+use App\Http\Controllers\FooterTitleController;
 
 use App\Http\Controllers\AdminReportedConcernController;
 
@@ -117,4 +119,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/reported_concerns/{id}/edit', [AdminReportedConcernController::class, 'edit'])->name('reported_concerns.edit');
     Route::put('/reported_concerns/{id}', [AdminReportedConcernController::class, 'update'])->name('reported_concerns.update');
     Route::post('/reportconcern', [AdminReportedConcernController::class, 'store'])->name('reportconcern.store');
+    Route::get('/government-links', [GovernmentLinkController::class, 'index'])->name('government-links.index');
+    Route::post('/government-links', [GovernmentLinkController::class, 'update'])->name('government-links.update');
+    Route::post('/footer-title/update', [FooterTitleController::class, 'update'])->name('footer-title.update');
 });
