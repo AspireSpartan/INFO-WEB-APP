@@ -23,6 +23,7 @@ use App\Http\Controllers\PublicOfficialCaptionController;
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\AboutGovphController;
+use App\Http\Controllers\AboutUsController;
 
 
 use App\Http\Controllers\ReportedConcernController;
@@ -46,8 +47,7 @@ Route::get('/sign-in', function () {
 Route::get('/blog', [HomeController::class, 'blogIndex'])->name('blog');
 
 Route::get('/logout', function () {
-
-return redirect('/home')->with('status', 'You have been logged out.');
+    return redirect('/home')->with('status', 'You have been logged out.');
 })->name('logout');
 
 Route::get('/contact-us', function () {
@@ -64,9 +64,8 @@ Route::get('/cedula', function () {
     return view('User_Side_Screen.cedula');
 })->name('cedula');
 
-Route::get('/about-us', function () {
-    return view('User_Side_Screen.about-us');
-})->name('about-us');
+// Make sure your user-facing about-us page loads content from the controller
+Route::get('/about-us', [AboutUsController::class, 'showUserAboutUs'])->name('about-us');
 
 Route::get('/businesspermit', function () {
     return view('User_Side_Screen.businesspermit');
@@ -74,7 +73,7 @@ Route::get('/businesspermit', function () {
 
 Route::get('/reportconcern', function () {
     return view('User_Side_Screen.reportconcern');
-})->name('reportconcern');  
+})->name('reportconcern');
 
 Route::post('/news/{newsItem}/increment-views', [NewsController::class, 'incrementViews'])
     ->name('news.incrementViews');
@@ -114,7 +113,14 @@ Route::prefix('admin')->group(function () {
     Route::get('/reported-concerns/{id}/edit', [AdminReportedConcernController::class, 'edit'])->name('admin.reportedconcerns.edit');
     Route::put('/reported-concerns/{id}', [AdminReportedConcernController::class, 'update'])->name('admin.reportedconcerns.update');
     Route::delete('/reported-concerns/{id}', [AdminReportedConcernController::class, 'destroy'])->name('admin.reportedconcerns.destroy');
+
+    // ABOUT US ADMIN ROUTES - UPDATED/ADDED HERE
+    Route::get('/about-us', [AboutUsController::class, 'index'])->name('admin.about-us.index');
+    Route::post('/about-us/update-content', [AboutUsController::class, 'updateContent'])->name('admin.about-us.updateContent');
+    Route::post('/about-us/store-offer', [AboutUsController::class, 'storeOffer'])->name('admin.about-us.storeOffer');
+    Route::delete('/about-us/delete-offer/{id}', [AboutUsController::class, 'deleteOffer'])->name('admin.about-us.deleteOffer');
+    Route::get('/about-us/offers-json', [AboutUsController::class, 'getOffersJson'])->name('admin.about-us.offersJson'); // This route is no longer strictly needed by Alpine.js for the save logic but can remain for debugging or other uses.
+
 });
 
 Route::post('/reportconcern', [ReportedConcernController::class, 'store'])->name('reportconcern.store');
-
