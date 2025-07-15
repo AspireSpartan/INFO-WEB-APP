@@ -53,7 +53,7 @@
                     <div class="py-1" role="none">
                         <a href="/home" data-scroll-percent="0" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Banner</a>
                         <a href="/home" data-scroll-percent="24.9" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Latest News</a>
-                        <a href="/home" data-scroll-percent="38" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Strategic plan</a>
+                        <a href="/home" data-scroll-percent="38" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Announcements</a>
                         <a href="/home" data-scroll-percent="56.8" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Projects</a>
                         <a href="/home" data-scroll-percent="83.5" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Officials</a>
                         <a href="/home" data-scroll-percent="100" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Footer</a>
@@ -110,7 +110,6 @@
                     <div class="py-1" role="none">
                         <a href="/blog" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Latest Articles</a>
                         <a href="/showallproject" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Projects</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1">Case Studies</a>
                     </div>
                 </div>
             </div>
@@ -168,7 +167,7 @@
                  class="mt-4 flex flex-col space-y-4 text-xl">
                 <a href="/home" data-scroll-percent="0" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Banner</a>
                 <a href="/home" data-scroll-percent="24.9" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Latest News</a>
-                <a href="/home" data-scroll-percent="36" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Strategic plan</a>
+                <a href="/home" data-scroll-percent="36" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Announcements</a>
                 <a href="/home" data-scroll-percent="56.8" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Projects</a>
                 <a href="/home" data-scroll-percent="83.5" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Officials</a>
                 <a href="/home" data-scroll-percent="100" class="scroll-link text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false; open = false">Footer</a>
@@ -213,7 +212,6 @@
                  class="mt-4 flex flex-col space-y-4 text-xl">
                 <a href="/blog" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Latest Articles</a>
                 <a href="/showallproject" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Projects</a>
-                <a href="#" class="text-white hover:text-amber-400 font-['Questrial']" @click="mobileMenuOpen = false">Case Studies</a>
             </div>
         </div>
         

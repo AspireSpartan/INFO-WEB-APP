@@ -17,7 +17,6 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProjectDescriptionController;
-
 use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\PublicOfficialCaptionController;
 use App\Http\Controllers\PreviewSection2CaptionController;
@@ -27,7 +26,6 @@ use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\GovernmentLinkController;
 use App\Http\Controllers\FooterTitleController;
 use App\Http\Controllers\CommunityController; 
-
 use App\Http\Controllers\AdminReportedConcernController;
 
 Route::get('/', function () {
