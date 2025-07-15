@@ -4,13 +4,19 @@
 @section('title', 'About-us')
 
 @section('content')
-    {{-- Pass contentManager and contentOffer as props to the section-1 component --}}
+    {{-- Pass communityContent and carouselImages as props to the section-3 component --}}
     <x-User.about-us.section-1
         :contentManager="$contentManager"
         :contentOffer="$contentOffer"
     ></x-User.about-us.section-1>
 
     <x-User.about-us.section-2></x-User.about-us.section-2>
-    <x-User.about-us.section-3></x-User.about-us.section-3>
+
+    {{-- Pass the fetched data to section-3 --}}
+    <x-User.about-us.section-3
+        :communityContent="$communityContent"
+        :carouselImages="$carouselImages"
+    ></x-User.about-us.section-3>
+
     <x-User.about-us.section-4></x-User.about-us.section-4>
 @endsection
