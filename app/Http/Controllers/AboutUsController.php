@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\AboutUsContentManager;
+use Illuminate\Support\Str;
 use App\Models\AboutUsOffer;
+use Illuminate\Http\Request;
+use App\Models\StrategicPlan;
+use App\Models\AboutUsContentManager;
+use Illuminate\Support\Facades\Storage;
+use App\Models\ContentManagerLogosImage;
 use App\Models\CommunityContent; // Import the CommunityContent model
 use App\Models\CommunityCarouselImage; // Import the CommunityCarouselImage model
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class AboutUsController extends Controller
 {
@@ -34,13 +36,6 @@ class AboutUsController extends Controller
         return view('Components.Admin.Ad-Header.Ad-Header', compact('contentManager', 'contentOffer'));
     }
 
-    /**
-     * Display the user-facing About Us page.
-     * Fetches all static content and dynamic offers from the database,
-     * including community content and carousel images for section-3.
-     *
-     * @return \Illuminate\View\View
-     */
     public function showUserAboutUs()
     {
         $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray();
@@ -55,7 +50,6 @@ class AboutUsController extends Controller
         ], $contentManager);
         $contentOffer = AboutUsOffer::all();
 
-        // Fetch static content for the "Community at Work" section (from CommunityContent model)
         $communityContent = CommunityContent::pluck('content', 'key')->toArray();
         $communityContent = array_merge([
             'main_title_part1' => 'Community',
@@ -64,10 +58,38 @@ class AboutUsController extends Controller
             'footer_text' => 'Building stronger communities through collaboration and innovation since 2023',
         ], $communityContent);
 
-        // Fetch carousel images ordered by the 'order' column (from CommunityCarouselImage model)
         $carouselImages = CommunityCarouselImage::orderBy('order')->get();
 
-        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages'));
+        $contentMlogos = ContentManagerLogosImage::all();
+        $strategicPlans = StrategicPlan::all();
+
+        
+        $vision = $strategicPlans->where('id', 1)->first();
+        $mission = $strategicPlans->where('id', 2)->first();
+        $goal = $strategicPlans->where('id', 3)->first();
+
+        $visionIcon = ContentManagerLogosImage::find(3);
+        $missionIcon = ContentManagerLogosImage::find(4);
+        $goalIcon = ContentManagerLogosImage::find(5);
+        $vmgEditableContentData = [
+            'vision' => [
+                'icon' => $visionIcon ? asset($visionIcon->image_path) : asset('storage/Vision.svg'),
+                'title' => $vision ? $vision->title : '',
+                'paragraph' => $vision ? $vision->paragraph : '',
+            ],
+            'mission' => [
+                'icon' => $missionIcon ? asset($missionIcon->image_path) : asset('storage/Mission.svg'),
+                'title' => $mission ? $mission->title : '',
+                'paragraph' => $mission ? $mission->paragraph : '',
+            ],
+            'goal' => [
+                'icon' => $goalIcon ? asset($goalIcon->image_path) : asset('storage/goal.svg'),
+                'title' => $goal ? $goal->title : '',
+                'paragraph' => $goal ? $goal->paragraph : '',
+            ],
+        ];
+
+        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData'));
     }
 
     /**

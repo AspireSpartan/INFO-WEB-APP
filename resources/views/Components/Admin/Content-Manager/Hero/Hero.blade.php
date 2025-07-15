@@ -1,4 +1,4 @@
-<!-- Components/Admin/Content-Manager/banner/banner.blade.php-->
+<!-- Components/Admin/Content-Manager/Hero/Hero.blade.php-->
 @php
     $bgImagePath = null;
     if (!empty($pageContent['main-container-bg'])) {
@@ -12,9 +12,9 @@
 
 <div id="main-container" class="relative min-h-screen bg-cover bg-center pt-24"
      @if($bgImagePath) style="background-image: url('{{ $bgImagePath }}');" @endif>
-        <!-- Background Overlay -->    
-        <div class="absolute inset-0 bg-gray-700/50 animate-bg-overlay"></div>  
-        
+        <!-- Background Overlay -->
+        <div class="absolute inset-0 bg-gray-700/50 animate-bg-overlay"></div>
+
         <!-- Button to Change Background Image -->
         <div class="absolute top-5 right-5 z-19">
             <button data-edit-type="image" data-target-id="main-container" class="edit-trigger bg-white/20 hover:bg-white/40 text-white font-semibold py-2 px-4 rounded-lg shadow-md backdrop-blur-sm transition-all duration-300">
@@ -22,43 +22,43 @@
             </button>
         </div>
 
-        <!-- Mobile Menu (Hidden by default, shown with Alpine.js) -->  
-        <div class="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-75" x-cloak x-show="mobileMenuOpen"    
-            x-transition:enter="transition ease-in-out duration-300 transform"  
-            x-transition:enter-start="translate-x-full"    
-            x-transition:enter-end="translate-x-0"  
-            x-transition:leave="transition ease-in-out duration-300 transform"  
-            x-transition:leave-start="translate-x-0"    
-            x-transition:leave-end="translate-x-full">  
-            <div class="fixed inset-y-0 right-0 w-3/4 max-w-sm bg-gray-900 p-6 shadow-lg">  
-                <div class="flex justify-between items-center mb-6">    
-                    <div class="flex items-center gap-2 editable-container">    
+        <!-- Mobile Menu (Hidden by default, shown with Alpine.js) -->
+        <div class="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-75" x-cloak x-show="mobileMenuOpen"
+            x-transition:enter="transition ease-in-out duration-300 transform"
+            x-transition:enter-start="translate-x-full"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in-out duration-300 transform"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full">
+            <div class="fixed inset-y-0 right-0 w-3/4 max-w-sm bg-gray-900 p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-2 editable-container">
                         <!-- logo-image-src will remain static as per request -->
                         <img id="logo-image" src="https://placehold.co/100x100/ffffff/333333?text=Logo" alt="COREDEV Logo" class="h-10 w-auto animate-logo-slide">
-                        <button class="edit-button edit-trigger" data-edit-type="image" data-target-id="logo-image">Edit</button>  
-                    </div>  
-                    <button type="button" class="text-gray-400 hover:text-white" @click="mobileMenuOpen = false">  
-                        <span class="sr-only">Close menu</span>    
-                        <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">    
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />    
-                        </svg>  
-                    </button>  
-                </div>  
+                        <button class="edit-button edit-trigger" data-edit-type="image" data-target-id="logo-image">Edit</button>
+                    </div>
+                    <button type="button" class="text-gray-400 hover:text-white" @click="mobileMenuOpen = false">
+                        <span class="sr-only">Close menu</span>
+                        <svg class="size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
                 <nav class="flex flex-col gap-4">
                     <!-- Editable Nav links would require more complex JS, focusing on main content per request -->
-                    <a href="#" class="block text-white text-lg font-normal font-['Questrial'] hover:text-amber-400 py-2 animate-nav-item">Home</a>    
+                    <a href="#" class="block text-white text-lg font-normal font-['Questrial'] hover:text-amber-400 py-2 animate-nav-item">Home</a>
                     <!-- More nav items here -->
                     <div class="editable-container">
                         <!-- signin-button will remain static as per request -->
                         <a id="signin-button" href="#" class="block bg-amber-400 text-white text-lg font-normal font-['Segoe_UI'] py-2 px-8 rounded-[30px] text-center hover:bg-amber-500 transition-colors mt-4 animate-nav-item">Sign In</a>
                         <button class="edit-button edit-trigger" data-edit-type="button" data-target-id="signin-button">Edit</button>
                     </div>
-                </nav>  
-            </div>  
-        </div>  
+                </nav>
+            </div>
+        </div>
 
-        <!-- Hero Content -->  
-        <div class="relative z-10 flex flex-col items-end justify-center h-[calc(100vh-theme(spacing.24))] text-left px-4">    
+        <!-- Hero Content -->
+        <div class="relative z-10 flex flex-col items-end justify-center h-[calc(100vh-theme(spacing.24))] text-left px-4">
             <div class="w-full max-w-4xl space-y-6 md:space-y-8 lg:space-y-10 pr-2 md:pr-8 lg:pr-16">
                 <div class="editable-container">
                     <p id="hero-subtitle-1" class="text-white text-2xl md:text-3xl lg:text-4xl font-normal font-['Noto_Sans'] animate-hero-text" style="--delay: 0.2s">“DRIVEN BY INNOVATION</p>
@@ -76,42 +76,42 @@
                     <p id="hero-subtitle-2" class="text-white text-lg md:text-xl lg:text-2xl font-normal font-['Source_Sans_Pro'] animate-hero-text" style="--delay: 0.8s"><span class="inline-block transform rotate-90 scale-x-[-1] text-2xl relative top-1 right-1">/</span>BREAKING BOUNDARIES</p>
                     <button class="edit-button edit-trigger" data-edit-type="text" data-target-id="hero-subtitle-2">Edit</button>
                 </div>
-            </div>  
-        </div>  
+            </div>
+        </div>
 
-        <!-- Bottom Bar with Statistics -->    
-        <div id="bottom-stats-bar" class="relative z-10 w-full bg-zinc-500/20 shadow-md py-4 md:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 mt-auto editable-container">    
-            <div class="flex flex-col sm:flex-row justify-around items-center gap-6 md:gap-12 lg:gap-24">  
+        <!-- Bottom Bar with Statistics -->
+        <div id="bottom-stats-bar" class="relative z-10 w-full bg-zinc-500/20 shadow-md py-4 md:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 mt-auto editable-container">
+            <div class="flex flex-col sm:flex-row justify-around items-center gap-6 md:gap-12 lg:gap-24">
                 <!-- Stat Item 1 -->
-                <div id="stat-item-1" class="text-center animate-stat-item" style="--delay: 0.2s">  
-                    <div id="stat-1-number" class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">24</div>    
+                <div id="stat-item-1" class="text-center animate-stat-item" style="--delay: 0.2s">
+                    <div id="stat-1-number" class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">24</div>
                     <div id="stat-1-label" class="text-white text-sm md:text-lg font-light font-['Merriweather']">Barangay</div>
-                </div>  
+                </div>
                 <!-- Stat Item 2 -->
-                <div id="stat-item-2" class="text-center animate-stat-item" style="--delay: 0.4s">  
-                    <div id="stat-2-number" class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">1500+</div>    
+                <div id="stat-item-2" class="text-center animate-stat-item" style="--delay: 0.4s">
+                    <div id="stat-2-number" class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">1500+</div>
                     <div id="stat-2-label" class="text-white text-sm md:text-lg font-light font-['Merriweather']">Residents</div>
-                </div>  
+                </div>
                 <!-- Stat Item 3 -->
-                <div id="stat-item-3" class="text-center animate-stat-item" style="--delay: 0.6s">  
-                    <div id="stat-3-number" class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">120+</div>  
-                    <div id="stat-3-label" class="text-white text-sm md:text-lg font-light font-['Merriweather']">Public Projects</div>    
-                </div>  
+                <div id="stat-item-3" class="text-center animate-stat-item" style="--delay: 0.6s">
+                    <div id="stat-3-number" class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">120+</div>
+                    <div id="stat-3-label" class="text-white text-sm md:text-lg font-light font-['Merriweather']">Public Projects</div>
+                </div>
                 <!-- Stat Item 4 -->
-                <div id="stat-item-4" class="text-center animate-stat-item" style="--delay: 0.8s">  
-                    <div id="stat-4-number" class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">75</div>    
+                <div id="stat-item-4" class="text-center animate-stat-item" style="--delay: 0.8s">
+                    <div id="stat-4-number" class="text-white text-3xl md:text-4xl font-bold font-['Merriweather']">75</div>
                     <div id="stat-4-label" class="text-white text-sm md:text-lg font-light font-['Merriweather']">Years of Service</div>
-                </div>  
-            </div>  
+                </div>
+            </div>
             <button class="edit-button edit-trigger" data-edit-type="all-stats" data-target-id="bottom-stats-bar">Edit All Statistics</button>
-            <div class="w-full h-px bg-white/50 my-6"></div>    
+            <div class="w-full h-px bg-white/50 my-6"></div>
             <div class="editable-container">
                 <p id="footer-paragraph" class="relative z-10 w-full text-center text-white text-xs md:text-sm lg:text-base font-normal font-['Questrial'] px-4 md:px-8 lg:px-16 animate-footer-text">Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.</p>
                 <button class="edit-button edit-trigger" data-edit-type="text" data-target-id="footer-paragraph">Edit</button>
             </div>
-        </div>    
+        </div>
     </div>
-    
+
     <!-- Editing Modal -->
     <div id="edit-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
