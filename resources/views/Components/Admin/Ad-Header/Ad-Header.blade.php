@@ -7,7 +7,7 @@
     'newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description',
     'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans',
     // Add these if they are passed to the admin layout directly
-    'contentManager','contentOffer', 'concerns','request',
+    'contentManager','contentOffer', 'concerns','request', 'communityContent','communityCarouselImages',
 ])
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
@@ -296,8 +296,8 @@
                     <div>@include('Components.Admin.about-us.3goals.3goals', ['contentMlogos' => $contentMlogos ?? [], 'vmgEditableContentData' => $vmgEditableContentData ?? [], 'strategicPlans' => $strategicPlans ?? []])</div>
                 </template>
                 <template x-if="screen === 'about-section-3'">
-                    <div>@include('Components.Admin.about-us.section-3')</div>
-                </template>
+                <div>@include('Components.Admin.about-us.section-3', ['communityContent' => $communityContent, 'communityCarouselImages' => $communityCarouselImages])</div>
+            </template>
                 <template x-if="screen === 'about-section-4'">
                     <div>@include('Components.Admin.about-us.section-4')</div>
                 </template>
