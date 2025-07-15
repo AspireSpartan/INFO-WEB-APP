@@ -4,29 +4,31 @@ use App\Models\Project;
 use App\Models\NewsItem;
 use App\Models\ProjectDescription;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReportConcern;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\FooterLogoController;
-use App\Http\Controllers\KeepInTouchController;
-use App\Http\Controllers\PageContentController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\StrategicPlanController;
-use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProjectDescriptionController;
+use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\PreviewSection2LogoController;
-use App\Http\Controllers\PublicOfficialCaptionController;
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\AboutGovphController;
-use App\Http\Controllers\AboutUsController;
-use App\Http\Controllers\GovernmentLinkController;
+use App\Http\Controllers\FooterLogoController;
 use App\Http\Controllers\FooterTitleController;
-use App\Http\Controllers\CommunityController; 
+use App\Http\Controllers\KeepInTouchController;
+use App\Http\Controllers\PageContentController;
+use App\Http\Controllers\GovernmentLinkController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AdminReportedConcernController;
+use App\Http\Controllers\PublicOfficialCaptionController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\HomeController;
+
+
+//use App\Http\Controllers\Blog\LatestArticles\BlogController;
 
 Route::get('/', function () {
     return view('welcome');

@@ -18,19 +18,19 @@ class CommunityController extends Controller
      */
     public function index()
     {
-        $content = CommunityContent::pluck('content', 'key')->toArray();
+        $communityContent = CommunityContent::pluck('content', 'key')->toArray();
         // Ensure all expected keys exist to prevent undefined index errors in Blade
-        $content = array_merge([
+        $communityContent = array_merge([
             'main_title_part1' => '',
             'main_title_part2' => '',
             'subtitle_paragraph' => '',
             'footer_text' => '',
-        ], $content);
+        ], $communityContent);
 
         // Fetch carousel images ordered by the 'order' column
-        $carouselImages = CommunityCarouselImage::orderBy('order')->get();
+        $communityCarouselImages = CommunityCarouselImage::orderBy('order')->get();
 
-        return view('Components.Admin.Community.AdminCommunityPage', compact('content', 'carouselImages'));
+        return view('Components.Admin.Community.AdminCommunityPage', compact('communityContent', 'communityCarouselImages'));
     }
     
 
