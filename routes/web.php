@@ -3,7 +3,8 @@
 use App\Models\Project;
 use App\Models\NewsItem;
 use App\Models\ProjectDescription;
-use Illuminate\Support\Facades\Route;      
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportConcern;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\AboutGovphController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\GovernmentLinkController;
 use App\Http\Controllers\FooterTitleController;
+use App\Http\Controllers\CommunityController; 
 use App\Http\Controllers\AdminReportedConcernController;
 
 Route::get('/', function () {
@@ -120,4 +122,13 @@ Route::prefix('admin')->group(function () {
     Route::get('/government-links', [GovernmentLinkController::class, 'index'])->name('government-links.index');
     Route::post('/government-links', [GovernmentLinkController::class, 'update'])->name('government-links.update');
     Route::post('/footer-title/update', [FooterTitleController::class, 'update'])->name('footer-title.update');
+
+    Route::get('/community', [CommunityController::class, 'index'])->name('admin.community.index');
+    Route::post('/community/update-content', [CommunityController::class, 'updateContent'])->name('admin.community.updateContent');
+    Route::post('/community/store-image', [CommunityController::class, 'storeCarouselImage'])->name('admin.community.storeCarouselImage'); // For new images
+    Route::post('/community/update-image/{id}', [CommunityController::class, 'updateCarouselImage'])->name('admin.community.updateCarouselImage'); // For updating existing images (title/image file)
+    Route::delete('/community/delete-image/{id}', [CommunityController::class, 'deleteCarouselImage'])->name('admin.community.deleteCarouselImage');
+    Route::post('/community/update-image-order', [CommunityController::class, 'updateImageOrder'])->name('admin.community.updateImageOrder');
+    
+
 });
