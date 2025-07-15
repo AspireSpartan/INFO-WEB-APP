@@ -5,15 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Blogfeed;
 use App\Models\NewsItem;
+use App\Models\GovphLink;
+use App\Models\AboutGovph;
+use App\Models\FooterLogo;
+use App\Models\FooterTitle;
+use App\Models\KeepInTouch;
 use Illuminate\Support\Str;
 use App\Models\PageContent; 
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
+use App\Models\StrategicPlan;
+use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
+use App\Models\ContentManagerLogosImage;
 
 
 class HomeController extends Controller
@@ -44,6 +52,12 @@ class HomeController extends Controller
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
         $description = ProjectDescription::first();
         
+        $keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail();
+        $footerLogo = FooterLogo::first();
+        $aboutGovph = AboutGovph::first();
+        $govphLinks = GovphLink::all();
+        $governmentlinks = GovernmentLink::all();
+        $footertitle = FooterTitle::first();
 
         if (empty($pageContent)) {
             $pageContent = [
@@ -72,11 +86,9 @@ class HomeController extends Controller
         });
         $caption = PreviewSection2Caption::value('caption');
 
-        
-
         // Pass all necessary data to the home view
 
-        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption', 'officials', 'publicOfficialCaption')); // Pass the pageContent array
+        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption', 'officials', 'publicOfficialCaption', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle')); // Pass the pageContent array
     }
 
     /**
