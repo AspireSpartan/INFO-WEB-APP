@@ -79,6 +79,12 @@ class AdminDashboardController extends Controller
         $governmentlinks = GovernmentLink::all();
         $footertitle = FooterTitle::first();
         $communityContent = CommunityContent::pluck('content', 'key')->toArray();
+        $communityContent = array_merge([
+            'main_title_part1' => '',
+            'main_title_part2' => '',
+            'subtitle_paragraph' => '',
+            'footer_text' => '',
+        ], $communityContent);
         $communityCarouselImages = CommunityCarouselImage::orderBy('order')->get();
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
@@ -105,7 +111,7 @@ class AdminDashboardController extends Controller
             'governmentlinks',
             'footertitle',
             'communityContent',
-            'communityCarouselImages' 
+            'communityCarouselImages'
         ));
     }
 }
