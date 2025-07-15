@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
             CommunityContentSeeder::class,
             CommunityCarouselImageSeeder::class,
         ]);
+        $this->call(AnnouncementSeeder::class);
 
         // Your existing User factory call is retained here
         User::factory()->create([
