@@ -1,4 +1,4 @@
-<!-- Component/user/banner/banner.blade.php-->
+<!-- Component/user/Hero/Hero.blade.php-->
 @props(['pageContent']) {{-- Accept the pageContent array as a prop --}}
 
 @php
@@ -189,7 +189,7 @@
             const numberElement = item.querySelector('div:first-child');
             // Get target from data-target, ensure it's a number
             // Safely parse integer, handling potential '+' and ensuring a default of 0
-            const targetNumber = parseInt(String(numberElement.getAttribute('data-target')).replace('+', ''), 10) || 0; 
+            const targetNumber = parseInt(String(numberElement.getAttribute('data-target')).replace('+', ''), 10) || 0;
             const textContent = numberElement.textContent; // Get initial text content
             const needsPlus = textContent.includes('+'); // Check if '+' was present
 

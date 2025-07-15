@@ -4,11 +4,22 @@
 @section('title', 'Home')
 
 @section('content')
-    {{-- Corrected path to the user-side banner component --}}
-    {{-- It should be 'Components.User.banner.banner' based on your provided file structure --}}
-    @include('Components.User.banner.banner', ['pageContent' => $pageContent])
-    <x-User.latestnews.latestnews :newsItems="$newsItems" :logos="$logos" :caption="$caption"></x-User.latestnews.latestnews>
+    {{-- Corrected path to the user-side Hero component --}}
+    {{-- It should be 'Components.User.Hero.Hero' based on your provided file structure --}}
+    @include('Components.User.Hero.Hero', ['pageContent' => $pageContent])
+    <x-User.latestnews.latestnews :newsItems="$newsItems" :logos="$logos"
+                                  :caption="$caption"></x-User.latestnews.latestnews>
     <x-User.announcement.announcement></x-User.announcement.announcement>
-    <x-User.completeproj.completeproj :projects="$projects" :description="$description"></x-User.completeproj.completeproj>
-    <x-User.teamdev.teamdev :officials="$officials" :publicOfficialCaption="$publicOfficialCaption"></x-User.teamdev.teamdev>
+    <x-User.completeproj.completeproj :projects="$projects"
+                                      :description="$description"></x-User.completeproj.completeproj>
+    <x-User.PublicOfficials.PublicOfficials :officials="$officials"
+                            :publicOfficialCaption="$publicOfficialCaption"></x-User.PublicOfficials.PublicOfficials>
+<x-user.footer.footer
+    :keepInTouch="$keepInTouch"
+    :footerLogo="$footerLogo"
+    :aboutGovph="$aboutGovph"
+    :govphLinks="$govphLinks"
+    :governmentlinks="$governmentlinks"
+    :footertitle="$footertitle"
+/>
 @endsection
