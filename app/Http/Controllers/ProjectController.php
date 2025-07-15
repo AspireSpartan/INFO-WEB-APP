@@ -1,5 +1,5 @@
 <?php
-//app\Http\Controllers\ProjectController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\News;
@@ -9,17 +9,23 @@ use App\Models\NewsItem;
 use App\Models\GovphLink;
 use App\Models\AboutGovph;
 use App\Models\FooterLogo;
+use App\Models\FooterTitle;
 use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use Illuminate\Support\Str;
+use App\Models\AboutUsOffer;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
+use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
 use App\Models\ReportedConcern;
+use App\Models\CommunityContent;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
+use App\Models\AboutUsContentManager;
 use App\Models\PublicOfficialCaption;
+use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
@@ -77,6 +83,18 @@ public function index() // user side
         $aboutGovph = AboutGovph::first();
         $govphLinks = GovphLink::all();
         $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
+        $governmentlinks = GovernmentLink::all();
+        $footertitle = FooterTitle::first();
+        $communityContent = CommunityContent::pluck('content', 'key')->toArray();
+        $communityContent = array_merge([
+            'main_title_part1' => '',
+            'main_title_part2' => '',
+            'subtitle_paragraph' => '',
+            'footer_text' => '',
+        ], $communityContent);
+        $communityCarouselImages = CommunityCarouselImage::orderBy('order')->get();
+        $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray();
+        $contentOffer = AboutUsOffer::all();
 
         $vmgEditableContentData = [
             'vision' => [
@@ -97,7 +115,7 @@ public function index() // user side
         ];
         
         session()->flash('activeAdminScreen', 'projects');
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials','vmgEditableContentData', 'strategicPlans', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials','vmgEditableContentData', 'strategicPlans', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer'));
     }
 
     

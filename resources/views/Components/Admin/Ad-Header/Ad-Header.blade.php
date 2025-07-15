@@ -7,14 +7,14 @@
     'newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description',
     'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans',
     // Add these if they are passed to the admin layout directly
-    'contentManager','contentOffer', 'concerns','request',
+    'contentManager','contentOffer', 'concerns','request', 'communityContent','communityCarouselImages',
 ])
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
          x-data="{
              activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
              notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4', 'reported_concerns'],
+             screens: ['dashboard', 'news', 'Blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4', 'reported_concerns'],
 
              resetNotifications() {
                  this.notificationCount = 0;
@@ -69,7 +69,7 @@
 
             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                 <button @click="open = !open"
-                        :class="{'text-amber-400': ['blog', 'projects'].includes(activeScreen) || open, 'text-white': !(['blog', 'projects'].includes(activeScreen) || open)}"
+                        :class="{'text-amber-400': ['Blog', 'projects'].includes(activeScreen) || open, 'text-white': !(['Blog', 'projects'].includes(activeScreen) || open)}"
                         class="text-base font-normal font-questrial hover:text-amber-400 transition-colors capitalize focus:outline-none flex items-center">
                     Blog
                     <svg class="h-4 w-4 inline-block ml-1" :class="{'transform rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -88,7 +88,7 @@
                          role="menu">
                         <div class="py-1">
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            @click.prevent="switchScreen('blog'); open = false">Latest Articles</a>
+                            @click.prevent="switchScreen('Blog'); open = false">Latest Articles</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             @click.prevent="switchScreen('projects'); open = false">Projects</a>
                         </div>
@@ -254,11 +254,11 @@
                 <template x-if="screen === 'news'">
                     <div>@include('Components.Admin.newss.news_content', ['newsItems' => $newsItems ?? []])</div>
                 </template>
-                <template x-if="screen === 'blog'">
-                    <div>@include('Components.Admin.blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
+                <template x-if="screen === 'Blog'">
+                    <div>@include('Components.Admin.Blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
                 </template>
                 <template x-if="screen === 'projects'">
-                    <div>@include('Components.Admin.blog.projects.project_content', ['projects' => $projects ?? [], 'description' => $description ?? []])</div>
+                    <div>@include('Components.Admin.Blog.projects.project_content', ['projects' => $projects ?? [], 'description' => $description ?? []])</div>
                 </template>
                 <template x-if="screen === 'banner'">
                     <div>@include('Components.Admin.Content-Manager.banner.banner', ['pageContent' => $pageContent ?? []])</div>
@@ -296,8 +296,8 @@
                     <div>@include('Components.Admin.about-us.3goals.3goals', ['contentMlogos' => $contentMlogos ?? [], 'vmgEditableContentData' => $vmgEditableContentData ?? [], 'strategicPlans' => $strategicPlans ?? []])</div>
                 </template>
                 <template x-if="screen === 'about-section-3'">
-                    <div>@include('Components.Admin.about-us.section-3')</div>
-                </template>
+                <div>@include('Components.Admin.about-us.section-3', ['communityContent' => $communityContent, 'communityCarouselImages' => $communityCarouselImages])</div>
+            </template>
                 <template x-if="screen === 'about-section-4'">
                     <div>@include('Components.Admin.about-us.section-4')</div>
                 </template>

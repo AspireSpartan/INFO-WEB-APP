@@ -23,6 +23,8 @@ use App\Models\AboutUsContentManager;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
+use App\Models\CommunityContent; 
+use App\Models\CommunityCarouselImage;
 
 class AdminDashboardController extends Controller
 {
@@ -76,6 +78,14 @@ class AdminDashboardController extends Controller
         $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
         $governmentlinks = GovernmentLink::all();
         $footertitle = FooterTitle::first();
+        $communityContent = CommunityContent::pluck('content', 'key')->toArray();
+        $communityContent = array_merge([
+            'main_title_part1' => '',
+            'main_title_part2' => '',
+            'subtitle_paragraph' => '',
+            'footer_text' => '',
+        ], $communityContent);
+        $communityCarouselImages = CommunityCarouselImage::orderBy('order')->get();
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -99,7 +109,9 @@ class AdminDashboardController extends Controller
             'contentOffer',
             'concerns',
             'governmentlinks',
-            'footertitle'
+            'footertitle',
+            'communityContent',
+            'communityCarouselImages'
         ));
     }
 }
