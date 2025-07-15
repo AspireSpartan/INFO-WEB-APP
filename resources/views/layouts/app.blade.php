@@ -107,9 +107,6 @@
     <main>
         @yield('content')
     </main>
-
-    <footer>
-        <x-User.footer.footer></x-User.footer.footer>
-    </footer>
+    
 </body>
 </html>

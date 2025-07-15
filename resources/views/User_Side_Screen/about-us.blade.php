@@ -10,7 +10,10 @@
         :contentOffer="$contentOffer"
     ></x-User.about-us.section-1>
 
-    <x-User.about-us.section-2></x-User.about-us.section-2>
+    <x-User.about-us.section-2 
+    :contentMlogos="$contentMlogos" 
+    :vmgEditableContentData="$vmgEditableContentData"
+    :strategicPlans="$strategicPlans"></x-User.about-us.section-2>
 
     {{-- Pass the fetched data to section-3 --}}
     <x-User.about-us.section-3
