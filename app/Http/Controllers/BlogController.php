@@ -9,17 +9,23 @@ use App\Models\NewsItem;
 use App\Models\GovphLink;
 use App\Models\AboutGovph;
 use App\Models\FooterLogo;
+use App\Models\FooterTitle;
 use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use Illuminate\Support\Str;
+use App\Models\AboutUsOffer;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
+use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
 use App\Models\ReportedConcern;
+use App\Models\CommunityContent;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
+use App\Models\AboutUsContentManager;
 use App\Models\PublicOfficialCaption;
+use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
@@ -49,6 +55,18 @@ class BlogController extends Controller
         $aboutGovph = AboutGovph::first();
         $govphLinks = GovphLink::all();
         $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
+        $governmentlinks = GovernmentLink::all();
+        $footertitle = FooterTitle::first();
+        $communityContent = CommunityContent::pluck('content', 'key')->toArray();
+        $communityContent = array_merge([
+            'main_title_part1' => '',
+            'main_title_part2' => '',
+            'subtitle_paragraph' => '',
+            'footer_text' => '',
+        ], $communityContent);
+        $communityCarouselImages = CommunityCarouselImage::orderBy('order')->get();
+        $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray();
+        $contentOffer = AboutUsOffer::all();
 
         $vmgEditableContentData = [
             'vision' => [
@@ -88,7 +106,7 @@ class BlogController extends Controller
         if ($isViewportPresent) {
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer'));
     }
 
     /**
@@ -102,7 +120,7 @@ class BlogController extends Controller
         // Redirect to index, flag to show create modal, and set active screen to 'blog'
         return redirect()->route('blogs.index')
                         ->with('showCreateBlogModal', true)
-                        ->with('activeAdminScreen', 'blog'); // Added this line
+                        ->with('activeAdminScreen', 'Blog'); // Added this line
     }
 
     /**
@@ -133,7 +151,7 @@ class BlogController extends Controller
                              ->withErrors($validator)
                              ->withInput()
                              ->with('showCreateBlogModal', true)
-                             ->with('activeAdminScreen', 'blog'); // Added this line for error redirect
+                             ->with('activeAdminScreen', 'Blog'); // Added this line for error redirect
         }
 
         // If validation passes, get the validated data
@@ -165,7 +183,7 @@ class BlogController extends Controller
         // Redirect back to the blog index and show success, and close the modal
         return redirect()->route('blogs.index')
                         ->with('success', 'Blog post created successfully!')
-                        ->with('activeAdminScreen', 'blog'); // Added this line
+                        ->with('activeAdminScreen', 'Blog'); // Added this line
     }
 
     public function show(Blogfeed $blogfeed)
@@ -186,7 +204,7 @@ class BlogController extends Controller
     {
         // This path should be correct based on your previous input
         // When going to the edit view, also flash the active screen so a refresh returns to blog view
-        session()->flash('activeAdminScreen', 'blog'); // Added this to set screen on entering edit view
+        session()->flash('activeAdminScreen', 'Blog'); // Added this to set screen on entering edit view
         return view('Components.Admin.blog.edit', compact('blogfeed'));
     }
 
@@ -242,7 +260,7 @@ class BlogController extends Controller
         // Redirect back to the blog index and show success message, setting the active screen
         return redirect()->route('blogs.index')
                         ->with('success', 'Blog post updated successfully!')
-                        ->with('activeAdminScreen', 'blog'); // Added this line
+                        ->with('activeAdminScreen', 'Blog'); // Added this line
     }
 
     /**
@@ -269,6 +287,6 @@ class BlogController extends Controller
         // 3. Redirect with a success message, ensuring the 'blog' screen is active
         return redirect()->route('blogs.index')
                         ->with('success', 'Blog post deleted successfully!')
-                        ->with('activeAdminScreen', 'blog'); // Added this line
+                        ->with('activeAdminScreen', 'Blog'); // Added this line
     }
 }
