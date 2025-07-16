@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PublicOfficial;
+use App\Http\Controllers\Controller;
 
 class PublicOfficialController extends Controller
 {
