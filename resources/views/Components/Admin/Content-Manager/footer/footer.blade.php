@@ -69,11 +69,12 @@
                     {{-- Updated: Added flex-wrap and adjusted gap for better icon display --}}
                     <div class="flex flex-wrap justify-start items-center gap-4 mt-4">
                         <template x-for="link in keepInTouch.social_links" :key="link.url">
+                            {{-- The 'a' tag already has flex items-center justify-center for centering --}}
                             <a :href="link.url" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-white rounded-full flex items-center justify-center" :aria-label="link.platform">
                                 <!-- Dynamically display icon based on link.icon -->
                                 <template x-if="link.icon">
-                                    {{-- Increased size to w-8 h-8 and ensured text-black for visibility --}}
-                                    <i :class="link.icon" class="w-8 h-8 text-black flex items-center justify-center"></i>
+                                    {{-- Removed w-X h-X from i tag, relying on text-size for icon size and parent for centering --}}
+                                    <i :class="link.icon" class="text-2xl text-black"></i>
                                 </template>
                                 <template x-if="!link.icon">
                                     <!-- Fallback to platform name if no icon is provided -->
