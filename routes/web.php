@@ -29,8 +29,6 @@ use App\Http\Controllers\AdminReportedConcernController;
 use App\Http\Controllers\PublicOfficialCaptionController;
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AdminAnnouncementController;
 use App\Http\Controllers\CedulaReportController;
 use App\Http\Controllers\BusinessPermitController;
 
