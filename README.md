@@ -17,6 +17,7 @@ ________________________________________________________________________________
 Installation Steps
 1. Install PHP Dependencies:
 composer install
+npm install
 
 2. Copy Environment File:
 cp .env.example .env
