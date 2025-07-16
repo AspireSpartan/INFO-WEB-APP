@@ -9,8 +9,8 @@
 
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:mx-0 text-center lg:text-left">
-            <h2 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-2">Our Blog Posts</h2>
-            <p class="text-lg text-gray-600">Discover the latest articles, insights, and stories from our team.</p>
+            <h2 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-2">Our Latest Articles Posts</h2>
+            <p class="text-lg text-gray-600">Discover the latest articles, insights, and stories from our community.</p>
 
             {{-- Success/Error Messages (Optional, but good practice) --}}
             @if (session('success'))

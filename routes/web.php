@@ -3,28 +3,34 @@
 use App\Models\Project;
 use App\Models\NewsItem;
 use App\Models\ProjectDescription;
-use Illuminate\Support\Facades\Route;      
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\FooterLogoController;
-use App\Http\Controllers\KeepInTouchController;
-use App\Http\Controllers\PageContentController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\StrategicPlanController;
-use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProjectDescriptionController;
-
+use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\PreviewSection2LogoController;
-use App\Http\Controllers\PublicOfficialCaptionController;
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\AboutGovphController;
-use App\Http\Controllers\AboutUsController;
-
+use App\Http\Controllers\FooterLogoController;
+use App\Http\Controllers\FooterTitleController;
+use App\Http\Controllers\KeepInTouchController;
+use App\Http\Controllers\PageContentController;
+use App\Http\Controllers\GovernmentLinkController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AdminReportedConcernController;
+use App\Http\Controllers\PublicOfficialCaptionController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\HomeController;
+
+
+//use App\Http\Controllers\Blog\LatestArticles\BlogController;
+use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\AdminAnnouncementController;
 use App\Http\Controllers\CedulaReportController;
 use App\Http\Controllers\BusinessPermitController;
 
@@ -119,8 +125,24 @@ Route::prefix('admin')->group(function () {
     Route::get('/reported_concerns/{id}/edit', [AdminReportedConcernController::class, 'edit'])->name('reported_concerns.edit');
     Route::put('/reported_concerns/{id}', [AdminReportedConcernController::class, 'update'])->name('reported_concerns.update');
     Route::post('/reportconcern', [AdminReportedConcernController::class, 'store'])->name('reportconcern.store');
-});
-Route::get('/cedulareports', [CedulaReportController::class, 'index'])->name('cedulareports.index');
+    Route::get('/government-links', [GovernmentLinkController::class, 'index'])->name('government-links.index');
+    Route::post('/government-links', [GovernmentLinkController::class, 'update'])->name('government-links.update');
+    Route::post('/footer-title/update', [FooterTitleController::class, 'update'])->name('footer-title.update');
+
+    Route::get('/community', [CommunityController::class, 'index'])->name('admin.community.index');
+    Route::post('/community/update-content', [CommunityController::class, 'updateContent'])->name('admin.community.updateContent');
+    Route::post('/community/store-image', [CommunityController::class, 'storeCarouselImage'])->name('admin.community.storeCarouselImage'); // For new images
+    Route::post('/community/update-image/{id}', [CommunityController::class, 'updateCarouselImage'])->name('admin.community.updateCarouselImage'); // For updating existing images (title/image file)
+    Route::delete('/community/delete-image/{id}', [CommunityController::class, 'deleteCarouselImage'])->name('admin.community.deleteCarouselImage');
+    Route::post('/community/update-image-order', [CommunityController::class, 'updateImageOrder'])->name('admin.community.updateImageOrder');
+
+    // Announcement Routes
+    Route::get('/announcements/data', [AdminAnnouncementController::class, 'getAnnouncementsData'])->name('admin.announcements.data');
+    Route::post('/announcements', [AdminAnnouncementController::class, 'store'])->name('admin.announcements.store');
+    Route::put('/announcements/{announcement}', [AdminAnnouncementController::class, 'update'])->name('admin.announcements.update');
+    Route::delete('/announcements/{announcement}', [AdminAnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
+    Route::delete('admin/announcements/bulk-delete', [AdminAnnouncementController::class, 'bulkDestroy'])->name('admin.announcements.bulkDestroy');
+});Route::get('/cedulareports', [CedulaReportController::class, 'index'])->name('cedulareports.index');
 Route::post('/cedula', [CedulaReportController::class, 'store'])->name('cedula.store');
 Route::put('/cedulareports/{cedulaReport}', [CedulaReportController::class, 'update'])->name('cedulareports.update');
 

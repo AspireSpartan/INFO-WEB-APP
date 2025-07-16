@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\AboutUsContentManager;
+use Illuminate\Support\Str;
 use App\Models\AboutUsOffer;
+use Illuminate\Http\Request;
+use App\Models\StrategicPlan;
+use App\Models\AboutUsContentManager;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str; // For Str::startsWith, Str::after, and Str::contains
+use App\Models\ContentManagerLogosImage;
+use App\Models\CommunityContent; // Import the CommunityContent model
+use App\Models\CommunityCarouselImage; // Import the CommunityCarouselImage model
 
 class AboutUsController extends Controller
 {
@@ -18,41 +22,74 @@ class AboutUsController extends Controller
      */
     public function index()
     {
-        $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray(); // [cite: 10]
-        // Ensure all expected keys exist to prevent undefined index errors in Blade
+        $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray();
         $contentManager = array_merge([
             'heroTitle' => '',
             'heroSubtitle' => '',
-            'heroImage' => '', // Consider a default placeholder image if none exists
-            'introTitlePart1' => '',
-            'introTitlePart2' => '', // [cite: 11, 12]
-            'introParagraph1' => '',
-            'introParagraph2' => '',
-        ], $contentManager);
-        $contentOffer = AboutUsOffer::all(); // [cite: 13]
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('contentManager', 'contentOffer'));
-    }
-
-    /**
-     * Display the user-facing About Us page.
-     * Fetches all static content and dynamic offers from the database.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function showUserAboutUs()
-    {
-        $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray(); // [cite: 15]
-        $contentManager = array_merge([
-            'heroTitle' => '',
-            'heroSubtitle' => '',
-            'heroImage' => '', // Consider a default placeholder image if none exists
+            'heroImage' => '',
             'introTitlePart1' => '',
             'introTitlePart2' => '',
             'introParagraph1' => '',
-            'introParagraph2' => '', // [cite: 17]
+            'introParagraph2' => '',
         ], $contentManager);
-        $contentOffer = AboutUsOffer::all(); // [cite: 18]
-        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer'));
+        $contentOffer = AboutUsOffer::all();
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('contentManager', 'contentOffer'));
+    }
+
+    public function showUserAboutUs()
+    {
+        $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray();
+        $contentManager = array_merge([
+            'heroTitle' => '',
+            'heroSubtitle' => '',
+            'heroImage' => '',
+            'introTitlePart1' => '',
+            'introTitlePart2' => '',
+            'introParagraph1' => '',
+            'introParagraph2' => '',
+        ], $contentManager);
+        $contentOffer = AboutUsOffer::all();
+
+        $communityContent = CommunityContent::pluck('content', 'key')->toArray();
+        $communityContent = array_merge([
+            'main_title_part1' => 'Community',
+            'main_title_part2' => ' at Work',
+            'subtitle_paragraph' => 'We work hand-in-hand with barangay officials and municipal departments to ensure streamlined digital services and community development.',
+            'footer_text' => 'Building stronger communities through collaboration and innovation since 2023',
+        ], $communityContent);
+
+        $carouselImages = CommunityCarouselImage::orderBy('order')->get();
+
+        $contentMlogos = ContentManagerLogosImage::all();
+        $strategicPlans = StrategicPlan::all();
+
+        
+        $vision = $strategicPlans->where('id', 1)->first();
+        $mission = $strategicPlans->where('id', 2)->first();
+        $goal = $strategicPlans->where('id', 3)->first();
+
+        $visionIcon = ContentManagerLogosImage::find(3);
+        $missionIcon = ContentManagerLogosImage::find(4);
+        $goalIcon = ContentManagerLogosImage::find(5);
+        $vmgEditableContentData = [
+            'vision' => [
+                'icon' => $visionIcon ? asset($visionIcon->image_path) : asset('storage/Vision.svg'),
+                'title' => $vision ? $vision->title : '',
+                'paragraph' => $vision ? $vision->paragraph : '',
+            ],
+            'mission' => [
+                'icon' => $missionIcon ? asset($missionIcon->image_path) : asset('storage/Mission.svg'),
+                'title' => $mission ? $mission->title : '',
+                'paragraph' => $mission ? $mission->paragraph : '',
+            ],
+            'goal' => [
+                'icon' => $goalIcon ? asset($goalIcon->image_path) : asset('storage/goal.svg'),
+                'title' => $goal ? $goal->title : '',
+                'paragraph' => $goal ? $goal->paragraph : '',
+            ],
+        ];
+
+        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData'));
     }
 
     /**
@@ -67,11 +104,11 @@ class AboutUsController extends Controller
             'key' => 'required|string|max:255',
             'content' => 'nullable|string',
         ]);
-        $content = AboutUsContentManager::updateOrCreate( // [cite: 20]
+        $content = AboutUsContentManager::updateOrCreate(
             ['key' => $request->key],
             ['content' => $request->content]
         );
-        return response()->json(['message' => 'Content updated successfully.', 'data' => $content]); // [cite: 21]
+        return response()->json(['message' => 'Content updated successfully.', 'data' => $content]);
     }
 
     /**
@@ -87,88 +124,72 @@ class AboutUsController extends Controller
             'id' => 'nullable|integer',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'icon' => 'nullable|string', // Will be Base64 string for new uploads or URL for existing
+            'icon' => 'nullable|string',
         ]);
 
         $offer = null;
-        $iconData = $request->input('icon'); // This holds the current icon value from frontend [cite: 24]
-        $newIconPath = null; // This will store the final URL path to be saved in DB
+        $iconData = $request->input('icon');
+        $newIconPath = null;
 
-        // Determine if it's an existing offer or a new one
         if ($request->filled('id') && $request->id !== 0 && $request->id !== null) {
-            $offer = AboutUsOffer::find($request->id); // [cite: 24]
+            $offer = AboutUsOffer::find($request->id);
             if (!$offer) {
-                return response()->json(['message' => 'Offer not found.', 'data' => null], 404); // [cite: 25]
+                return response()->json(['message' => 'Offer not found.', 'data' => null], 404);
             }
         }
 
-        // Handle Base64 image upload
         if ($iconData && Str::startsWith($iconData, 'data:image/')) {
-            list($type, $base64String) = explode(';', $iconData); // [cite: 27]
-            list(, $base64String) = explode(',', $base64String); // [cite: 28]
+            list($type, $base64String) = explode(';', $iconData);
+            list(, $base64String) = explode(',', $base64String);
 
             $decodedImage = base64_decode($base64String);
 
-            // Extract file extension from MIME type (e.g., 'jpeg', 'png', 'gif')
-            preg_match('/data:image\/(.*?);/', $type, $matches); // [cite: 29]
-            $extension = $matches[1] ?? 'png'; // Default to png if type not found [cite: 29]
+            preg_match('/data:image\/(.*?);/', $type, $matches);
+            $extension = $matches[1] ?? 'png';
 
-            $fileName = 'offers/icon_' . time() . '_' . uniqid() . '.' . $extension; // [cite: 30]
+            $fileName = 'offers/icon_' . time() . '_' . uniqid() . '.' . $extension;
 
             Storage::disk('public')->put($fileName, $decodedImage);
-            $newIconPath = Storage::disk('public')->url($fileName); // Get public URL [cite: 31]
+            $newIconPath = Storage::disk('public')->url($fileName);
 
-            // If updating an existing offer and the old icon was a locally stored file, delete it
             if ($offer && $offer->icon && Str::contains($offer->icon, '/storage/')) {
-                $oldFilePath = Str::after($offer->icon, '/storage/'); // [cite: 32]
+                $oldFilePath = Str::after($offer->icon, '/storage/');
                 if (Storage::disk('public')->exists($oldFilePath)) {
-                    Storage::disk('public')->delete($oldFilePath); // [cite: 33]
+                    Storage::disk('public')->delete($oldFilePath);
                 }
             }
         } elseif ($offer && $iconData && $iconData === $offer->icon && Str::contains($iconData, '/storage/')) {
-            // Existing offer, icon data sent is the same as current stored, and it's a local file URL
             $newIconPath = $iconData;
         } elseif ($offer && ($iconData === null || $iconData === '')) {
-            // Existing offer, icon is being cleared. Delete old file if it was one.
             if ($offer->icon && Str::contains($offer->icon, '/storage/')) {
-                $oldFilePath = Str::after($offer->icon, '/storage/'); // [cite: 41]
+                $oldFilePath = Str::after($offer->icon, '/storage/');
                 if (Storage::disk('public')->exists($oldFilePath)) {
-                    Storage::disk('public')->delete($oldFilePath); // [cite: 42]
+                    Storage::disk('public')->delete($oldFilePath);
                 }
             }
-            $newIconPath = null; // Set to null in DB [cite: 43]
+            $newIconPath = null;
         } elseif (!$offer && ($iconData === null || $iconData === '')) {
-            // New offer with no icon initially provided
             $newIconPath = null;
         } else {
-            // This handles cases where an existing icon URL is sent back, but not a new Base64 string
-            // and ensures only valid URLs are passed or it's cleared.
-            // If the iconData is not a Base64 string but not empty, and not a local storage URL,
-            // we should treat it as an attempt to set a non-local-image, which is now disallowed.
-            // However, if it's an existing local storage URL, we keep it.
             if ($offer && $iconData && Str::contains($iconData, '/storage/')) {
                 $newIconPath = $iconData;
             } else {
-                // For any other unexpected string or non-local URL, default to null or handle error
-                $newIconPath = null; // [cite: 45]
+                $newIconPath = null;
             }
         }
 
-        // Prepare data for creation/update
-        $data = $request->except('icon'); // Exclude the raw icon data from $request->all() [cite: 46]
-        $data['icon'] = $newIconPath; // Use the processed newIconPath [cite: 47]
+        $data = $request->except('icon');
+        $data['icon'] = $newIconPath;
 
         if ($offer) {
-            // Update existing offer
-            $offer->update($data); // [cite: 48]
-            $message = 'Offer updated successfully.'; // [cite: 48]
+            $offer->update($data);
+            $message = 'Offer updated successfully.';
         } else {
-            // Create new offer
-            $offer = AboutUsOffer::create($data); // [cite: 49]
-            $message = 'Offer added successfully.'; // [cite: 49]
+            $offer = AboutUsOffer::create($data);
+            $message = 'Offer added successfully.';
         }
 
-        return response()->json(['message' => $message, 'data' => $offer]); // [cite: 50]
+        return response()->json(['message' => $message, 'data' => $offer]);
     }
 
     /**
@@ -180,18 +201,17 @@ class AboutUsController extends Controller
      */
     public function deleteOffer($id)
     {
-        $offer = AboutUsOffer::findOrFail($id); // [cite: 52]
+        $offer = AboutUsOffer::findOrFail($id);
 
-        // Delete the associated icon file from storage if it's a locally stored image URL
         if ($offer->icon && Str::contains($offer->icon, '/storage/')) {
-            $filePath = Str::after($offer->icon, '/storage/'); // Get path relative to storage/app/public [cite: 53]
+            $filePath = Str::after($offer->icon, '/storage/');
             if (Storage::disk('public')->exists($filePath)) {
-                Storage::disk('public')->delete($filePath); // [cite: 54]
+                Storage::disk('public')->delete($filePath);
             }
         }
 
-        $offer->delete(); // [cite: 55]
-        return response()->json(['message' => 'Offer deleted successfully.']); // [cite: 55]
+        $offer->delete();
+        return response()->json(['message' => 'Offer deleted successfully.']);
     }
 
     /**
@@ -202,6 +222,6 @@ class AboutUsController extends Controller
      */
     public function getOffersJson()
     {
-        return response()->json(AboutUsOffer::all()); // [cite: 58]
+        return response()->json(AboutUsOffer::all());
     }
 }

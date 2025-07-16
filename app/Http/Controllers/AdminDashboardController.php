@@ -8,19 +8,24 @@ use App\Models\NewsItem;
 use App\Models\GovphLink;
 use App\Models\AboutGovph;
 use App\Models\FooterLogo;
+use App\Models\FooterTitle;
 use App\Models\KeepInTouch;
 use App\Models\PageContent;
+use App\Models\AboutUsOffer;
 use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
+use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
+use App\Models\ReportedConcern;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
+use App\Models\AboutUsContentManager;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
-use App\Models\ReportedConcern;
-use App\Models\AboutUsContentManager;
-use App\Models\AboutUsOffer;
+use App\Models\CommunityContent; 
+use App\Models\CommunityCarouselImage;
+use App\Models\Announcement;
 use App\Models\CedulaReport;
 use App\Models\BusinessPermit;
 
@@ -74,6 +79,17 @@ class AdminDashboardController extends Controller
         $publicOfficialCaption = PublicOfficialCaption::find(1);
         $officials = PublicOfficial::all();
         $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
+        $governmentlinks = GovernmentLink::all();
+        $footertitle = FooterTitle::first();
+        $communityContent = CommunityContent::pluck('content', 'key')->toArray();
+        $communityContent = array_merge([
+            'main_title_part1' => '',
+            'main_title_part2' => '',
+            'subtitle_paragraph' => '',
+            'footer_text' => '',
+        ], $communityContent);
+        $communityCarouselImages = CommunityCarouselImage::orderBy('order')->get();
+        $announcements = Announcement::orderBy('date', 'desc')->get(); 
         $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
         $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
 
@@ -98,6 +114,11 @@ class AdminDashboardController extends Controller
             'contentManager',      
             'contentOffer',
             'concerns',
+            'governmentlinks',
+            'footertitle',
+            'communityContent',
+            'communityCarouselImages',
+            'announcements'
             'reports',
             'applications',
         ));

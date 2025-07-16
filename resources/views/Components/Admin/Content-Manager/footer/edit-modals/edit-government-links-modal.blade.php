@@ -1,3 +1,5 @@
+@props(['governmentlinks', 'footertitle'])
+
 <div
     x-show="activeSubModal === 'governmentLinks'"
     x-transition:enter="transition ease-out duration-200"
@@ -14,31 +16,48 @@
         @keydown.escape.window="$dispatch('close-modal')"
         x-trap.noscroll
         x-data="{
-            governmentLinksTitle: 'Government Links', // Editable title for the section
-            govLinks: [
-                //{ id: 1, title: 'Office of the President', url: 'https://op.gov.ph/' },
-                //{ id: 2, title: 'Office of the Vice-President', url: 'https://ovp.gov.ph/' },
-                //{ id: 3, title: 'Senate of the Philippines', url: 'https://senate.gov.ph/' },
-                //{ id: 4, title: 'House of Representatives', url: 'https://congress.gov.ph/' },
-                //{ id: 5, title: 'Supreme Court', url: 'https://sc.judiciary.gov.ph/' },
-                //{ id: 6, title: 'Court of Appeals', url: 'https://ca.judiciary.gov.ph/' },
-                //{ id: 7, title: 'Sandiganbayan', url: 'https://sb.judiciary.gov.ph/' }
-            ],
-            nextGovLinkId: 8, // For unique keys for new links
+            governmentLinksTitle: '{{ $footertitle->government_links_title ?? 'Government Links' }}',
+            govLinks: {{ json_encode($governmentlinks) }},
+            init() {
+                let nextId = Math.max(0, ...this.govLinks.map(link => link.id)) + 1;
+                this.nextGovLinkId = nextId;
+            },
             addGovLink() {
-                this.govLinks.push({ id: this.nextGovLinkId++, title: '', url: '' });
+                this.govLinks.push({ id: this.nextGovLinkId++, title: '', url: '', isNew: true });
             },
             removeGovLink(idToRemove) {
                 this.govLinks = this.govLinks.filter(link => link.id !== idToRemove);
             },
-            saveGovernmentLinksChanges() {
-                // Here you would typically send this.governmentLinksTitle and this.govLinks
-                // to your backend or update your global state.
-                console.log('Government Links Title:', this.governmentLinksTitle);
-                console.log('Government Links:', this.govLinks);
-                $dispatch('close-modal');
+            async saveGovernmentLinksChanges() {
+                try {
+                    // Save the title
+                    await fetch('{{ route('footer-title.update') }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: JSON.stringify({ government_links_title: this.governmentLinksTitle })
+                    });
+
+                    // Save the links
+                    const response = await fetch('{{ route('government-links.update') }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: JSON.stringify({ links: this.govLinks.map(({id, ...rest}) => rest) })
+                    });
+                    const updatedLinks = await response.json();
+
+                    // Dispatch event to update parent component
+                    this.$dispatch('government-links-updated', {
+                        governmentLinksTitle: this.governmentLinksTitle,
+                        governmentlinks: updatedLinks
+                    });
+
+                    this.$dispatch('close-modal');
+                } catch (error) {
+                    console.error('Error saving government links:', error);
+                }
             }
         }"
+        x-init="init()"
     >
         <div class="flex items-center justify-between p-6 pb-4 border-b border-gray-200">
             <h2 class="text-xl font-medium text-gray-900" x-text="`Edit ${governmentLinksTitle} Area`"></h2>
