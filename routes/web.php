@@ -26,12 +26,15 @@ use App\Http\Controllers\AdminAnnouncementController;
 use App\Http\Controllers\ProjectDescriptionController;
 use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\AdminReportedConcernController;
-
-
-//use App\Http\Controllers\Blog\LatestArticles\BlogController;
 use App\Http\Controllers\PublicOfficialCaptionController;
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdminAnnouncementController;
+use App\Http\Controllers\CedulaReportController;
+use App\Http\Controllers\BusinessPermitController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -72,9 +75,9 @@ Route::get('/cedula', function () {
 // Make sure your user-facing about-us page loads content from the controller
 Route::get('/about-us', [AboutUsController::class, 'showUserAboutUs'])->name('about-us');
 
-Route::get('/businesspermit', function () {
-    return view('User_Side_Screen.businesspermit');
-})->name('businesspermit');
+
+Route::get('/businesspermit', [BusinessPermitController::class, 'showForm'])->name('businesspermit');
+Route::post('/businesspermit', [BusinessPermitController::class, 'submitApplication'])->name('businesspermit.submit');
 
 Route::get('/reportconcern', function () {
     return view('User_Side_Screen.reportconcern');
@@ -151,5 +154,12 @@ Route::prefix('admin')->group(function () {
     Route::put('/announcements/{announcement}', [AdminAnnouncementController::class, 'update'])->name('admin.announcements.update');
     Route::delete('/announcements/{announcement}', [AdminAnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
     Route::delete('admin/announcements/bulk-delete', [AdminAnnouncementController::class, 'bulkDestroy'])->name('admin.announcements.bulkDestroy');
-    // }); // End of middleware group if you uncommented it
-});
+
+    Route::get('/cedulareports', [CedulaReportController::class, 'index'])->name('cedulareports.index');
+    Route::post('/cedula', [CedulaReportController::class, 'store'])->name('cedula.store');
+    Route::put('/cedulareports/{cedulaReport}', [CedulaReportController::class, 'update'])->name('cedulareports.update');
+
+    Route::get('/business-permits', [BusinessPermitController::class, 'adminIndex'])->name('admin.business-permits');
+    Route::post('/business-permits/{application}/update-status', [BusinessPermitController::class, 'updateStatus'])->name('admin.business-permits.update-status');
+    Route::get('/admin/business-permits/{id}/details', [BusinessPermitController::class, 'details'])->name('admin.business-permits.details');
+    });
