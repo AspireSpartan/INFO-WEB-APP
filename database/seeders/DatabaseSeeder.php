@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
             AboutUsOfferSeeder::class,
             GovernmentLinksSeeder::class,
             FooterTitleSeeder::class,
+            ContactUsSectionTitleSeeder::class,
+            ContactUsDetailSeeder::class,
         ]);
         $this->call([
             CommunityContentSeeder::class,

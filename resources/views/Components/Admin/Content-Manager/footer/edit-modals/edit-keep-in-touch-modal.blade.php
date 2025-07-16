@@ -36,6 +36,30 @@
 
             <!-- The form now submits via the saveChanges() method -->
             <form @submit.prevent="saveChanges" class="flex-grow overflow-y-auto p-6">
+                {{-- Notification Pop-up --}}
+                <div
+                    x-show="showNotification"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-y-2"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 translate-y-2"
+                    :class="{
+                        'bg-green-100 border-green-400 text-green-700': notificationType === 'success',
+                        'bg-red-100 border-red-400 text-red-700': notificationType === 'error'
+                    }"
+                    class="border px-4 py-3 rounded relative mb-4"
+                    role="alert"
+                    style="display: none;"
+                >
+                    <strong class="font-bold" x-text="notificationType === 'success' ? 'Success!' : 'Error!'"></strong>
+                    <span class="block sm:inline" x-html="notificationMessage"></span>
+                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="showNotification = false">
+                        <svg class="fill-current h-6 w-6" :class="{ 'text-green-500': notificationType === 'success', 'text-red-500': notificationType === 'error' }" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 2.65a1.2 1.2 0 1 1-1.697-1.697L8.303 10l-2.651-2.651a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-2.651a1.2 1.2 0 1 1 1.697 1.697L11.697 10l2.651 2.651a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                    </span>
+                </div>
+
                 <!-- Laravel CSRF token field -->
                 @csrf
 
@@ -94,6 +118,37 @@
                                     x-model="link.url"
                                     style="color: black;"
                                 />
+                            </div>
+                            <!-- Icon Dropdown (New Field) -->
+                            <div class="w-full sm:w-auto sm:flex-1">
+                                <label :for="`socialIcon_${link.id}`" class="sr-only">Icon Class</label>
+                                <select
+                                    :id="`socialIcon_${link.id}`"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                    x-model="link.icon"
+                                    style="color: black;"
+                                >
+                                    <option value="">-- Select Icon --</option>
+                                    <option value="fab fa-facebook-f">Facebook</option>
+                                    <option value="fab fa-twitter">Twitter</option>
+                                    <option value="fab fa-instagram">Instagram</option>
+                                    <option value="fab fa-youtube">YouTube</option>
+                                    <option value="fab fa-linkedin-in">LinkedIn</option>
+                                    <option value="fab fa-github">GitHub</option>
+                                    <option value="fab fa-tiktok">TikTok</option>
+                                    <option value="fab fa-pinterest">Pinterest</option>
+                                    <option value="fab fa-snapchat">Snapchat</option>
+                                    <option value="fab fa-whatsapp">WhatsApp</option>
+                                    <option value="fab fa-discord">Discord</option>
+                                    <option value="fab fa-reddit">Reddit</option>
+                                    <option value="fab fa-tumblr">Tumblr</option>
+                                    <option value="fab fa-vimeo">Vimeo</option>
+                                    <option value="fab fa-flickr">Flickr</option>
+                                    <option value="fab fa-stack-overflow">Stack Overflow</option>
+                                    <option value="fab fa-medium">Medium</option>
+                                    <option value="fas fa-globe">Website (Globe)</option>
+                                    <option value="fas fa-link">Website (Link)</option>
+                                </select>
                             </div>
                             <!-- Remove Button -->
                             <button
@@ -154,9 +209,13 @@
             nextSocialId: initialData.social_links && initialData.social_links.length > 0
                 ? Math.max(...initialData.social_links.map(l => l.id)) + 1
                 : 1,
+            showNotification: false, // Added for notification
+            notificationMessage: '', // Added for notification
+            notificationType: '', // Added for notification ('success' or 'error')
 
             addSocialLink() {
-                this.socialLinks.push({ id: this.nextSocialId++, platform: '', url: '' });
+                // Initialize new link with empty values, including an empty icon string
+                this.socialLinks.push({ id: this.nextSocialId++, platform: '', url: '', icon: '' });
             },
 
             removeSocialLink(id) {
@@ -164,6 +223,8 @@
             },
 
             async saveChanges() {
+                this.showNotification = false; // Hide previous notification
+
                 // Get the CSRF token from the meta tag
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -171,8 +232,8 @@
                 const payload = {
                     title: this.modalTitle,
                     text_content: this.textContent,
-                    // Ensure the social_links array doesn't contain the 'id' field
-                    social_links: this.socialLinks.map(({ platform, url }) => ({ platform, url }))
+                    // Ensure the social_links array doesn't contain the 'id' field if not needed by backend for new links
+                    social_links: this.socialLinks.map(({ id, ...rest }) => rest) // Exclude 'id' but include 'icon'
                 };
 
                 try {
@@ -188,35 +249,60 @@
 
                     if (response.ok) {
                         const updatedData = await response.json();
-                        
+
                         // Dispatch a custom event with the updated data
                         window.dispatchEvent(new CustomEvent('keep-in-touch-updated', {
                             detail: {
                                 title: updatedData.keepInTouch.title,
                                 text_content: updatedData.keepInTouch.text_content,
-                                social_links: updatedData.keepInTouch.social_links
+                                social_links: updatedData.keepInTouch.social_links // Ensure this includes the icon
                             }
                         }));
-                        
-                        alert(updatedData.message);
 
-                        // Close the modal
-                        this.activeSubModal = '';
+                        this.notificationType = 'success';
+                        this.notificationMessage = updatedData.message || 'Changes saved successfully!';
+                        this.showNotification = true;
+
+                        setTimeout(() => {
+                            this.showNotification = false;
+                            this.$dispatch('close-modal'); // Close modal after showing success
+                        }, 2000); // Hide after 2 seconds and close modal
 
                     } else {
                         // Handle validation errors or other server issues
                         const errorData = await response.json();
-                        let errorMessage = 'An error occurred. Please check the console.';
+                        this.notificationType = 'error';
+                        let errorMessage = errorData.message || 'An error occurred. Please check the console.';
+
                         if (errorData.errors) {
                             // Format validation errors from Laravel
-                            errorMessage = Object.values(errorData.errors).map(e => e.join('\n')).join('\n');
+                            let errorHtml = '<ul>';
+                            for (const key in errorData.errors) {
+                                if (errorData.errors.hasOwnProperty(key)) {
+                                    errorData.errors[key].forEach(msg => {
+                                        errorHtml += `<li>${msg}</li>`;
+                                    });
+                                }
+                            }
+                            errorHtml += '</ul>';
+                            errorMessage = `Please fix the following issues: ${errorHtml}`;
                         }
-                        alert(errorMessage);
-                        console.error('Save failed:', errorData);
+                        this.notificationMessage = errorMessage;
+                        this.showNotification = true;
+
+                        setTimeout(() => {
+                            this.showNotification = false;
+                        }, 5000); // Hide error after 5 seconds
                     }
                 } catch (error) {
-                    alert('A network error occurred. Please try again.');
                     console.error('Fetch error:', error);
+                    this.notificationType = 'error';
+                    this.notificationMessage = 'A network error occurred. Please try again.';
+                    this.showNotification = true;
+
+                    setTimeout(() => {
+                        this.showNotification = false;
+                    }, 5000); // Hide error after 5 seconds
                 }
             }
         }
