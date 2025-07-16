@@ -13,39 +13,8 @@
         class="bg-white rounded-2xl shadow-2xl max-w-lg w-full m-4 relative flex flex-col max-h-[90vh]"
         @keydown.escape.window="$dispatch('close-modal')"
         x-trap.noscroll
-        x-data="{
-            contactUsTitle: 'Contact Us!', // Added title for consistency
-            phoneNumbers: [
-                { id: 1, number: '(63+) 910 495 8419' }
-            ],
-            nextPhoneNumberId: 2,
-            addPhoneNumber() {
-                this.phoneNumbers.push({ id: this.nextPhoneNumberId++, number: '' });
-            },
-            removePhoneNumber(idToRemove) {
-                this.phoneNumbers = this.phoneNumbers.filter(phone => phone.id !== idToRemove);
-            },
-            emailAddresses: [
-                { id: 1, email: 'government@gmail.com' }
-            ],
-            nextEmailAddressId: 2,
-            addEmailAddress() {
-                this.emailAddresses.push({ id: this.nextEmailAddressId++, email: '' });
-            },
-            removeEmailAddress(idToRemove) {
-                this.emailAddresses = this.emailAddresses.filter(email => email.id !== idToRemove);
-            },
-            contactAddress: 'Malacañang Complex, J.P. Laurel Sr. St., San Miguel, Manila, 1000 Metro Manila', // Added for potential future use or if there's a physical address
-            saveContactChanges() {
-                // Here you would typically send this.contactUsTitle, this.phoneNumbers,
-                // this.emailAddresses, and this.contactAddress to your backend.
-                console.log('Contact Us Title:', this.contactUsTitle);
-                console.log('Phone Numbers:', this.phoneNumbers);
-                console.log('Email Addresses:', this.emailAddresses);
-                console.log('Contact Address:', this.contactAddress);
-                $dispatch('close-modal');
-            }
-        }"
+        x-data="contactUsModal()" {{-- Call the function defined in the script block --}}
+        @init-contact-us-modal.window="initData($event.detail)"
     >
         <div class="flex items-center justify-between p-6 pb-4 border-b border-gray-200">
             <h2 class="text-xl font-medium text-gray-900" x-text="`Edit ${contactUsTitle} Area`"></h2>
@@ -61,6 +30,31 @@
         </div>
 
         <form @submit.prevent="saveContactChanges" class="flex-grow overflow-y-auto p-6">
+            {{-- Notification Pop-up --}}
+            <div
+                x-show="showNotification"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-2"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 translate-y-2"
+                :class="{
+                    'bg-green-100 border-green-400 text-green-700': notificationType === 'success',
+                    'bg-red-100 border-red-400 text-red-700': notificationType === 'error'
+                }"
+                class="border px-4 py-3 rounded relative mb-4"
+                role="alert"
+                style="display: none;"
+            >
+                <strong class="font-bold" x-text="notificationType === 'success' ? 'Success!' : 'Error!'"></strong>
+                <span class="block sm:inline" x-html="notificationMessage"></span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="showNotification = false">
+                    <svg class="fill-current h-6 w-6" :class="{ 'text-green-500': notificationType === 'success', 'text-red-500': notificationType === 'error' }" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 2.65a1.2 1.2 0 1 1-1.697-1.697L8.303 10l-2.651-2.651a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-2.651a1.2 1.2 0 1 1 1.697 1.697L11.697 10l2.651 2.651a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                </span>
+            </div>
+
+
             <div class="mb-5">
                 <label for="contactUsTitle" class="block text-gray-700 font-medium mb-2 text-sm">Section Title</label>
                 <input
@@ -74,91 +68,27 @@
             </div>
 
             <div class="mb-5">
-                <label class="block text-gray-700 font-medium mb-3 text-sm">Phone Numbers</label>
-
-                <template x-for="phone in phoneNumbers" :key="phone.id">
-                    <div class="flex items-end gap-2 mb-3 last:mb-0 transition-all duration-200 ease-out"
-                         x-transition:enter="opacity-0 translate-y-2" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="opacity-0 -translate-y-2" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2"
-                    >
-                        <div class="flex-grow">
-                            <label :for="`phoneNumber_${phone.id}`" class="sr-only">Phone Number</label>
-                            <input
-                                type="text"
-                                :id="`phoneNumber_${phone.id}`"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                placeholder="(+63) XXX XXX XXXX"
-                                x-model="phone.number"
-                                style="color: black;"
-                            />
-                        </div>
-                        <button
-                            type="button"
-                            @click="removePhoneNumber(phone.id)"
-                            class="p-2 rounded-full text-gray-500 hover:bg-red-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 flex-shrink-0"
-                            aria-label="Remove phone number"
-                        >
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    </div>
-                </template>
-
-                <button
-                    type="button"
-                    @click="addPhoneNumber()"
-                    class="mt-4 w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 text-sm font-medium"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Add Another Phone Number
-                </button>
+                <label for="phoneNumber" class="block text-gray-700 font-medium mb-3 text-sm">Phone Number</label>
+                <input
+                    type="text"
+                    id="phoneNumber"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="(+63) XXX XXX XXXX"
+                    x-model="phoneNumber" {{-- Bind to single phoneNumber string --}}
+                    style="color: black;"
+                />
             </div>
 
             <div class="mb-5">
-                <label class="block text-gray-700 font-medium mb-3 text-sm">Email Addresses</label>
-
-                <template x-for="email in emailAddresses" :key="email.id">
-                    <div class="flex items-end gap-2 mb-3 last:mb-0 transition-all duration-200 ease-out"
-                         x-transition:enter="opacity-0 translate-y-2" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-                         x-transition:leave="opacity-0 -translate-y-2" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2"
-                    >
-                        <div class="flex-grow">
-                            <label :for="`emailAddress_${email.id}`" class="sr-only">Email Address</label>
-                            <input
-                                type="email"
-                                :id="`emailAddress_${email.id}`"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                placeholder="name@example.com"
-                                x-model="email.email"
-                                style="color: black;"
-                            />
-                        </div>
-                        <button
-                            type="button"
-                            @click="removeEmailAddress(email.id)"
-                            class="p-2 rounded-full text-gray-500 hover:bg-red-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 flex-shrink-0"
-                            aria-label="Remove email address"
-                        >
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    </div>
-                </template>
-
-                <button
-                    type="button"
-                    @click="addEmailAddress()"
-                    class="mt-4 w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 text-sm font-medium"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Add Another Email Address
-                </button>
+                <label for="emailAddress" class="block text-gray-700 font-medium mb-3 text-sm">Email Address</label>
+                <input
+                    type="email"
+                    id="emailAddress"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="name@example.com"
+                    x-model="emailAddress" {{-- Bind to single emailAddress string --}}
+                    style="color: black;"
+                />
             </div>
 
             <div class="mb-5">
@@ -193,3 +123,96 @@
         </div>
     </div>
 </div>
+
+{{-- Alpine.js component logic --}}
+<script>
+    function contactUsModal() {
+        return {
+            contactUsTitle: '',
+            phoneNumber: '', // Changed to single string
+            emailAddress: '', // Changed to single string
+            contactAddress: '',
+            showNotification: false,
+            notificationMessage: '',
+            notificationType: '', // 'success' or 'error'
+
+            initData(data) {
+                this.contactUsTitle = String(data.contactUsTitle || 'CONTACT US!');
+                this.phoneNumber = String(data.phoneNumbers || ''); // Expect single string
+                this.emailAddress = String(data.emailAddresses || ''); // Expect single string
+                this.contactAddress = String(data.contactAddress || '');
+                this.showNotification = false; // Reset notification on init
+            },
+
+            saveContactChanges() {
+                this.showNotification = false; // Hide previous notification
+
+                const data = {
+                    contactUsTitle: this.contactUsTitle,
+                    phoneNumbers: this.phoneNumber, // Send single string
+                    emailAddresses: this.emailAddress, // Send single string
+                    contactAddress: this.contactAddress,
+                };
+
+                fetch('/admin/contact-us-api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // If response is not OK, parse error and throw
+                        return response.json().then(err => { throw new Error(err.message || 'Failed to save changes', { cause: err.errors }); });
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('Contact Us information updated:', result);
+                    this.notificationType = 'success';
+                    this.notificationMessage = result.message || 'Changes saved successfully!';
+                    this.showNotification = true;
+
+                    // Dispatch an event to update the footer display
+                    this.$dispatch('contact-us-updated', {
+                        contactUsTitle: this.contactUsTitle,
+                        phoneNumbers: this.phoneNumber,
+                        emailAddresses: this.emailAddress,
+                        contactAddress: this.contactAddress
+                    });
+
+                    setTimeout(() => {
+                        this.showNotification = false;
+                        this.$dispatch('close-modal'); // Close modal after showing success
+                    }, 2000); // Hide after 2 seconds and close modal
+                })
+                .catch(error => {
+                    console.error('Error updating contact us information:', error);
+                    this.notificationType = 'error';
+                    // Check if the error has specific validation errors
+                    if (error.cause && typeof error.cause === 'object') {
+                        let errorHtml = '<ul>';
+                        for (const key in error.cause) {
+                            if (error.cause.hasOwnProperty(key)) {
+                                error.cause[key].forEach(msg => {
+                                    errorHtml += `<li>${msg}</li>`;
+                                });
+                            }
+                        }
+                        errorHtml += '</ul>';
+                        this.notificationMessage = `Please fix the following issues: ${errorHtml}`;
+                    } else {
+                        this.notificationMessage = error.message || 'Failed to save changes. Please try again.';
+                    }
+                    this.showNotification = true;
+
+                    setTimeout(() => {
+                        this.showNotification = false;
+                    }, 5000); // Hide error after 5 seconds
+                });
+            }
+        }
+    }
+</script>
