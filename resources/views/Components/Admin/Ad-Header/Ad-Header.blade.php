@@ -2,13 +2,13 @@
 @section('title', 'Admin View')
 @section('content')
 
-    {{-- Add contentManager and contentOffer to the props if they are needed directly in this layout for other purposes --}}
-    @props([
-        'newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description',
-        'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans',
-        // Add these if they are passed to the admin layout directly
-        'contentManager','contentOffer', 'concerns','request', 'communityContent','communityCarouselImages',
-    ])
+{{-- Add contentManager and contentOffer to the props if they are needed directly in this layout for other purposes --}}
+@props([
+    'newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description',
+    'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans',
+    // Add these if they are passed to the admin layout directly
+    'contentManager','contentOffer', 'concerns','request', 'communityContent','communityCarouselImages', 'announcements'
+])
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
          x-data="{
@@ -247,78 +247,76 @@
 
         <div class="w-full h-px bg-neutral-400"></div>
 
-        <div class="flex-grow relative bg-white">
-            <template x-for="screen in screens" :key="screen">
-                <div
-                    x-show="activeScreen === screen"
-                    x-transition:enter="transition-opacity duration-300"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition-opacity duration-300"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    x-cloak
-                    class="absolute top-0 left-0 w-full h-full"
-                >
-                    <template x-if="screen === 'dashboard'">
-                        <div>@include('Components.Admin.dashboard.dashboard_content')</div>
-                    </template>
-                    <template x-if="screen === 'news'">
-                        <div>@include('Components.Admin.newss.news_content', ['newsItems' => $newsItems ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'Blog'">
-                        <div>@include('Components.Admin.Blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'projects'">
-                        <div>@include('Components.Admin.Blog.projects.project_content', ['projects' => $projects ?? [], 'description' => $description ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'Hero'">
-                        <div>@include('Components.Admin.Content-Manager.Hero.Hero', ['pageContent' => $pageContent ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'latestnews'">
-                        <div>@include('Components.Admin.Content-Manager.latestnews.latestnews', ['newsItems' => $newsItems ?? [], 'logos' => $logos ?? [], 'caption' => $caption ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'announcement'">
-                        <div>@include('Components.Admin.Content-Manager.announcement.announcement')</div>
-                    </template>
-                    <template x-if="screen === 'publicofficials'">
-                        <div>@include('Components.Admin.Content-Manager.PublicOfficials.PublicOfficials', ['contentMlogos' => $contentMlogos ?? [], 'publicOfficialCaption' => $publicOfficialCaption ?? [], 'officials' => $officials ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'links'">
-                        <div>@include('Components.Admin.Content-Manager.footer.footer', ['contentMlogos' => $contentMlogos ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'notifications'">
-                        <div>@include('Components.Admin.notification.notification', ['contactMessages' => $contactMessages ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'reported_concerns'">
-                        <div>@include('Components.Admin.reported_concerns.index', ['concerns' => $concerns ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'content manager'">
-                        <div class="p-8 text-center text-gray-500">Select an item from the "Content Manager" dropdown.
-                        </div>
-                    </template>
-                    <template x-if="screen === 'about-section-1'">
-                        <div>
-                            @include('Components.Admin.about-us.section-1', [
-                                'contentManager' => $contentManager ?? [],
-                                'contentOffer' => $contentOffer ?? []
-                            ])
-                        </div>
-                    </template>
-                    <template x-if="screen === 'about-section-2'">
-                        <div>@include('Components.Admin.about-us.StrategicGoals.StrategicGoals', ['contentMlogos' => $contentMlogos ?? [], 'vmgEditableContentData' => $vmgEditableContentData ?? [], 'strategicPlans' => $strategicPlans ?? []])</div>
-                    </template>
-                    <template x-if="screen === 'about-section-3'">
-                        <div>@include('Components.Admin.about-us.section-3', ['communityContent' => $communityContent, 'communityCarouselImages' => $communityCarouselImages])</div>
-                    </template>
-                    <template x-if="screen === 'about-section-4'">
-                        <div>@include('Components.Admin.about-us.section-4')</div>
-                    </template>
-                </div>
+    <div class="flex-grow relative bg-white">
+        <template x-for="screen in screens" :key="screen">
+            <div
+                x-show="activeScreen === screen"
+                x-transition:enter="transition-opacity duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition-opacity duration-300"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                x-cloak
+                class="absolute top-0 left-0 w-full h-full"
+            >
+                <template x-if="screen === 'dashboard'">
+                    <div>@include('Components.Admin.dashboard.dashboard_content')</div>
+                </template>
+                <template x-if="screen === 'news'">
+                    <div>@include('Components.Admin.newss.news_content', ['newsItems' => $newsItems ?? []])</div>
+                </template>
+                <template x-if="screen === 'Blog'">
+                    <div>@include('Components.Admin.Blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
+                </template>
+                <template x-if="screen === 'projects'">
+                    <div>@include('Components.Admin.Blog.projects.project_content', ['projects' => $projects ?? [], 'description' => $description ?? []])</div>
+                </template>
+                <template x-if="screen === 'Hero'">
+                    <div>@include('Components.Admin.Content-Manager.Hero.Hero', ['pageContent' => $pageContent ?? []])</div>
+                </template>
+                <template x-if="screen === 'latestnews'">
+                    <div>@include('Components.Admin.Content-Manager.latestnews.latestnews', ['newsItems' => $newsItems ?? [], 'logos' => $logos ?? [], 'caption' => $caption ?? []])</div>
+                </template>
+                <template x-if="screen === 'announcement'">
+                    <div>@include('Components.Admin.Content-Manager.announcement.announcement', ['announcements' => $announcements ?? []])</div>
+                </template>
+                <template x-if="screen === 'publicofficials'">
+                    <div>@include('Components.Admin.Content-Manager.PublicOfficials.PublicOfficials', ['contentMlogos' => $contentMlogos ?? [], 'publicOfficialCaption' => $publicOfficialCaption ?? [], 'officials' => $officials ?? []])</div>
+                </template>
+                <template x-if="screen === 'links'">
+                    <div>@include('Components.Admin.Content-Manager.footer.footer', ['contentMlogos' => $contentMlogos ?? []])</div>
+                </template>
+                <template x-if="screen === 'notifications'">
+                    <div>@include('Components.Admin.notification.notification', ['contactMessages' => $contactMessages ?? []])</div>
+                </template>
+                <template x-if="screen === 'reported_concerns'">
+                    <div>@include('Components.Admin.reported_concerns.index', ['concerns' => $concerns ?? []])</div>
+                </template>
+                <template x-if="screen === 'content manager'">
+                    <div class="p-8 text-center text-gray-500">Select an item from the "Content Manager" dropdown.</div>
+                </template>
+                <template x-if="screen === 'about-section-1'">
+                    <div>
+                        @include('Components.Admin.about-us.section-1', [
+                            'contentManager' => $contentManager ?? [],
+                            'contentOffer' => $contentOffer ?? []
+                        ])
+                    </div>
+                </template>
+                <template x-if="screen === 'about-section-2'">
+                    <div>@include('Components.Admin.about-us.StrategicGoals.StrategicGoals', ['contentMlogos' => $contentMlogos ?? [], 'vmgEditableContentData' => $vmgEditableContentData ?? [], 'strategicPlans' => $strategicPlans ?? []])</div>
+                </template>
+                <template x-if="screen === 'about-section-3'">
+                <div>@include('Components.Admin.about-us.section-3', ['communityContent' => $communityContent, 'communityCarouselImages' => $communityCarouselImages])</div>
             </template>
-        </div>
-
+                <template x-if="screen === 'about-section-4'">
+                    <div>@include('Components.Admin.about-us.section-4')</div>
+                </template>
+            </div>
+        </template>
     </div>
+    
     <script>
         document.addEventListener('notification-increment', () => {
             const mainAlpineData = document.querySelector('[x-data]').__alpine.$data;
@@ -339,43 +337,43 @@
 
     <script>
         function confirmBulkDelete() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="selected_news_items[]"]:checked');
-            const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="selected_news_items[]"]:checked');
+    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
 
-            if (selectedIds.length === 0) {
-                alert('Please select at least one news item to delete.');
-                return;
-            }
+    if (selectedIds.length === 0) {
+        alert('Please select at least one news item to delete.');
+        return;
+    }
 
-            if (confirm(`Are you sure you want to delete ${selectedIds.length} selected news item(s)?`)) {
-                const form = document.createElement('form');
-                form.method = 'POST'; // This is correct, as Laravel spoofs DELETE from POST
-                form.action = '{{ route('news.bulkDestroy') }}'; // This should resolve to /admin/news/bulk-delete
+    if (confirm(`Are you sure you want to delete ${selectedIds.length} selected news item(s)?`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        // CHANGE THIS LINE:
+        form.action = '{{ route('admin.announcements.bulkDestroy') }}'; // Correct route for announcements bulk delete
 
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = '_token';
-                csrfInput.value = '{{ csrf_token() }}';
-                form.appendChild(csrfInput);
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        form.appendChild(csrfInput);
 
-                // This is the crucial part for spoofing the DELETE method
-                const methodInput = document.createElement('input');
-                methodInput.type = 'hidden';
-                methodInput.name = '_method';
-                methodInput.value = 'DELETE'; // Ensure this is exactly 'DELETE'
-                form.appendChild(methodInput);
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        form.appendChild(methodInput);
 
-                selectedIds.forEach(id => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'ids[]';
-                    input.value = id;
-                    form.appendChild(input);
-                });
+        selectedIds.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = id;
+            form.appendChild(input);
+        });
 
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
     </script>
 @endsection
