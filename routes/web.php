@@ -5,26 +5,30 @@ use App\Models\NewsItem;
 use App\Models\ProjectDescription;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ProjectDescriptionController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\CommunityController;
-use App\Http\Controllers\StrategicPlanController;
-use App\Http\Controllers\PreviewSection2LogoController;
-use App\Http\Controllers\PreviewSection2CaptionController;
-use App\Http\Controllers\ContentManagerLogosImageController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\AboutGovphController;
 use App\Http\Controllers\FooterLogoController;
 use App\Http\Controllers\FooterTitleController;
 use App\Http\Controllers\KeepInTouchController;
 use App\Http\Controllers\PageContentController;
-use App\Http\Controllers\GovernmentLinkController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\StrategicPlanController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\GovernmentLinkController;
+use App\Http\Controllers\AdminAnnouncementController;
+use App\Http\Controllers\ProjectDescriptionController;
+use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\AdminReportedConcernController;
 use App\Http\Controllers\PublicOfficialCaptionController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\PreviewSection2CaptionController;
+use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminAnnouncementController;
 use App\Http\Controllers\CedulaReportController;
@@ -53,6 +57,7 @@ Route::get('/logout', function () {
     return redirect('/home')->with('status', 'You have been logged out.');
 })->name('logout');
 
+// User-facing Contact Us page (if applicable)
 Route::get('/contact-us', function () {
     return view('/User_Side_Screen.contact-us');
 })->name('contact-us');
@@ -90,8 +95,11 @@ Route::get('/admin/notifications/{message}/show', [NotificationController::class
 Route::get('/page-content', [PageContentController::class, 'show'])->name('page.content.show');
 Route::post('/page-content', [PageContentController::class, 'update'])->name('page.content.update');
 
+
 // Admin Routes (Grouped for clarity and potential middleware)
 Route::prefix('admin')->group(function () {
+    // Apply 'auth' middleware here if all admin routes require authentication
+    // Route::middleware('auth')->group(function () {
 
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -127,6 +135,12 @@ Route::prefix('admin')->group(function () {
     Route::post('/government-links', [GovernmentLinkController::class, 'update'])->name('government-links.update');
     Route::post('/footer-title/update', [FooterTitleController::class, 'update'])->name('footer-title.update');
 
+    // **IMPORTANT FIXES FOR CONTACT US ROUTES**
+    // This GET route should be for displaying the admin contact us *management* page
+    Route::get('/contact-us-manager', [ContactUsController::class, 'Indexshow'])->name('admin.contact-us.manager');
+    // This POST route is your API endpoint for updating contact us data
+    Route::post('/contact-us-api', [ContactUsController::class, 'update'])->name('api.contact-us.update');
+
     Route::get('/community', [CommunityController::class, 'index'])->name('admin.community.index');
     Route::post('/community/update-content', [CommunityController::class, 'updateContent'])->name('admin.community.updateContent');
     Route::post('/community/store-image', [CommunityController::class, 'storeCarouselImage'])->name('admin.community.storeCarouselImage'); // For new images
@@ -144,7 +158,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/cedulareports', [CedulaReportController::class, 'index'])->name('cedulareports.index');
     Route::post('/cedula', [CedulaReportController::class, 'store'])->name('cedula.store');
     Route::put('/cedulareports/{cedulaReport}', [CedulaReportController::class, 'update'])->name('cedulareports.update');
-
 
     Route::get('/business-permits', [BusinessPermitController::class, 'adminIndex'])->name('admin.business-permits');
     Route::post('/business-permits/{application}/update-status', [BusinessPermitController::class, 'updateStatus'])->name('admin.business-permits.update-status');

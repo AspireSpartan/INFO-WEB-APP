@@ -88,8 +88,23 @@ class AboutUsController extends Controller
                 'paragraph' => $goal ? $goal->paragraph : '',
             ],
         ];
+        $keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail(); 
+        $footerLogo = FooterLogo::first();
+        $aboutGovph = AboutGovph::first();
+        $govphLinks = GovphLink::all();
+        $governmentlinks = GovernmentLink::all();
+        $footertitle = FooterTitle::first();
+        $contactUsTitle = ContactUsSectionTitle::first();
+        $contactUsDetails = ContactUsDetail::first(); 
+        $initialContactUsData = [
+            'contactUsTitle' => $contactUsTitle->title,
+            // These are now single strings
+            'phoneNumbers' => $contactUsDetails->phone_numbers,
+            'emailAddresses' => $contactUsDetails->email_addresses,
+            'contactAddress' => $contactUsDetails->contact_address,
+        ];
 
-        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData'));
+        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData','keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData'));
     }
 
     /**

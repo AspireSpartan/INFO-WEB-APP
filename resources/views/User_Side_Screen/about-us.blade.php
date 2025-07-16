@@ -22,4 +22,16 @@
     ></x-User.about-us.section-3>
 
     <x-User.about-us.section-4></x-User.about-us.section-4>
+
+    <x-user.footer.footer
+    :keepInTouch="$keepInTouch"
+    :footerLogo="$footerLogo"
+    :aboutGovph="$aboutGovph"
+    :govphLinks="$govphLinks"
+    :governmentlinks="$governmentlinks"
+    :footertitle="$footertitle"
+    :contactUsTitle="$contactUsTitle"
+    :contactUsDetails="$contactUsDetails"
+    :initialContactUsData="$initialContactUsData"
+/>
 @endsection
