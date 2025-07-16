@@ -21,6 +21,8 @@ use App\Models\ContentManagerLogosImage;
 use App\Models\ReportedConcern;
 use App\Models\AboutUsContentManager;
 use App\Models\AboutUsOffer;
+use App\Models\CedulaReport;
+use App\Models\BusinessPermit;
 
 class AdminDashboardController extends Controller
 {
@@ -72,6 +74,8 @@ class AdminDashboardController extends Controller
         $publicOfficialCaption = PublicOfficialCaption::find(1);
         $officials = PublicOfficial::all();
         $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
+        $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
+        $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -94,6 +98,8 @@ class AdminDashboardController extends Controller
             'contentManager',      
             'contentOffer',
             'concerns',
+            'reports',
+            'applications',
         ));
     }
 }

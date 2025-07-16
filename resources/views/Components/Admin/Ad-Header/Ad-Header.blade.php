@@ -7,14 +7,14 @@
     'newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description',
     'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans',
     // Add these if they are passed to the admin layout directly
-    'contentManager','contentOffer', 'concerns','request',
+    'contentManager','contentOffer', 'concerns','request','reports','applications',
 ])
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
          x-data="{
              activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
              notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4', 'reported_concerns'],
+             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4', 'reported_concerns','cedulareports','business-permits'],
 
              resetNotifications() {
                  this.notificationCount = 0;
@@ -203,7 +203,11 @@
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-blue-600"
                            @click.prevent="switchScreen('notifications'); open = false; resetNotifications();">View All Notifications</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            @click.prevent="switchScreen('reported_concerns'); open = false">Reported Concerns</a>
+                            @click.prevent="switchScreen('reported_concerns'); open = false">Manage Reported Concerns</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            @click.prevent="switchScreen('cedulareports'); open = false">Manage Cedula Forms</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            @click.prevent="switchScreen('business-permits'); open = false">Manage Business Permit Applications</a>
                     </div>
                 </div>
             </div>
@@ -280,6 +284,12 @@
                 </template>
                 <template x-if="screen === 'reported_concerns'">
                     <div>@include('Components.Admin.reported_concerns.index', ['concerns' => $concerns ?? []])</div>
+                </template>
+                <template x-if="screen === 'cedulareports'">
+                    <div>@include('Components.Admin.CedulaReports.index', ['reports' => $reports ?? []])</div>
+                </template>
+                <template x-if="screen === 'business-permits'">
+                    <div>@include('Components.Admin.business_permit.index', ['applications' => $applications ?? []])</div>
                 </template>
                 <template x-if="screen === 'content manager'">
                     <div class="p-8 text-center text-gray-500">Select an item from the "Content Manager" dropdown.</div>
