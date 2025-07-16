@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ContentManager\PublicOfficials;
 
 use App\Models\PublicOfficialCaption;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PublicOfficialCaptionController extends Controller
 {

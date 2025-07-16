@@ -118,7 +118,7 @@ class AdminDashboardController extends Controller
             'footertitle',
             'communityContent',
             'communityCarouselImages',
-            'announcements'
+            'announcements',
             'reports',
             'applications',
         ));

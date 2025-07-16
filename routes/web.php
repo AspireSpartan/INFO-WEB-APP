@@ -26,13 +26,11 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\HomeController;
-
-
-//use App\Http\Controllers\Blog\LatestArticles\BlogController;
-use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AdminAnnouncementController;
 use App\Http\Controllers\CedulaReportController;
 use App\Http\Controllers\BusinessPermitController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -142,11 +140,13 @@ Route::prefix('admin')->group(function () {
     Route::put('/announcements/{announcement}', [AdminAnnouncementController::class, 'update'])->name('admin.announcements.update');
     Route::delete('/announcements/{announcement}', [AdminAnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
     Route::delete('admin/announcements/bulk-delete', [AdminAnnouncementController::class, 'bulkDestroy'])->name('admin.announcements.bulkDestroy');
-});Route::get('/cedulareports', [CedulaReportController::class, 'index'])->name('cedulareports.index');
-Route::post('/cedula', [CedulaReportController::class, 'store'])->name('cedula.store');
-Route::put('/cedulareports/{cedulaReport}', [CedulaReportController::class, 'update'])->name('cedulareports.update');
+
+    Route::get('/cedulareports', [CedulaReportController::class, 'index'])->name('cedulareports.index');
+    Route::post('/cedula', [CedulaReportController::class, 'store'])->name('cedula.store');
+    Route::put('/cedulareports/{cedulaReport}', [CedulaReportController::class, 'update'])->name('cedulareports.update');
 
 
-Route::get('/business-permits', [BusinessPermitController::class, 'adminIndex'])->name('admin.business-permits');
-Route::post('/business-permits/{application}/update-status', [BusinessPermitController::class, 'updateStatus'])->name('admin.business-permits.update-status');
-Route::get('/admin/business-permits/{id}/details', [BusinessPermitController::class, 'details'])->name('admin.business-permits.details');
+    Route::get('/business-permits', [BusinessPermitController::class, 'adminIndex'])->name('admin.business-permits');
+    Route::post('/business-permits/{application}/update-status', [BusinessPermitController::class, 'updateStatus'])->name('admin.business-permits.update-status');
+    Route::get('/admin/business-permits/{id}/details', [BusinessPermitController::class, 'details'])->name('admin.business-permits.details');
+    });

@@ -14,7 +14,7 @@
          x-data="{
              activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
              notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4', 'reported_concerns'],
+             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4', 'reported_concerns', 'cedulareports', 'businesspermits'],
 
              resetNotifications() {
                  this.notificationCount = 0;
