@@ -28,9 +28,6 @@ use App\Models\PublicOfficialCaption;
 use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
-use App\Models\CommunityContent; 
-use App\Models\CommunityCarouselImage;
-use App\Models\Announcement;
 use App\Models\CedulaReport;
 use App\Models\BusinessPermit;
 
