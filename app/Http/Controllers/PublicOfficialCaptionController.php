@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ContentManager\PublicOfficials;
+namespace App\Http\Controllers;
 
 use App\Models\PublicOfficialCaption;
 use Illuminate\Http\Request;
