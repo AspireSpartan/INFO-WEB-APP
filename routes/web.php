@@ -29,6 +29,8 @@ use App\Http\Controllers\HomeController;
 
 
 //use App\Http\Controllers\Blog\LatestArticles\BlogController;
+use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\AdminAnnouncementController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -131,6 +133,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/community/update-image/{id}', [CommunityController::class, 'updateCarouselImage'])->name('admin.community.updateCarouselImage'); // For updating existing images (title/image file)
     Route::delete('/community/delete-image/{id}', [CommunityController::class, 'deleteCarouselImage'])->name('admin.community.deleteCarouselImage');
     Route::post('/community/update-image-order', [CommunityController::class, 'updateImageOrder'])->name('admin.community.updateImageOrder');
-    
 
+    // Announcement Routes
+    Route::get('/announcements/data', [AdminAnnouncementController::class, 'getAnnouncementsData'])->name('admin.announcements.data');
+    Route::post('/announcements', [AdminAnnouncementController::class, 'store'])->name('admin.announcements.store');
+    Route::put('/announcements/{announcement}', [AdminAnnouncementController::class, 'update'])->name('admin.announcements.update');
+    Route::delete('/announcements/{announcement}', [AdminAnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
+    Route::delete('admin/announcements/bulk-delete', [AdminAnnouncementController::class, 'bulkDestroy'])->name('admin.announcements.bulkDestroy');
 });
