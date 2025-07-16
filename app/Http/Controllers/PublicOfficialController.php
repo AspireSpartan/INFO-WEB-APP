@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ContentManager\PublicOfficials;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PublicOfficial;
