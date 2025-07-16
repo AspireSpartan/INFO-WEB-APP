@@ -11,7 +11,7 @@ use App\Models\FooterLogo;
 use App\Models\FooterTitle;
 use App\Models\KeepInTouch;
 use Illuminate\Support\Str;
-use App\Models\PageContent; 
+use App\Models\PageContent;
 use Illuminate\Http\Request;
 use App\Models\SectionBanner;
 use App\Models\StrategicPlan;
@@ -22,7 +22,7 @@ use App\Models\PreviewSection2Logo;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
-
+use App\Models\Announcement; // Import the Announcement model
 
 class HomeController extends Controller
 {
@@ -34,16 +34,16 @@ class HomeController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
-    {   
+    {
         $publicOfficialCaption = PublicOfficialCaption::find(1);
         $officials = PublicOfficial::all();
         $projects = Project::all();
         $projects->transform(function ($project) {
-           
+
             if (str_contains($project->image_url, 'storage/')) {
                 $project->image_url = asset($project->image_url);
             } else {
-                
+
                 $project->image_url = asset('storage/' . $project->image_url);
             }
             return $project;
@@ -51,7 +51,7 @@ class HomeController extends Controller
         $newsItems = NewsItem::orderBy('date', 'desc')->get();
         $pageContent = PageContent::all()->pluck('value', 'key')->toArray();
         $description = ProjectDescription::first();
-        
+
         $keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail();
         $footerLogo = FooterLogo::first();
         $aboutGovph = AboutGovph::first();
@@ -77,7 +77,7 @@ class HomeController extends Controller
                 'footer-paragraph' => 'Local Government Units (LGUs) in the Philippines play a vital role in implementing national policies at the grassroots level while addressing the specific needs of their communities. These units, which include provinces, cities, municipalities, and barangays, are granted autonomy under the Local Government Code of 1991. LGUs are responsible for delivering basic services such as health care, education, infrastructure, and disaster response. They are also tasked with promoting local development through planning, budgeting, and legislation. Despite challenges like limited resources and political interference, many LGUs have successfully launched innovative programs to uplift their constituents and promote inclusive growth.',
             ];
         }
-        
+
         $logos = PreviewSection2Logo::select('logo')->get()->map(function ($logo) {
             if (!Str::startsWith($logo->logo, 'storage/')) {
                 $logo->logo = 'storage/' . $logo->logo;
@@ -86,9 +86,27 @@ class HomeController extends Controller
         });
         $caption = PreviewSection2Caption::value('caption');
 
-        // Pass all necessary data to the home view
+        // Fetch all announcements from the database
+        $announcements = Announcement::all();
 
-        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption', 'officials', 'publicOfficialCaption', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle')); // Pass the pageContent array
+        // Pass all necessary data to the home view
+        return view('User_Side_Screen.home', compact(
+            'pageContent',
+            'newsItems',
+            'projects',
+            'description',
+            'logos',
+            'caption',
+            'officials',
+            'publicOfficialCaption',
+            'keepInTouch',
+            'footerLogo',
+            'aboutGovph',
+            'govphLinks',
+            'governmentlinks',
+            'footertitle',
+            'announcements' // Pass the announcements data
+        ));
     }
 
     /**
