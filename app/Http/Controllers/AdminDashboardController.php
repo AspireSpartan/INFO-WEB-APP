@@ -25,6 +25,7 @@ use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
 use App\Models\CommunityContent; 
 use App\Models\CommunityCarouselImage;
+use App\Models\Announcement;
 
 class AdminDashboardController extends Controller
 {
@@ -86,6 +87,7 @@ class AdminDashboardController extends Controller
             'footer_text' => '',
         ], $communityContent);
         $communityCarouselImages = CommunityCarouselImage::orderBy('order')->get();
+        $announcements = Announcement::orderBy('date', 'desc')->get(); 
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -111,7 +113,8 @@ class AdminDashboardController extends Controller
             'governmentlinks',
             'footertitle',
             'communityContent',
-            'communityCarouselImages'
+            'communityCarouselImages',
+            'announcements'
         ));
     }
 }
