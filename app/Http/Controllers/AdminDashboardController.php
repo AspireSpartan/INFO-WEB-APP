@@ -28,6 +28,11 @@ use App\Models\PublicOfficialCaption;
 use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
+use App\Models\CommunityContent; 
+use App\Models\CommunityCarouselImage;
+use App\Models\Announcement;
+use App\Models\CedulaReport;
+use App\Models\BusinessPermit;
 
 class AdminDashboardController extends Controller
 {
@@ -100,6 +105,8 @@ class AdminDashboardController extends Controller
         ], $communityContent);
         $communityCarouselImages = CommunityCarouselImage::orderBy('order')->get();
         $announcements = Announcement::orderBy('date', 'desc')->get(); 
+        $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
+        $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -129,7 +136,9 @@ class AdminDashboardController extends Controller
             'announcements',
             'contactUsTitle', 
             'contactUsDetails',
-            'initialContactUsData'
+            'initialContactUsData',
+            'reports',
+            'applications'
         ));
     }
 }

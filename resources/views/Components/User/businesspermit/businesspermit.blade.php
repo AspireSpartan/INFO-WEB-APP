@@ -3,7 +3,8 @@
         <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-6 sm:mb-8">Business Permit Application</h1>
         <p class="text-center text-black mb-8 sm:mb-10">Please fill out the form below accurately to apply for your business permit.</p>
 
-        <form action="#" method="POST" class="space-y-6 sm:space-y-8">
+        <form action="{{ route('businesspermit.submit') }}" method="POST" class="space-y-6 sm:space-y-8">
+            @csrf
             <!-- Business Information Section -->
             <div class="border-b border-gray-200 pb-6 sm:pb-8">
                 <h2 class="text-2xl font-semibold text-black mb-4">1. Business Information</h2>
