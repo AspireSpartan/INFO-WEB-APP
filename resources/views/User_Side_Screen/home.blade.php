@@ -21,5 +21,8 @@
     :govphLinks="$govphLinks"
     :governmentlinks="$governmentlinks"
     :footertitle="$footertitle"
+    :contactUsTitle="$contactUsTitle"
+    :contactUsDetails="$contactUsDetails"
+    :initialContactUsData="$initialContactUsData"
 />
 @endsection

@@ -17,8 +17,10 @@ use App\Models\SectionBanner;
 use App\Models\StrategicPlan;
 use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
+use App\Models\ContactUsDetail;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
+use App\Models\ContactUsSectionTitle;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
@@ -58,6 +60,15 @@ class HomeController extends Controller
         $govphLinks = GovphLink::all();
         $governmentlinks = GovernmentLink::all();
         $footertitle = FooterTitle::first();
+        $contactUsTitle = ContactUsSectionTitle::first();
+        $contactUsDetails = ContactUsDetail::first(); 
+        $initialContactUsData = [
+            'contactUsTitle' => $contactUsTitle->title,
+            // These are now single strings
+            'phoneNumbers' => $contactUsDetails->phone_numbers,
+            'emailAddresses' => $contactUsDetails->email_addresses,
+            'contactAddress' => $contactUsDetails->contact_address,
+        ];
 
         if (empty($pageContent)) {
             $pageContent = [
@@ -88,7 +99,7 @@ class HomeController extends Controller
 
         // Pass all necessary data to the home view
 
-        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption', 'officials', 'publicOfficialCaption', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle')); // Pass the pageContent array
+        return view('User_Side_Screen.home', compact('pageContent', 'newsItems', 'projects', 'description', 'logos', 'caption', 'officials', 'publicOfficialCaption', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData')); // Pass the pageContent array
     }
 
     /**
