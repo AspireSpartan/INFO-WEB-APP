@@ -266,13 +266,13 @@
                 <template x-if="screen === 'news'">
                     <div>@include('Components.Admin.newss.news_content', ['newsItems' => $newsItems ?? []])</div>
                 </template>
-                <template x-if="screen === 'blog'">
-                    <div>@include('Components.Admin.blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
+                <template x-if="screen === 'Blog'">
+                    <div>@include('Components.Admin.Blog.blog_content', ['blogfeeds' => $blogfeeds ?? []])</div>
                 </template>
                 <template x-if="screen === 'projects'">
-                    <div>@include('Components.Admin.blog.projects.project_content', ['projects' => $projects ?? [], 'description' => $description ?? []])</div>
+                    <div>@include('Components.Admin.Blog.projects.project_content', ['projects' => $projects ?? [], 'description' => $description ?? []])</div>
                 </template>
-                <template x-if="screen === 'banner'">
+                <template x-if="screen === 'Hero'">
                     <div>@include('Components.Admin.Content-Manager.Hero.Hero', ['pageContent' => $pageContent ?? []])</div>
                 </template>
                 <template x-if="screen === 'latestnews'">
