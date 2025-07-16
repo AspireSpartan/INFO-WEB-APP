@@ -7,14 +7,14 @@
     'newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description',
     'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans',
     // Add these if they are passed to the admin layout directly
-    'contentManager','contentOffer', 'concerns','request', 'communityContent','communityCarouselImages', 'announcements''reports','applications',
+    'contentManager','contentOffer', 'concerns','request','reports','applications', 'communityContent','communityCarouselImages', 'announcements',
 ])
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
          x-data="{
              activeScreen: '{{ session('activeAdminScreen', Request::query('screen', 'dashboard')) }}',
              notificationCount: localStorage.getItem('unreadNotifications') ? parseInt(localStorage.getItem('unreadNotifications')) : 0,
-             screens: ['dashboard', 'news', 'blog', 'projects', 'content manager', 'notifications', 'banner', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4', 'reported_concerns', 'cedulareports', 'businesspermits'],
+             screens: ['dashboard', 'news', 'Blog', 'projects', 'content manager', 'notifications', 'Hero', 'latestnews', 'announcement', 'publicofficials', 'links', 'aboutsection', 'about-section-1', 'about-section-2', 'about-section-3', 'about-section-4', 'reported_concerns','cedulareports','business-permits'],
 
              resetNotifications() {
                  this.notificationCount = 0;
@@ -210,17 +210,18 @@
                                 </div>
                             </template>
 
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-blue-600"
-                           @click.prevent="switchScreen('notifications'); open = false; resetNotifications();">View All Notifications</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            @click.prevent="switchScreen('reported_concerns'); open = false">Manage Reported Concerns</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            @click.prevent="switchScreen('cedulareports'); open = false">Manage Cedula Forms</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            @click.prevent="switchScreen('business-permits'); open = false">Manage Business Permit Applications</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-blue-600"
+                             @click.prevent="switchScreen('notifications'); open = false; resetNotifications();">View All Notifications</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                             @click.prevent="switchScreen('reported_concerns'); open = false">Manage Reported Concerns</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                             @click.prevent="switchScreen('cedulareports'); open = false">Manage Cedula Forms</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                             @click.prevent="switchScreen('business-permits'); open = false">Manage Business Permit Applications</a>
+                            
+                        </div>
                     </div>
                 </div>
-            </div>
 
                 <div class="relative flex items-center gap-4" x-data="{ open: false }" @click.away="open = false">
                     <button @click="open = !open" class="flex items-center gap-4 focus:outline-none">

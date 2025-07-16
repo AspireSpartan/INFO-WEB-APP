@@ -47,6 +47,6 @@ class CedulaReportController extends Controller
     public function index()
     {
         $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
-        return view('Components.Admin.CedulaReports.index', ['reports' => $reports]);
+        return view('Components.Admin.CedulaReports.index', compact('reports'));
     }
 }

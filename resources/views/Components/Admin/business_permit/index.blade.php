@@ -77,7 +77,7 @@
             {{ $applications->links() }}
         @else
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <span class="block sm:inline">The reports variable is not a paginator instance.</span>
+                <span class="block sm:inline">The applications variable is not a paginator instance.</span>
             </div>
         @endif
     </div>
