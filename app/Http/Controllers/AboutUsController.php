@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GovphLink;
+use App\Models\AboutGovph;
+use App\Models\FooterLogo;
+use App\Models\FooterTitle;
+use App\Models\KeepInTouch;
 use Illuminate\Support\Str;
 use App\Models\AboutUsOffer;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
+use App\Models\GovernmentLink;
+use App\Models\ContactUsDetail;
 use App\Models\AboutUsContentManager;
+use App\Models\ContactUsSectionTitle;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
 use App\Models\CommunityContent; // Import the CommunityContent model
