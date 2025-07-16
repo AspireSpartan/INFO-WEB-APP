@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
 use App\Models\CommunityContent; // Import the CommunityContent model
 use App\Models\CommunityCarouselImage; // Import the CommunityCarouselImage model
+use App\Models\Developer; // Import the Developer model
+use App\Models\AboutUsSection4Content; // Import the AboutUsSection4Content model
 
 class AboutUsController extends Controller
 {
@@ -44,6 +46,11 @@ class AboutUsController extends Controller
         return view('Components.Admin.Ad-Header.Ad-Header', compact('contentManager', 'contentOffer'));
     }
 
+    /**
+     * Display the user-facing About Us page with dynamic content.
+     *
+     * @return \Illuminate\View\View
+     */
     public function showUserAboutUs()
     {
         $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray();
@@ -71,7 +78,6 @@ class AboutUsController extends Controller
         $contentMlogos = ContentManagerLogosImage::all();
         $strategicPlans = StrategicPlan::all();
 
-        
         $vision = $strategicPlans->where('id', 1)->first();
         $mission = $strategicPlans->where('id', 2)->first();
         $goal = $strategicPlans->where('id', 3)->first();
@@ -111,8 +117,9 @@ class AboutUsController extends Controller
             'emailAddresses' => $contactUsDetails->email_addresses,
             'contactAddress' => $contactUsDetails->contact_address,
         ];
+        $developers = Developer::all();
 
-        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData','keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData'));
+        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData','keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData','developers'));
     }
 
     /**
@@ -248,3 +255,4 @@ class AboutUsController extends Controller
         return response()->json(AboutUsOffer::all());
     }
 }
+
