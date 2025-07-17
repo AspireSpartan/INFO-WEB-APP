@@ -131,7 +131,7 @@ class NewsController extends Controller
     /**
      * Remove multiple specified news items from storage.
      */
-    public function bulkDestroy(Request $request)
+    public function hulkDestroy(Request $request)
     {
         $request->validate([
             'ids' => 'required|array', // Expect 'ids'

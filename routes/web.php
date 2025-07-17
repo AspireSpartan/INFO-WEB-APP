@@ -108,7 +108,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/teamdev/update', [PublicOfficialCaptionController::class, 'update'])->name('teamdev.update');
     Route::get('/teamdev', [PublicOfficialCaptionController::class, 'index'])->name('teamdev.index');
     Route::resource('news', NewsController::class);
-    Route::delete('news', [NewsController::class, 'bulkDestroy'])->name('news.bulkDestroy');
+    Route::delete('news', [NewsController::class, 'hulkDestroy'])->name('news.hulkDestroy');
     Route::resource('projects', ProjectController::class);
     Route::get('projects', [ProjectController::class, 'indexAdmin'])->name('projects.indexAdmin');
     Route::post('/project-description/update', [ProjectDescriptionController::class, 'update'])->name('project-description.update');
