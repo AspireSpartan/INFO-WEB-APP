@@ -34,6 +34,8 @@ use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Developer;
+
 
 class BlogController extends Controller
 {
@@ -120,9 +122,10 @@ class BlogController extends Controller
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
         $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
+        $developers = Developer::all();
         $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
         return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle',
-         'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer','contactUsTitle', 'contactUsDetails', 'initialContactUsData', 'reports', 'applications'));
+         'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer','contactUsTitle', 'contactUsDetails', 'initialContactUsData', 'reports', 'applications', 'developers'));
     }
 
     /**
