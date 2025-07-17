@@ -33,6 +33,7 @@ use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
+use App\Models\Developer;
 
 class ProjectController extends Controller
 {
@@ -121,6 +122,7 @@ public function index() // user side
         $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
         $contactUsTitle = ContactUsSectionTitle::first();
         $contactUsDetails = ContactUsDetail::first();
+        $developers = Developer::all();
         $initialContactUsData = [
             'contactUsTitle' => $contactUsTitle->title,
             // These are now single strings
@@ -130,7 +132,7 @@ public function index() // user side
         ];
         session()->flash('activeAdminScreen', 'projects');
         return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption',
-         'officials','vmgEditableContentData', 'strategicPlans', 'reports', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData','applications'));
+         'officials','vmgEditableContentData', 'strategicPlans', 'reports', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData','applications', 'developers'));
     }
 
     
