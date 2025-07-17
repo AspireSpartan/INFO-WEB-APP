@@ -73,8 +73,7 @@
     </div>
 
     <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-    
-        @if ($applications instanceof \Illuminate\Pagination\LengthAwarePaginator)
+     @if ($applications instanceof \Illuminate\Pagination\LengthAwarePaginator)
             {{ $applications->links() }}
         @else
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
