@@ -30,6 +30,7 @@ use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
 use App\Models\CedulaReport;
 use App\Models\BusinessPermit;
+use App\Models\Developer;
 
 class AdminDashboardController extends Controller
 {
@@ -104,6 +105,7 @@ class AdminDashboardController extends Controller
         $announcements = Announcement::orderBy('date', 'desc')->get(); 
         $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
         $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
+        $developers = Developer::all();
 
         return view('Components.Admin.Ad-Header.Ad-Header', compact(
             'newsItems',
@@ -135,7 +137,8 @@ class AdminDashboardController extends Controller
             'contactUsDetails',
             'initialContactUsData',
             'reports',
-            'applications'
+            'applications',
+            'developers'
         ));
     }
 }
