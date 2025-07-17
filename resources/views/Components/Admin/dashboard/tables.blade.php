@@ -2,9 +2,11 @@
  @props(['concerns', 'reports', 'applications'])
 
                 <div class="flex justify-between items-center p-6 border-b border-gray-100">
-                    <h2 class="text-2xl font-semibold font-montserrat text-[#37474F]">Reported Concerns</h2>
+                    <h2 class="text-2xl font-semibold font-montserrat text-[#37474F]">
+                        <i class="fas fa-exclamation-triangle mr-3"></i> Reported Concerns
+                    </h2>
                 </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto shadow-md">
             <table class="min-w-full bg-white border border-gray-300">
                 <thead>
                     <tr>
@@ -54,13 +56,15 @@
             </table>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto shadow-md ">
 
                 <div class="flex justify-between items-center p-6 border-b border-gray-100">
-                    <h2 class="text-2xl font-semibold font-montserrat text-[#37474F]">Cedula Reports</h2>
+                    <h2 class="text-2xl font-semibold font-montserrat text-[#37474F]">
+                        <i class="fas fa-file-alt mr-3"></i> Cedula Reports
+                    </h2>
                 </div>
 
-            <table class="min-w-full divide-y divide-gray-200">
+            <table class="min-w-full divide-y divide-gray-200 ">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
@@ -94,10 +98,12 @@
             </table>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto shadow-md">
             <div class="flex justify-between items-center p-6 border-b border-gray-100">
-                    <h2 class="text-2xl font-semibold font-montserrat text-[#37474F]">Business Permit Reports</h2>
-                </div>
+                <h2 class="text-2xl font-semibold font-montserrat text-[#37474F]">
+                    <i class="fas fa-file-invoice mr-3"></i> Business Permit Reports
+                </h2>
+            </div>
             <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
