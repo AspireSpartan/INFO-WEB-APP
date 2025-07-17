@@ -5,9 +5,9 @@
     <div class="absolute bottom-[264px] left-0 w-full h-36 bg-gradient-to-b from-white/0 via-zinc-300/50 to-zinc-300 z-0"></div>
         <div class="gradient-overlay"></div>
         <div class="gradient-bottom"></div>
-        
+
         <div id="particle-container"></div>
-        
+
         <div class="content-wrapper">
             <div class="header-container">
                 <div class="header-shapes">
@@ -18,69 +18,34 @@
                             <span>The Developers Behind CoreDev</span>
                         </h1>
                         <p class="mb-[50px]">
-                            Our dedicated team built this platform with care, innovation, and community in mind. 
-                            Each member brings unique expertise to create an exceptional experience.
+                            Our dedicated team built this platform with care, innovation, and community in mind. Each member brings unique expertise to create an exceptional experience.
                         </p>
 
                     </div>
                     <div class="shape-right"></div>
                 </div>
             </div>
-            
+
             <div class="developers-grid">
-                <!-- Developer 1 -->
+                @props(['developers', 'section4Content'])
+                @foreach($developers as $developer)
                 <div class="developer-card">
-                    <img src="{{ asset('storage/jasper.jpg') }}"
-                         alt="Front-end Developer" class="card-image">
+                    <img src="{{ asset('storage/' . $developer->image_url) }}"
+                            alt="{{ $developer->role }}" class="card-image">
                     <div class="card-overlay">
-                        <div class="card-role">Front-end Developer</div>
-                        <div class="card-name">Jaspher Lawrence Siloy</div>
+                        <div class="card-role">{{ $developer->role }}</div>
+                        <div class="card-name">{{ $developer->name }}</div>
                         <p class="card-desc">
-                            Creates UI designs and transforms ideas into clean, responsive, and engaging user interfaces.
+                            {{ $developer->description }}
                         </p>
                         <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" class="social-link"><i class="fas fa-globe"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                            @foreach($developer->social_links as $link)
+                            <a href="{{ $link['url'] }}" class="social-link"><i class="{{ $link['icon'] }}"></i></a>
+                            @endforeach
                         </div>
                     </div>
                 </div>
-                
-                <!-- Developer 2 -->
-                <div class="developer-card">
-                    <img src="{{ asset('storage/janpaul.jpg') }}"
-                         alt="Lead Developer" class="card-image">
-                    <div class="card-overlay">
-                        <div class="card-role">Lead Developer</div>
-                        <div class="card-name">Jan Paul Bustillo</div>
-                        <p class="card-desc">
-                            Responsible for system architecture, backend integration, and performance optimization.
-                        </p>
-                        <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-medium"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Developer 3 -->
-                <div class="developer-card">
-                    <img src="{{ asset('storage/kerstan.jpg') }}"
-                         alt="Front-end Developer" class="card-image">
-                    <div class="card-overlay">
-                        <div class="card-role">Front-end Developer</div>
-                        <div class="card-name">Kerstan Davide</div>
-                        <p class="card-desc">
-                            Transforms complex requirements into intuitive, accessible, and visually appealing interfaces.
-                        </p>
-                        <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-behance"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -90,7 +55,7 @@
             // Create particles
             const particleContainer = document.getElementById('particle-container');
             const particleCount = 80;
-            
+
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.style.position = 'absolute';
@@ -103,15 +68,15 @@
                 particle.style.top = Math.random() * 100 + '%';
                 particle.style.zIndex = '1';
                 particle.style.pointerEvents = 'none';
-                
+
                 // Animation
                 const duration = Math.random() * 10 + 10;
                 particle.style.animation = `particleFloat ${duration}s infinite ease-in-out`;
                 particle.style.animationDelay = Math.random() * 5 + 's';
-                
+
                 particleContainer.appendChild(particle);
             }
-            
+
             // Add CSS for particle animation
             const style = document.createElement('style');
             style.textContent = `
@@ -124,10 +89,10 @@
                 }
             `;
             document.head.appendChild(style);
-            
+
             // Card animation on scroll
             const cards = document.querySelectorAll('.developer-card');
-            
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -139,11 +104,11 @@
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
             });
-            
+
             cards.forEach(card => {
                 observer.observe(card);
             });
-            
+
             // Shape hover effect
             const shapes = document.querySelectorAll('.shape-left, .shape-right');
             shapes.forEach(shape => {
@@ -151,11 +116,11 @@
                     shape.style.transform = 'scale(1.1)';
                     shape.style.boxShadow = '0 15px 30px -5px rgba(249, 115, 22, 0.6)';
                 });
-                
+
                 shape.addEventListener('mouseleave', () => {
                     shape.style.transform = 'scale(1)';
                     shape.style.boxShadow = '0 10px 25px -5px rgba(249, 115, 22, 0.4)';
                 });
             });
         });
-</script>
+    </script>

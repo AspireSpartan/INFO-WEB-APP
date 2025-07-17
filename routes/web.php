@@ -31,6 +31,7 @@ use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\CedulaReportController;
 use App\Http\Controllers\BusinessPermitController;
+use App\Http\Controllers\DeveloperController;
 
 
 
@@ -118,12 +119,17 @@ Route::prefix('admin')->group(function () {
     Route::post('/admin/content-manager/update', [ContentManagerLogosImageController::class, 'update'])->name('content-manager.update');
     Route::resource('blogs', BlogController::class)->parameters(['blogs' => 'blogfeed']);
     Route::post('/about-govph/update', [AboutGovphController::class, 'update'])->name('about-govph.update');
+
     // ABOUT US ADMIN ROUTES - UPDATED/ADDED HERE
-    Route::get('/about-us', [AboutUsController::class, 'index'])->name('admin.about-us.index');
+    // This route now specifically handles the admin view for about-us, including developers
+    Route::get('/about-us', [AdminDashboardController::class, 'index'])->name('admin.about-us.index'); // Use AdminDashboardController for the main admin about-us page
     Route::post('/about-us/update-content', [AboutUsController::class, 'updateContent'])->name('admin.about-us.updateContent');
     Route::post('/about-us/store-offer', [AboutUsController::class, 'storeOffer'])->name('admin.about-us.storeOffer');
     Route::delete('/about-us/delete-offer/{id}', [AboutUsController::class, 'deleteOffer'])->name('admin.about-us.deleteOffer');
-    Route::get('/about-us/offers-json', [AboutUsController::class, 'getOffersJson'])->name('admin.about-us.offersJson'); // This route is no longer strictly needed by Alpine.js for the save logic but can remain for debugging or other uses.
+    Route::get('/about-us/offers-json', [AboutUsController::class, 'getOffersJson'])->name('admin.about-us.offersJson');
+
+    // MOVED AND REFINED: Developer CRUD routes are now correctly nested under the 'admin' prefix
+    Route::resource('developers', DeveloperController::class)->except(['create', 'show', 'edit']);
 
     Route::get('/reported_concerns', [AdminReportedConcernController::class, 'index'])->name('reported_concerns.index');
     Route::get('/reported_concerns/{id}/edit', [AdminReportedConcernController::class, 'edit'])->name('reported_concerns.edit');
