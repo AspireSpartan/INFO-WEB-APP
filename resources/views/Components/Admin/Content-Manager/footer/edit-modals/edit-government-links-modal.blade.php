@@ -18,9 +18,15 @@
         x-data="{
             governmentLinksTitle: '{{ $footertitle->government_links_title ?? 'Government Links' }}',
             govLinks: {{ json_encode($governmentlinks) }},
+            nextGovLinkId: 1, // Will be initialized by init()
+            showNotification: false, // Added for notification
+            notificationMessage: '', // Added for notification
+            notificationType: '', // Added for notification ('success' or 'error')
+
             init() {
-                let nextId = Math.max(0, ...this.govLinks.map(link => link.id)) + 1;
-                this.nextGovLinkId = nextId;
+                // Ensure nextGovLinkId is correctly set based on existing links
+                this.nextGovLinkId = this.govLinks.length > 0 ? Math.max(...this.govLinks.map(link => link.id)) + 1 : 1;
+                this.showNotification = false; // Reset notification on init
             },
             addGovLink() {
                 this.govLinks.push({ id: this.nextGovLinkId++, title: '', url: '', isNew: true });
@@ -29,21 +35,39 @@
                 this.govLinks = this.govLinks.filter(link => link.id !== idToRemove);
             },
             async saveGovernmentLinksChanges() {
+                this.showNotification = false; // Hide previous notification
+
                 try {
                     // Save the title
-                    await fetch('{{ route('footer-title.update') }}', {
+                    const titleResponse = await fetch('{{ route('footer-title.update') }}', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                         body: JSON.stringify({ government_links_title: this.governmentLinksTitle })
                     });
 
+                    if (!titleResponse.ok) {
+                        const errorData = await titleResponse.json();
+                        // Throw an error with cause for detailed message
+                        throw new Error(errorData.message || 'Failed to update title', { cause: errorData.errors });
+                    }
+
                     // Save the links
-                    const response = await fetch('{{ route('government-links.update') }}', {
+                    const linksResponse = await fetch('{{ route('government-links.update') }}', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        // Filter out the 'id' property if your backend doesn't expect it for new links,
+                        // or if it handles updates based on title/url uniqueness.
+                        // For simplicity, mapping to only title and url as per previous discussions.
                         body: JSON.stringify({ links: this.govLinks.map(({id, ...rest}) => rest) })
                     });
-                    const updatedLinks = await response.json();
+
+                    if (!linksResponse.ok) {
+                        const errorData = await linksResponse.json();
+                        // Throw an error with cause for detailed message
+                        throw new Error(errorData.message || 'Failed to update links', { cause: errorData.errors });
+                    }
+
+                    const updatedLinks = await linksResponse.json();
 
                     // Dispatch event to update parent component
                     this.$dispatch('government-links-updated', {
@@ -51,9 +75,39 @@
                         governmentlinks: updatedLinks
                     });
 
-                    this.$dispatch('close-modal');
+                    this.notificationType = 'success';
+                    this.notificationMessage = 'Changes saved successfully!';
+                    this.showNotification = true;
+
+                    setTimeout(() => {
+                        this.showNotification = false;
+                        this.$dispatch('close-modal'); // Close modal after showing success
+                    }, 2000); // Hide after 2 seconds and close modal
+
                 } catch (error) {
                     console.error('Error saving government links:', error);
+                    this.notificationType = 'error';
+                    let errorMessage = error.message || 'An error occurred. Please try again.';
+
+                    // Check if the error has specific validation errors (from error.cause)
+                    if (error.cause && typeof error.cause === 'object') {
+                        let errorHtml = '<ul>';
+                        for (const key in error.cause) {
+                            if (error.cause.hasOwnProperty(key)) {
+                                error.cause[key].forEach(msg => {
+                                    errorHtml += `<li>${msg}</li>`;
+                                });
+                            }
+                        }
+                        errorHtml += '</ul>';
+                        errorMessage = `Please fix the following issues: ${errorHtml}`;
+                    }
+                    this.notificationMessage = errorMessage;
+                    this.showNotification = true;
+
+                    setTimeout(() => {
+                        this.showNotification = false;
+                    }, 5000); // Hide error after 5 seconds
                 }
             }
         }"
@@ -73,6 +127,30 @@
         </div>
 
         <form @submit.prevent="saveGovernmentLinksChanges" class="flex-grow overflow-y-auto p-6">
+            {{-- Notification Pop-up --}}
+            <div
+                x-show="showNotification"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-2"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 translate-y-2"
+                :class="{
+                    'bg-green-100 border-green-400 text-green-700': notificationType === 'success',
+                    'bg-red-100 border-red-400 text-red-700': notificationType === 'error'
+                }"
+                class="border px-4 py-3 rounded relative mb-4"
+                role="alert"
+                style="display: none;"
+            >
+                <strong class="font-bold" x-text="notificationType === 'success' ? 'Success!' : 'Error!'"></strong>
+                <span class="block sm:inline" x-html="notificationMessage"></span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="showNotification = false">
+                    <svg class="fill-current h-6 w-6" :class="{ 'text-green-500': notificationType === 'success', 'text-red-500': notificationType === 'error' }" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 2.65a1.2 1.2 0 1 1-1.697-1.697L8.303 10l-2.651-2.651a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-2.651a1.2 1.2 0 1 1 1.697 1.697L11.697 10l2.651 2.651a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                </span>
+            </div>
+
             <div class="mb-5">
                 <label for="governmentLinksTitle" class="block text-gray-700 font-medium mb-2 text-sm">Section Title</label>
                 <input

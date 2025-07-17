@@ -1,3 +1,9 @@
+<!-- resources/views/User_Side_Screen/home.blade.php -->
+{{-- This file is responsible for rendering the home page of the user side screen --}}
+{{-- It includes various components such as Hero, Latest News, Announcements, Completed Projects, Public Officials, and Footer --}}
+
+{{-- Ensure that the path to the Hero component is correct --}}
+{{-- The path should match the structure of your components directory --}}
 {{-- /resources/views/User_Side_Screen/home.blade.php --}}
 @extends('layouts.app')
 
@@ -9,7 +15,8 @@
     @include('Components.User.Hero.Hero', ['pageContent' => $pageContent])
     <x-User.latestnews.latestnews :newsItems="$newsItems" :logos="$logos"
                                   :caption="$caption"></x-User.latestnews.latestnews>
-    <x-User.announcement.announcement></x-User.announcement.announcement>
+    {{-- Pass the $announcements variable to the announcement component --}}
+    <x-User.announcement.announcement :announcements="$announcements"></x-User.announcement.announcement>
     <x-User.completeproj.completeproj :projects="$projects"
                                       :description="$description"></x-User.completeproj.completeproj>
     <x-User.PublicOfficials.PublicOfficials :officials="$officials"
@@ -21,5 +28,8 @@
     :govphLinks="$govphLinks"
     :governmentlinks="$governmentlinks"
     :footertitle="$footertitle"
+    :contactUsTitle="$contactUsTitle"
+    :contactUsDetails="$contactUsDetails"
+    :initialContactUsData="$initialContactUsData"
 />
 @endsection

@@ -12,20 +12,22 @@ use App\Models\FooterTitle;
 use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use App\Models\AboutUsOffer;
+use App\Models\Announcement;
 use App\Models\StrategicPlan;
 use App\Models\ContactMessage;
 use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
+use App\Models\ContactUsDetail;
 use App\Models\ReportedConcern;
+use App\Models\CommunityContent; 
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
 use App\Models\AboutUsContentManager;
+use App\Models\ContactUsSectionTitle;
 use App\Models\PublicOfficialCaption;
+use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
-use App\Models\CommunityContent; 
-use App\Models\CommunityCarouselImage;
-use App\Models\Announcement;
 use App\Models\CedulaReport;
 use App\Models\BusinessPermit;
 
@@ -81,6 +83,16 @@ class AdminDashboardController extends Controller
         $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
         $governmentlinks = GovernmentLink::all();
         $footertitle = FooterTitle::first();
+        $contactUsTitle = ContactUsSectionTitle::first();
+        $contactUsDetails = ContactUsDetail::first();
+        $initialContactUsData = [
+            'contactUsTitle' => $contactUsTitle->title,
+            // These are now single strings
+            'phoneNumbers' => $contactUsDetails->phone_numbers,
+            'emailAddresses' => $contactUsDetails->email_addresses,
+            'contactAddress' => $contactUsDetails->contact_address,
+        ];
+        
         $communityContent = CommunityContent::pluck('content', 'key')->toArray();
         $communityContent = array_merge([
             'main_title_part1' => '',
@@ -119,8 +131,11 @@ class AdminDashboardController extends Controller
             'communityContent',
             'communityCarouselImages',
             'announcements',
+            'contactUsTitle', 
+            'contactUsDetails',
+            'initialContactUsData',
             'reports',
-            'applications',
+            'applications'
         ));
     }
 }

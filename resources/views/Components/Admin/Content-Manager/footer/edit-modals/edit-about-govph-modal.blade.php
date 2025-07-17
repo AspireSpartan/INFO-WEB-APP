@@ -35,6 +35,30 @@
         </div>
 
         <form @submit.prevent="saveChanges" class="flex-grow overflow-y-auto p-6">
+            {{-- Notification Pop-up --}}
+            <div
+                x-show="showNotification"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-2"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 translate-y-2"
+                :class="{
+                    'bg-green-100 border-green-400 text-green-700': notificationType === 'success',
+                    'bg-red-100 border-red-400 text-red-700': notificationType === 'error'
+                }"
+                class="border px-4 py-3 rounded relative mb-4"
+                role="alert"
+                style="display: none;"
+            >
+                <strong class="font-bold" x-text="notificationType === 'success' ? 'Success!' : 'Error!'"></strong>
+                <span class="block sm:inline" x-html="notificationMessage"></span>
+                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="showNotification = false">
+                    <svg class="fill-current h-6 w-6" :class="{ 'text-green-500': notificationType === 'success', 'text-red-500': notificationType === 'error' }" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 2.65a1.2 1.2 0 1 1-1.697-1.697L8.303 10l-2.651-2.651a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-2.651a1.2 1.2 0 1 1 1.697 1.697L11.697 10l2.651 2.651a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                </span>
+            </div>
+
             <div class="mb-5">
                 <label for="aboutGovphTitle" class="block text-gray-700 font-medium mb-2 text-sm">Section Title</label>
                 <input
@@ -138,6 +162,9 @@
             description: data.aboutGovph.description || '',
             links: JSON.parse(JSON.stringify(data.govphLinks || [])),
             nextLinkId: data.govphLinks.length > 0 ? Math.max(...data.govphLinks.map(l => l.id)) + 1 : 1,
+            showNotification: false, // Added for notification
+            notificationMessage: '', // Added for notification
+            notificationType: '', // Added for notification ('success' or 'error')
 
             addLink() {
                 this.links.push({ id: this.nextLinkId++, title: '', url: '' });
@@ -148,6 +175,8 @@
             },
 
             async saveChanges() {
+                this.showNotification = false; // Hide previous notification
+
                 const payload = {
                     title: this.title,
                     description: this.description,
@@ -170,18 +199,49 @@
                     if (response.ok) {
                         const result = await response.json();
                         window.dispatchEvent(new CustomEvent('about-govph-updated', { detail: { aboutGovph: result.aboutGovph, links: result.links } }));
-                        alert(result.message);
-                        this.$dispatch('close-modal');
+
+                        this.notificationType = 'success';
+                        this.notificationMessage = result.message || 'Changes saved successfully!';
+                        this.showNotification = true;
+
+                        setTimeout(() => {
+                            this.showNotification = false;
+                            this.$dispatch('close-modal'); // Close modal after showing success
+                        }, 2000); // Hide after 2 seconds and close modal
+
                     } else {
                         const errorData = await response.json();
+                        this.notificationType = 'error';
                         let errorMessage = 'An error occurred. Please check the console.';
+
                         if (errorData.errors) {
-                            errorMessage = Object.values(errorData.errors).map(e => e.join('\\n')).join('\\n');
+                            let errorHtml = '<ul>';
+                            for (const key in errorData.errors) {
+                                if (errorData.errors.hasOwnProperty(key)) {
+                                    errorData.errors[key].forEach(msg => {
+                                        errorHtml += `<li>${msg}</li>`;
+                                    });
+                                }
+                            }
+                            errorHtml += '</ul>';
+                            errorMessage = `Please fix the following issues: ${errorHtml}`;
                         }
-                        alert(errorMessage);
+                        this.notificationMessage = errorMessage;
+                        this.showNotification = true;
+
+                        setTimeout(() => {
+                            this.showNotification = false;
+                        }, 5000); // Hide error after 5 seconds
                     }
                 } catch (error) {
-                    alert('A network error occurred. Please try again.');
+                    console.error('Network error:', error);
+                    this.notificationType = 'error';
+                    this.notificationMessage = 'A network error occurred. Please try again.';
+                    this.showNotification = true;
+
+                    setTimeout(() => {
+                        this.showNotification = false;
+                    }, 5000); // Hide error after 5 seconds
                 }
             }
         }

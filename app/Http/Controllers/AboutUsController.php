@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GovphLink;
+use App\Models\AboutGovph;
+use App\Models\FooterLogo;
+use App\Models\FooterTitle;
+use App\Models\KeepInTouch;
 use Illuminate\Support\Str;
 use App\Models\AboutUsOffer;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
+use App\Models\GovernmentLink;
+use App\Models\ContactUsDetail;
 use App\Models\AboutUsContentManager;
+use App\Models\ContactUsSectionTitle;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
 use App\Models\CommunityContent; // Import the CommunityContent model
@@ -88,8 +96,23 @@ class AboutUsController extends Controller
                 'paragraph' => $goal ? $goal->paragraph : '',
             ],
         ];
+        $keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail(); 
+        $footerLogo = FooterLogo::first();
+        $aboutGovph = AboutGovph::first();
+        $govphLinks = GovphLink::all();
+        $governmentlinks = GovernmentLink::all();
+        $footertitle = FooterTitle::first();
+        $contactUsTitle = ContactUsSectionTitle::first();
+        $contactUsDetails = ContactUsDetail::first(); 
+        $initialContactUsData = [
+            'contactUsTitle' => $contactUsTitle->title,
+            // These are now single strings
+            'phoneNumbers' => $contactUsDetails->phone_numbers,
+            'emailAddresses' => $contactUsDetails->email_addresses,
+            'contactAddress' => $contactUsDetails->contact_address,
+        ];
 
-        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData'));
+        return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData','keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData'));
     }
 
     /**
