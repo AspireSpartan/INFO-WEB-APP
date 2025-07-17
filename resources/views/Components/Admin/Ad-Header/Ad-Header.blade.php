@@ -266,7 +266,7 @@
                 class="absolute top-0 left-0 w-full h-full"
             >
                 <template x-if="screen === 'dashboard'">
-                    <div>@include('Components.Admin.dashboard.dashboard_content')</div>
+                    <div>@include('Components.Admin.dashboard.dashboard_content', ['concerns' => $concerns ?? []])</div>
                 </template>
                 <template x-if="screen === 'news'">
                     <div>@include('Components.Admin.newss.news_content', ['newsItems' => $newsItems ?? []])</div>
