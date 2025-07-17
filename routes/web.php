@@ -165,5 +165,6 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/business-permits', [BusinessPermitController::class, 'adminIndex'])->name('admin.business-permits');
     Route::post('/business-permits/{application}/update-status', [BusinessPermitController::class, 'updateStatus'])->name('admin.business-permits.update-status');
-    Route::get('/admin/business-permits/{id}/details', [BusinessPermitController::class, 'details'])->name('admin.business-permits.details');
+    Route::get('/admin/business-permits/{application}/details', [BusinessPermitController::class, 'showDetails'])->name('admin.business-permits.details');
     });
+
