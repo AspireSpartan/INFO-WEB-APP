@@ -14,16 +14,20 @@ use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use Illuminate\Support\Str;
 use App\Models\AboutUsOffer;
+use App\Models\CedulaReport;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
+use App\Models\BusinessPermit;
 use App\Models\ContactMessage;
 use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
+use App\Models\ContactUsDetail;
 use App\Models\ReportedConcern;
 use App\Models\CommunityContent;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
 use App\Models\AboutUsContentManager;
+use App\Models\ContactUsSectionTitle;
 use App\Models\PublicOfficialCaption;
 use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
@@ -113,9 +117,20 @@ public function index() // user side
                 'paragraph' => $goal ? $goal->paragraph : '',
             ],
         ];
-        
+        $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
+        $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
+        $contactUsTitle = ContactUsSectionTitle::first();
+        $contactUsDetails = ContactUsDetail::first();
+        $initialContactUsData = [
+            'contactUsTitle' => $contactUsTitle->title,
+            // These are now single strings
+            'phoneNumbers' => $contactUsDetails->phone_numbers,
+            'emailAddresses' => $contactUsDetails->email_addresses,
+            'contactAddress' => $contactUsDetails->contact_address,
+        ];
         session()->flash('activeAdminScreen', 'projects');
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials','vmgEditableContentData', 'strategicPlans', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption',
+         'officials','vmgEditableContentData', 'strategicPlans', 'reports', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData','applications'));
     }
 
     
