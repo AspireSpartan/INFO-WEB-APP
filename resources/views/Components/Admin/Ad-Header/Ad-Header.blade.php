@@ -1,3 +1,4 @@
+<!-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php -->
 @extends('layouts.admin') {{-- resources/views/Components/Admin/Ad-Header/Ad-Header.blade.php --}}
 @section('title', 'Admin View')
 @section('content')
@@ -7,7 +8,7 @@
     'newsItems', 'contactMessages', 'blogfeeds', 'projects', 'description',
     'logos', 'caption', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans',
     // Add these if they are passed to the admin layout directly
-    'contentManager','contentOffer', 'concerns','request','reports','applications', 'communityContent','communityCarouselImages', 'announcements',
+    'contentManager','contentOffer', 'concerns','request','reports','applications', 'communityContent','communityCarouselImages', 'announcements', 'developers',
 ])
 
     <div class="bg-neutral-200 min-h-screen flex flex-col"
@@ -321,7 +322,7 @@
                 <div>@include('Components.Admin.about-us.section-3', ['communityContent' => $communityContent, 'communityCarouselImages' => $communityCarouselImages])</div>
             </template>
                 <template x-if="screen === 'about-section-4'">
-                    <div>@include('Components.Admin.about-us.section-4')</div>
+                    <div>@include('Components.Admin.about-us.section-4', ['developers' => $developers ?? []])</div>
                 </template>
             </div>
         </template>
