@@ -33,7 +33,8 @@ use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
 use Illuminate\Support\Facades\Log; // Added for logging
-use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
+use App\Models\News; 
+use App\Models\Developer; // Ensure this is imported if you're using it in the controller
 
 class NewsController extends Controller
 {
@@ -113,6 +114,7 @@ class NewsController extends Controller
         $footerLogo = FooterLogo::first();
         $contactUsTitle = ContactUsSectionTitle::first();
         $contactUsDetails = ContactUsDetail::first();
+        $developers = Developer::all();
         $initialContactUsData = [
             'contactUsTitle' => $contactUsTitle->title,
             // These are now single strings
@@ -123,13 +125,13 @@ class NewsController extends Controller
         $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
         $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
         return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch' , 'aboutGovph' , 'footerLogo', 'govphLinks',
-         'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer','reports','contactUsTitle','contactUsDetails','initialContactUsData','applications'));
+         'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer','reports','contactUsTitle','contactUsDetails','initialContactUsData','applications', 'developers'));
     }
 
     /**
      * Remove multiple specified news items from storage.
      */
-    public function bulkDestroy(Request $request)
+    public function hulkDestroy(Request $request)
     {
         $request->validate([
             'ids' => 'required|array', // Expect 'ids'
