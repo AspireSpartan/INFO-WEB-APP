@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Log; // Don't forget to import Log
+use Illuminate\Support\Facades\Log; 
 
 class AdminAnnouncementController extends Controller
 {
-    /**
-     * Display a listing of the resource for the admin panel.
-     */
     public function index()
     {
         // This method will just load the view; data is fetched via AJAX
@@ -32,9 +29,6 @@ class AdminAnnouncementController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -44,11 +38,11 @@ class AdminAnnouncementController extends Controller
                 'date' => 'required|date',
                 'author' => 'required|string|max:255',
                 'content' => 'required|string',
-                'is_new' => 'boolean', // is_new is optional for 'add', will default to false if not provided or cast
+                'is_new' => 'boolean', 
                 'category' => 'required|string|max:255',
             ]);
 
-            // Set is_new default if not provided (for 'add' mode, it defaults to true in Alpine, but good to have a backend fallback)
+            
             $validatedData['is_new'] = $validatedData['is_new'] ?? true;
 
             $announcement = Announcement::create($validatedData);
@@ -91,9 +85,6 @@ class AdminAnnouncementController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Announcement $announcement)
     {
         try {
@@ -105,12 +96,6 @@ class AdminAnnouncementController extends Controller
         }
     }
 
-    /**
-     * Remove multiple resources from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function bulkDestroy(Request $request)
     {
         try {

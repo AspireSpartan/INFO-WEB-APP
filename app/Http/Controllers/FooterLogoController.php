@@ -36,7 +36,7 @@ class FooterLogoController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Logo updated successfully.',
-                'logo_path' => Storage::url($path) // Return the full URL
+                'logo_path' => Storage::url($path) 
             ]);
         }
 

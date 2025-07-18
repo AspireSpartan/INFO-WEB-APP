@@ -44,11 +44,12 @@
 
         {{-- Action Buttons --}}
         <div class="flex flex-col sm:flex-row justify-end gap-2 mt-auto pt-4 border-t border-gray-100">
-            {{-- Edit Button --}}
-            <a href="{{ route('blogs.edit', $blogfeed->id) }}"
+            {{-- Edit Button: Changed to a button that dispatches an Alpine.js event --}}
+            <button type="button"
+               @click="$dispatch('open-admin-blog-edit-modal', {{ json_encode($blogfeed) }})"
                class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors shadow-sm flex-grow sm:flex-none text-center">
                 Edit
-            </a>
+            </button>
 
             {{-- Delete Button --}}
             <form action="{{ route('blogs.destroy', $blogfeed->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this blog post?');">
