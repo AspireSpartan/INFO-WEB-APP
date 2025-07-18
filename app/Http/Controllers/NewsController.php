@@ -13,30 +13,32 @@ use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use Illuminate\Support\Str;
 use App\Models\AboutUsOffer;
+use App\Models\CedulaReport;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
+use App\Models\BusinessPermit;
 use App\Models\ContactMessage;
 use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
+use App\Models\ContactUsDetail;
 use App\Models\ReportedConcern;
 use App\Models\CommunityContent;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
 use App\Models\AboutUsContentManager;
+use App\Models\ContactUsSectionTitle;
 use App\Models\PublicOfficialCaption;
 use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
-use Illuminate\Support\Facades\Log; // Added for logging
-use App\Models\News; // This might be an old model, ensure you're using NewsItem if it's the primary one
+use Illuminate\Support\Facades\Log;
+use App\Models\News; 
+use Carbon\Carbon; // Make sure to import Carbon
+use App\Models\Developer; 
 
 class NewsController extends Controller
 {
-    /**
-     * Display a listing of the news items (for admin dashboard).
-     * This function now serves as the index for news items in the admin area.
-     */
 
     public function index(Request $request)
     {
@@ -107,20 +109,30 @@ class NewsController extends Controller
         ];
 
         $footerLogo = FooterLogo::first();
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch' , 'aboutGovph' , 'footerLogo', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer'));
+        $contactUsTitle = ContactUsSectionTitle::first();
+        $contactUsDetails = ContactUsDetail::first();
+        $developers = Developer::all();
+        $initialContactUsData = [
+            'contactUsTitle' => $contactUsTitle->title,
+            // These are now single strings
+            'phoneNumbers' => $contactUsDetails->phone_numbers,
+            'emailAddresses' => $contactUsDetails->email_addresses,
+            'contactAddress' => $contactUsDetails->contact_address,
+        ];
+        $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
+        $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch' , 'aboutGovph' , 'footerLogo', 'govphLinks',
+         'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer','reports','contactUsTitle','contactUsDetails','initialContactUsData','applications', 'developers'));
     }
 
-    /**
-     * Remove multiple specified news items from storage.
-     */
-    public function bulkDestroy(Request $request)
+    public function hulkDestroy(Request $request)
     {
         $request->validate([
-            'ids' => 'required|array', // Expect 'ids'
+            'ids' => 'required|array', 
             'ids.*' => 'exists:news_items,id',
         ]);
 
-        $newsItemIds = $request->input('ids'); // Get 'ids'
+        $newsItemIds = $request->input('ids'); 
 
         if (empty($newsItemIds)) {
             // Redirect to news index and keep on news screen
@@ -148,22 +160,14 @@ class NewsController extends Controller
                          ->with('activeAdminScreen', 'news');
     }
 
-    /**
-     * Show the form for creating a new news item.
-     * This method redirects to the news index with a flag to open the create modal.
-     */
     public function create()
     {
-        // Redirect to news index, flag to show create modal, and set active screen to 'news'
-        // CHANGED: showCreateNewsModal to showUploadModal to match your existing modal component
         return redirect()->route('news.index')
                          ->with('showUploadModal', true) // Flag to open the existing upload modal
                          ->with('activeAdminScreen', 'news'); // Ensure 'news' screen is active
     }
 
-    /**
-     * Store a newly created news item in storage.
-     */
+
     public function store(Request $request)
     {
         Log::info('News item store request:', $request->all());
@@ -223,78 +227,71 @@ class NewsController extends Controller
         }
     }
 
-    /**
-     * Display the specified news item (for public view).
-     */
-    
-
-    /**
-     * Show the form for editing the specified news item.
-     */
-    public function edit($id)
-    {
-        $newsItem = NewsItem::findOrFail($id);
-        // Ensure 'news' screen is active if refreshed or returning from edit
-        session()->flash('activeAdminScreen', 'news');
-        return view('Components.Admin.edit.edit', compact('newsItem')); // Assuming this is your news edit view
-    }
-
-    /**
-     * Update the specified news item in storage.
-     */
     public function update(Request $request, $id)
     {
+        // Find the news item, or throw a 404 if not found
         $newsItem = NewsItem::findOrFail($id);
 
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'date' => 'required|date',
-            'url' => 'required|url',
-            'sponsored' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8242880', // Max 8MB
-            'views' => 'nullable|integer|min:0',
-        ]);
-
-        // Handle image update
-        if ($request->hasFile('image')) {
-            // Delete old image if it exists
-            if ($newsItem->picture && Storage::disk('public')->exists($newsItem->picture)) {
-                Storage::disk('public')->delete($newsItem->picture);
-                Log::info('Old image deleted: ' . $newsItem->picture);
-            }
-            // Store new image
-            try {
-                $validatedData['picture'] = $request->file('image')->store('news_images', 'public');
-                Log::info('New image uploaded: ' . $validatedData['picture']);
-            } catch (\Exception $e) {
-                Log::error('Image update failed: ' . $e->getMessage());
-                return redirect()->back()
-                                 ->withInput()
-                                 ->withErrors(['image' => 'Failed to upload new image.'])
-                                 ->with('activeAdminScreen', 'news'); // Keep on news screen
-            }
-        } else {
-            // If no new image is uploaded, retain the old one
-            $validatedData['picture'] = $newsItem->picture;
-        }
-
-        $validatedData['sponsored'] = $request->has('sponsored');
-        $validatedData['views'] = $validatedData['views'] ?? $newsItem->views;
-
         try {
+            $validatedData = $request->validate([
+                'title' => 'required|string|max:255',
+                'author' => 'required|string|max:255',
+                'date' => 'required|date',
+                'url' => 'required|url',
+                'sponsored' => 'boolean', // Expects 0 or 1 from checkbox
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8242880', // Max 8MB (8242880 bytes)
+                'views' => 'nullable|integer|min:0',
+            ]);
+
+            // Handle image update
+            if ($request->hasFile('image')) {
+                // Delete old image if it exists
+                if ($newsItem->picture && Storage::disk('public')->exists($newsItem->picture)) {
+                    Storage::disk('public')->delete($newsItem->picture);
+                    Log::info('Old news image deleted: ' . $newsItem->picture);
+                }
+                // Store new image
+                $validatedData['picture'] = $request->file('image')->store('news_images', 'public');
+                Log::info('New news image uploaded: ' . $validatedData['picture']);
+            } else {
+                // If no new image is uploaded, retain the old one
+                $validatedData['picture'] = $newsItem->picture;
+            }
+
+            // Ensure 'sponsored' is correctly set based on checkbox presence
+            $validatedData['sponsored'] = $request->has('sponsored') ? 1 : 0; // Convert to 1 or 0
+
+            // Ensure 'views' has a default if not provided (e.g., if input is empty string)
+            $validatedData['views'] = $validatedData['views'] ?? $newsItem->views;
+
+            // Format date to database-friendly format
+            if ($request->has('date')) {
+                $validatedData['date'] = Carbon::parse($request->input('date'))->format('Y-m-d H:i:s');
+            }
+
             $newsItem->update($validatedData);
             Log::info('News item updated successfully.', $validatedData);
-            // Redirect to news index and keep on news screen
-            return redirect()->route('news.index')
-                             ->with('success', 'News item updated successfully!')
-                             ->with('activeAdminScreen', 'news');
+
+            // Return JSON response for AJAX success
+            return response()->json([
+                'message' => 'News item updated successfully!',
+                'newsItem' => $newsItem->fresh() // Return the fresh model data
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('News item validation failed: ' . json_encode($e->errors()));
+            // Return JSON response for validation errors
+            return response()->json([
+                'message' => 'Validation Failed',
+                'errors' => $e->errors()
+            ], 422); // HTTP 422 Unprocessable Entity
         } catch (\Exception $e) {
             Log::error('Failed to update news item: ' . $e->getMessage());
-            return redirect()->back()
-                             ->withInput()
-                             ->withErrors(['error' => 'Failed to update news item. Please try again.'])
-                             ->with('activeAdminScreen', 'news'); // Keep on news screen
+            // Return JSON response for general errors
+            return response()->json([
+                'message' => 'Failed to update news item. Please try again.',
+                'error' => $e->getMessage()
+            ], 500); // HTTP 500 Internal Server Error
         }
     }
 
@@ -319,12 +316,6 @@ class NewsController extends Controller
                          ->with('activeAdminScreen', 'news');
     }
 
-    /**
-     * Increment the views count for a specific news item.
-     *
-     * @param  \App\Models\NewsItem  $newsItem
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function incrementViews(NewsItem $newsItem)
     {
         $newsItem->increment('views');

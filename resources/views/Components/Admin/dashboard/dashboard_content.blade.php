@@ -1,6 +1,7 @@
 {{-- resources/views/Components/Admin/dashboard_content.blade.php --}}
+@props(['concerns', 'reports', 'applications'])
 
-<div class="p-4 md:p-6 lg:p-8"> {{-- Outer container for consistent padding --}}
+<div class="p-4 md:p-6 lg:p-8 "> {{-- Outer container for consistent padding --}}
     <!-- Dashboard Header Area -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
         <h1 class="text-[#37474F] text-3xl font-semibold font-montserrat mb-4 sm:mb-0">LGU Dashboard</h1>
@@ -186,62 +187,14 @@
         </div>
     </section>
 
-    <!-- Recent Public Service Requests Table -->
+    <!--Tables -->
     <section class="mb-8">
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="flex justify-between items-center p-6 border-b border-gray-100">
-                <h2 class="text-2xl font-semibold font-montserrat text-[#37474F]">Recent Public Service Requests</h2>
-                <button class="text-[#37474F] p-2 rounded-full hover:bg-gray-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m0 0H15"></path></svg>
-                </button>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-[#F3F3F3]">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request Type</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requester</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Submitted</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200 text-[#37474F]">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">Birth Certificate Inquiry</td>
-                            <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2025-06-14</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">Road Pothole Report</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Maria Garcia</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2025-06-13</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">In Progress</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">Business Permit Application</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Lim Brothers Corp.</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2025-06-12</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">Community Event Permit</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Barangay Youth Council</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2025-06-10</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <x-Admin.dashboard.tables
+        :concerns="$concerns"
+        :reports="$reports"
+        :applications="$applications"
+    ></x-Admin.dashboard.tables>
+        
     </section>
 </div>
 

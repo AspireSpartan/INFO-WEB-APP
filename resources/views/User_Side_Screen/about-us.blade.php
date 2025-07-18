@@ -10,8 +10,8 @@
         :contentOffer="$contentOffer"
     ></x-User.about-us.section-1>
 
-    <x-User.about-us.section-2 
-    :contentMlogos="$contentMlogos" 
+    <x-User.about-us.section-2
+    :contentMlogos="$contentMlogos"
     :vmgEditableContentData="$vmgEditableContentData"
     :strategicPlans="$strategicPlans"></x-User.about-us.section-2>
 
@@ -21,7 +21,9 @@
         :carouselImages="$carouselImages"
     ></x-User.about-us.section-3>
 
-    <x-User.about-us.section-4></x-User.about-us.section-4>
+    <x-User.about-us.section-4
+        :developers="$developers"
+    ></x-User.about-us.section-4>
 
     <x-user.footer.footer
     :keepInTouch="$keepInTouch"

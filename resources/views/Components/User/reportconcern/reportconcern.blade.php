@@ -3,6 +3,13 @@
         <h1 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-6 sm:mb-8">Report a Concern</h1>
         <p class="text-center text-gray-600 mb-8 sm:mb-10">Please use this form to report any concerns. Provide as much detail as possible.</p>
 
+
+        @if(session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+        
         <form action="{{ route('reportconcern.store') }}" method="POST" class="space-y-6 sm:space-y-8">
             @csrf
             <!-- Reporter Information Section -->

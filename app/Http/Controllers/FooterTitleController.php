@@ -11,7 +11,6 @@ class FooterTitleController extends Controller
     {
         $footertitle = FooterTitle::first();
         return view('Components.Admin.Ad-Header.Ad-Header', compact('footertitle'));
-        //return response()->json($title);
     }
 
     public function update(Request $request)

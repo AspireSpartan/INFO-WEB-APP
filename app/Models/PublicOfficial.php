@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PublicOfficial extends Model
 {
-    protected $table = 'public_officials';
+    use HasFactory;
 
     protected $fillable = [
-        'position',
         'name',
-        'icon',
+        'position',
         'picture',
+        'icon',
     ];
 }

@@ -14,31 +14,31 @@ use App\Models\KeepInTouch;
 use App\Models\PageContent;
 use Illuminate\Support\Str;
 use App\Models\AboutUsOffer;
+use App\Models\CedulaReport;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
+use App\Models\BusinessPermit;
 use App\Models\ContactMessage;
 use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
+use App\Models\ContactUsDetail;
 use App\Models\ReportedConcern;
 use App\Models\CommunityContent;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
 use App\Models\AboutUsContentManager;
+use App\Models\ContactUsSectionTitle;
 use App\Models\PublicOfficialCaption;
 use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Developer;
+
 
 class BlogController extends Controller
 {
-    /**
-     * Display a listing of the resource (all blog posts).
-     * This method fetches all blog posts and passes them to a view.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
         $strategicPlans = StrategicPlan::all();
@@ -57,6 +57,15 @@ class BlogController extends Controller
         $concerns = ReportedConcern::orderBy('created_at', 'desc')->paginate(15);
         $governmentlinks = GovernmentLink::all();
         $footertitle = FooterTitle::first();
+        $contactUsTitle = ContactUsSectionTitle::first(); 
+        $contactUsDetails = ContactUsDetail::first();
+        $initialContactUsData = [
+            'contactUsTitle' => $contactUsTitle->title,
+            // These are now single strings
+            'phoneNumbers' => $contactUsDetails->phone_numbers,
+            'emailAddresses' => $contactUsDetails->email_addresses,
+            'contactAddress' => $contactUsDetails->contact_address,
+        ];
         $communityContent = CommunityContent::pluck('content', 'key')->toArray();
         $communityContent = array_merge([
             'main_title_part1' => '',
@@ -106,42 +115,30 @@ class BlogController extends Controller
         if ($isViewportPresent) {
             return view('Components.Admin.blog.blog_content', compact('blogfeeds'));
         }
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer'));
+        $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
+        $developers = Developer::all();
+        $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('blogfeeds', 'newsItems', 'contactMessages', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle',
+         'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer','contactUsTitle', 'contactUsDetails', 'initialContactUsData', 'reports', 'applications', 'developers'));
     }
 
-    /**
-     * Show the form for creating a new resource (new blog post).
-     * This method simply returns the view containing the form for creating a new blog post.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function create()
     {
-        // Redirect to index, flag to show create modal, and set active screen to 'blog'
         return redirect()->route('blogs.index')
                         ->with('showCreateBlogModal', true)
-                        ->with('activeAdminScreen', 'Blog'); // Added this line
+                        ->with('activeAdminScreen', 'Blog');
     }
 
-    /**
-     * Store a newly created resource in storage (a new blog post).
-     * This method handles the form submission for creating a new blog post,
-     * including validation, file uploads, and saving to the database.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request)
     {
-        // Use the Validator facade for manual validation
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'published_at' => 'required|date',
             'author' => 'required|string|max:255',
             'authortitle' => 'nullable|string|max:255',
-            'image_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8049', // Max 8MB
-            'icon_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:999',   // Max 999KB
+            'image_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8049', 
+            'icon_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:999',   
         ]);
 
         // Check if validation fails
@@ -154,7 +151,6 @@ class BlogController extends Controller
                              ->with('activeAdminScreen', 'Blog'); // Added this line for error redirect
         }
 
-        // If validation passes, get the validated data
         $validatedData = $validator->validated();
 
         $blogfeed = new Blogfeed();
@@ -171,10 +167,9 @@ class BlogController extends Controller
             $blogfeed->icon_path = null;
         }
 
-        // Use $validatedData to assign values
         $blogfeed->title = $validatedData['title'];
         $blogfeed->content = $validatedData['content'];
-        $blogfeed->published_at = Carbon::parse($validatedData['published_at'])->format('Y-m-d H:i:s'); // Ensure correct date format
+        $blogfeed->published_at = Carbon::parse($validatedData['published_at'])->format('Y-m-d H:i:s');
         $blogfeed->author = $validatedData['author'];
         $blogfeed->authortitle = $validatedData['authortitle'];
 
@@ -188,89 +183,68 @@ class BlogController extends Controller
 
     public function show(Blogfeed $blogfeed)
     {
-        // This view path might also need adjustment if it's not directly in resources/views/blogs/show.blade.php
-        return view('blogs.show', compact('blogfeed')); //currently this line works even if i didn't add these next lines.
+        return view('blogs.show', compact('blogfeed')); 
     }
 
-    /**
-     * Show the form for editing the specified resource (existing blog post).
-     * This method retrieves an existing blog post and passes it to an edit form view.
-     * It uses Route Model Binding for cleaner code.
-     *
-     * @param  \App\Models\Blogfeed  $blogfeed
-     * @return \Illuminate\View\View
-     */
-    public function edit(Blogfeed $blogfeed)
-    {
-        // This path should be correct based on your previous input
-        // When going to the edit view, also flash the active screen so a refresh returns to blog view
-        session()->flash('activeAdminScreen', 'Blog'); // Added this to set screen on entering edit view
-        return view('Components.Admin.blog.edit', compact('blogfeed'));
-    }
-
-    /**
-     * Update the specified resource in storage (an existing blog post).
-     * This method handles the form submission for updating a blog post,
-     * including validation, file uploads (replacing old ones), and updating the database.
-     * It uses Route Model Binding.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Blogfeed  $blogfeed
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update(Request $request, Blogfeed $blogfeed)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'author' => 'required|string|max:255',
-            'authortitle' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8049', // Max 8MB
-            'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:999',   // Max 999KB
-            'published_at' => 'required|date',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'title' => 'required|string|max:255',
+                'content' => 'required|string',
+                'author' => 'required|string|max:255',
+                'authortitle' => 'nullable|string|max:255', // Changed to nullable
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:8049', // Max 8MB
+                'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:999',   // Max 999KB
+                'published_at' => 'required|date',
+            ]);
 
-        $data = $request->except(['_token', '_method', 'image', 'icon']);
+            $dataToUpdate = $request->except(['_token', '_method', 'image', 'icon']);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if it exists before uploading new one
-            if ($blogfeed->image_path) {
-                Storage::disk('public')->delete($blogfeed->image_path);
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                // Delete old image if it exists before uploading new one
+                if ($blogfeed->image_path) {
+                    Storage::disk('public')->delete($blogfeed->image_path);
+                }
+                $dataToUpdate['image_path'] = $request->file('image')->store('blog_images', 'public');
             }
-            $data['image_path'] = $request->file('image')->store('blog_images', 'public');
-        }
 
-        // Handle icon upload
-        if ($request->hasFile('icon')) {
-            // Delete old icon if it exists before uploading new one
-            if ($blogfeed->icon_path) {
-                Storage::disk('public')->delete($blogfeed->icon_path);
+            // Handle icon upload
+            if ($request->hasFile('icon')) {
+                // Delete old icon if it exists before uploading new one
+                if ($blogfeed->icon_path) {
+                    Storage::disk('public')->delete($blogfeed->icon_path);
+                }
+                $dataToUpdate['icon_path'] = $request->file('icon')->store('blog_icons', 'public');
             }
-            $data['icon_path'] = $request->file('icon')->store('blog_icons', 'public');
+
+            if ($request->has('published_at')) {
+                $dataToUpdate['published_at'] = Carbon::parse($request->input('published_at'))->format('Y-m-d H:i:s');
+            }
+
+            $blogfeed->update($dataToUpdate);
+
+            // Return JSON response for the modal
+            return response()->json([
+                'message' => 'Blog post updated successfully!',
+                'blogfeed' => $blogfeed->fresh(), // Return the fresh model data, including updated paths
+                'activeAdminScreen' => 'Blog',
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation Failed',
+                'errors' => $e->errors()
+            ], 422); // Unprocessable Entity
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while updating the blog post.',
+                'error' => $e->getMessage()
+            ], 500); // Internal Server Error
         }
-
-        // Format published_at to database-friendly format (assuming DATETIME/TIMESTAMP column)
-        if ($request->has('published_at')) {
-            $data['published_at'] = Carbon::parse($request->input('published_at'))->format('Y-m-d H:i:s');
-        }
-
-        $blogfeed->update($data);
-
-        // Redirect back to the blog index and show success message, setting the active screen
-        return redirect()->route('blogs.index')
-                        ->with('success', 'Blog post updated successfully!')
-                        ->with('activeAdminScreen', 'Blog'); // Added this line
     }
 
-    /**
-     * Remove the specified resource from storage (a blog post).
-     * This method handles deleting a blog post, including its associated image files.
-     * It uses Route Model Binding.
-     *
-     * @param  \App\Models\Blogfeed  $blogfeed
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function destroy(Blogfeed $blogfeed)
     {
         // 1. Delete associated image files from storage

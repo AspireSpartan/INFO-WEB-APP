@@ -12,23 +12,29 @@ use App\Models\FooterLogo;
 use App\Models\FooterTitle;
 use App\Models\KeepInTouch;
 use App\Models\PageContent;
-use Illuminate\Support\Str;
 use App\Models\AboutUsOffer;
+use App\Models\CedulaReport;
 use Illuminate\Http\Request;
 use App\Models\StrategicPlan;
+use App\Models\BusinessPermit;
 use App\Models\ContactMessage;
 use App\Models\GovernmentLink;
 use App\Models\PublicOfficial;
+use App\Models\ContactUsDetail;
 use App\Models\ReportedConcern;
 use App\Models\CommunityContent;
 use App\Models\ProjectDescription;
 use App\Models\PreviewSection2Logo;
 use App\Models\AboutUsContentManager;
+use App\Models\ContactUsSectionTitle;
 use App\Models\PublicOfficialCaption;
 use App\Models\CommunityCarouselImage;
 use App\Models\PreviewSection2Caption;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
+use App\Models\Developer;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -113,9 +119,21 @@ public function index() // user side
                 'paragraph' => $goal ? $goal->paragraph : '',
             ],
         ];
-        
+        $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
+        $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
+        $contactUsTitle = ContactUsSectionTitle::first();
+        $contactUsDetails = ContactUsDetail::first();
+        $developers = Developer::all();
+        $initialContactUsData = [
+            'contactUsTitle' => $contactUsTitle->title,
+            // These are now single strings
+            'phoneNumbers' => $contactUsDetails->phone_numbers,
+            'emailAddresses' => $contactUsDetails->email_addresses,
+            'contactAddress' => $contactUsDetails->contact_address,
+        ];
         session()->flash('activeAdminScreen', 'projects');
-        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials','vmgEditableContentData', 'strategicPlans', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer'));
+        return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption',
+         'officials','vmgEditableContentData', 'strategicPlans', 'reports', 'keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'concerns', 'governmentlinks', 'footertitle', 'communityCarouselImages', 'communityContent', 'contentManager', 'contentOffer', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData','applications', 'developers'));
     }
 
     
@@ -155,39 +173,59 @@ public function index() // user side
         // Delete the project record
         $project->delete();
         session()->flash('activeAdminScreen', 'projects');
-        // Redirect back with success message
         return redirect()->back()->with('success', 'Project deleted successfully.');
     }
 
     public function edit(Project $project)
     {
-    // Return the view with the project data for editing
-    session()->flash('activeAdminScreen', 'projects'); // Added this to set screen on entering edit view
+    session()->flash('activeAdminScreen', 'projects'); 
     return view('Components.Admin.blog.projects.projEdit_modal', compact('project'));
     }
 
     public function update(Request $request, Project $project)
     {
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'site' => 'required|string|max:255',
-        'scope' => 'required|string|max:255',
-        'outcome' => 'required|string|max:255',
-        'url' => 'nullable|url|max:255',
-        'image_upload' => 'nullable|image|max:8192',
-    ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'site' => 'required|string|max:255',
+                'scope' => 'required|string|max:255',
+                'outcome' => 'required|string|max:255',
+                'url' => 'nullable|url|max:255',
+                'image_url' => 'nullable|image|max:8192', 
+            ]);
 
-    if ($request->hasFile('image_upload')) {
-        if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
-            Storage::disk('public')->delete($project->image_url);
+            // Handle image update
+            if ($request->hasFile('image_url')) { 
+
+                if ($project->image_url && !Str::startsWith($project->image_url, ['http://', 'https://']) && Storage::disk('public')->exists($project->image_url)) {
+                    Storage::disk('public')->delete($project->image_url);
+                }
+                $path = $request->file('image_url')->store('projects_images', 'public');
+                $validated['image_url'] = $path;
+            } else {
+                $validated['image_url'] = $project->image_url;
+            }
+
+            $project->update($validated);
+
+            return response()->json([
+                'message' => 'Project updated successfully!',
+                'project' => $project->fresh() 
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            return response()->json([
+                'message' => 'Validation Failed',
+                'errors' => $e->errors()
+            ], 422); 
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => 'Failed to update project. Please try again.',
+                'error' => $e->getMessage()
+            ], 500); 
         }
-        $path = $request->file('image_upload')->store('projects_images', 'public'); // changed here
-        $validated['image_url'] = $path;
-    }
-
-    $project->update($validated);
-    session()->flash('activeAdminScreen', 'projects');
-    return redirect()->route('admin.dashboard')->with('success', 'Project updated successfully.');
     }
 
 }

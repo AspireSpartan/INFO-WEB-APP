@@ -1,13 +1,30 @@
 {{-- resources/views/Components/Admin/newss/news_content.blade.php --}}
 
 <main class="flex-grow p-4 md:p-8 lg:p-12"
-      x-data="{ showUploadModal: false }" {{-- showUploadModal state is now managed here --}}
+      x-data="{
+          showUploadModal: false,
+          showEditModal: false, // New state for edit modal
+          editingNewsItem: {}, // New property to hold the news data for editing
+          currentEditImageUrl: null // To manage image preview in edit modal
+      }"
       x-init="
           // Open the modal if there are validation errors AND the session indicates the modal should be shown
           @if ($errors->any() && session('showUploadModal'))
               showUploadModal = true;
           @endif
-      ">
+      "
+      @open-admin-news-edit-modal.window="
+          editingNewsItem = $event.detail;
+          showEditModal = true;
+          currentEditImageUrl = editingNewsItem.picture ? '{{ asset('storage') }}/' + editingNewsItem.picture : null;
+      "
+      @close-admin-news-edit-modal.window="showEditModal = false;"
+      @news-item-updated.window="() => {
+          // Refresh the page or update the specific news item in the list
+          showEditModal = false;
+          window.location.reload(); // Simple reload to reflect changes
+      }"
+>
     <!-- Changed text color to D4AF37 -->
     <h1 class="text-[#D4AF37] text-3xl font-semibold font-montserrat mb-8 mt-4 md:ml-8">News</h1>
 
@@ -131,6 +148,9 @@
 
     {{-- The upload modal for news is now included here --}}
     <x-Admin.upload-Modal.upload-Modal x-show="showUploadModal"></x-Admin.upload-Modal.upload-Modal>
+
+    {{-- INCLUDE THE EDIT MODAL HERE --}}
+    <x-Admin.newss.edit x-show="showEditModal" :newsItem="$newsItems" @close-admin-news-edit-modal.window="showEditModal = false;" style="display: none;"/>
 </main>
 
 <script>
@@ -150,3 +170,45 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+<script>
+        function confirmBulkDelete() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="selected_news_items[]"]:checked');
+    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+
+    if (selectedIds.length === 0) {
+        alert('Please select at least one news item to delete.');
+        return;
+    }
+
+    if (confirm(`Are you sure you want to delete ${selectedIds.length} selected news item(s)?`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        // CHANGE THIS LINE:
+        form.action = '{{ route('news.hulkDestroy') }}'; // Correct route for announcements bulk delete
+
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        form.appendChild(csrfInput);
+
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        form.appendChild(methodInput);
+
+        selectedIds.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = id;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+    </script>
