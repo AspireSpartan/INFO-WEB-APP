@@ -252,7 +252,7 @@
 
         <div class="w-full h-px bg-neutral-400"></div>
 
-    <div class="flex-grow relative bg-white">
+    <div class="flex-grow relative bg-white overflow-y-auto">
         <template x-for="screen in screens" :key="screen">
             <div
                 x-show="activeScreen === screen"
