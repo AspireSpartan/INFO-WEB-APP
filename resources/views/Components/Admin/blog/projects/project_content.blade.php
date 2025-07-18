@@ -1,22 +1,38 @@
-@props(['projects', 'description']) <!--resources\views\Components\Admin\blog\projects\project_content.blade.php-->
+{{-- resources/views/Components/Admin/newss/news_content.blade.php --}}
+@props(['projects', 'description'])
 
 <div class="bg-neutral-100 rounded-xl shadow-inner p-4 md:p-6 lg:p-8 mt-4 mx-4 md:mx-8 lg:mx-12 overflow-y-auto"
-     x-data="{ showUploadModal: false }"> {{-- Added outer gray container with padding and rounded corners and Alpine.js data --}}
-
-    <div class="min-h-screen bg-white font-sans text-gray-800 rounded-lg shadow-sm p-6"> {{-- Main white container with rounded corners and shadow --}}
+     x-data="{
+        showUploadModal: false,
+        openModal: false, // For editDescription modal
+        showProjectEditModal: false, // New state for project edit modal
+        editingProject: {}, // New property to hold the project data for editing
+        currentProjectImageUrl: null // To manage image preview in project edit modal
+     }"
+     @open-admin-project-edit-modal.window="
+         editingProject = $event.detail;
+         showProjectEditModal = true;
+         currentProjectImageUrl = editingProject.image_url ? (editingProject.image_url.startsWith('http') ? editingProject.image_url : '{{ asset('storage') }}/' + editingProject.image_url) : null;
+     "
+     @close-admin-project-edit-modal.window="showProjectEditModal = false;"
+     @project-updated.window="() => {
+         showProjectEditModal = false;
+         window.location.reload(); // Simple reload to reflect changes
+     }"
+>
+    <div class="min-h-screen bg-white font-sans text-gray-800 rounded-lg shadow-sm p-6">
 
         <div class="container mx-auto px-4 pt-20 pb-10 text-center relative"
             x-data="{ hover: false, openModal: false }"
             @mouseenter="hover = true"
             @mouseleave="hover = false"
-            id="description-container" {{-- added id for JS targeting --}}
+            id="description-container"
         >
             <h1 class="text-5xl font-bold font-['Merriweather'] mb-8">
                 Our <span class="text-amber-500">Complete Projects</span>
             </h1>
             <p class="text-xl font-light font-['Source_Sans_Pro'] leading-relaxed max-w-8xl mx-auto">
--                {{ $description->description ?? 'this text is not from the database' }}
-+                {{ is_array($description->description) ? implode(', ', $description->description) : ($description->description ?? '') }}
+                {{ is_array($description->description) ? implode(', ', $description->description) : ($description->description ?? '') }}
             </p>
 
             <!-- Edit button shown on hover, centered overlay -->
@@ -25,7 +41,7 @@
                 @click="openModal = true"
                 class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white text-lg font-semibold rounded transition opacity-0 hover:opacity-100"
                 aria-label="Edit description"
-                id="edit-description-btn" {{-- added id for JS targeting --}}
+                id="edit-description-btn"
             >
                 Edit
             </button>
@@ -36,7 +52,7 @@
                 x-show="openModal"
                 @close="openModal = false"
                 x-transition
-                id="edit-description-modal" {{-- added id for JS targeting --}}
+                id="edit-description-modal"
             ></x-Admin.blog.projects.editDescription>
         </div>
         
@@ -103,18 +119,18 @@
         @endif
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-
             @foreach ($projects as $project)
                 {{-- Make sure this path is correct for your project cards --}}
-                @include('Components.Admin.blog.projects.project_cards', ['project' => $project, 'indexContent' => $loop->index])
+                <x-Admin.blog.projects.project_cards :project="$project" :indexContent="$loop->index" />
             @endforeach
-
         </div>
     </div>
 
     {{-- Include the Project Upload Modal --}}
-    @include('Components.Admin.blog.projects.projUpload_modal') {{-- This line is added --}}
+    @include('Components.Admin.blog.projects.projUpload_modal')
 
+    {{-- Include the Project Edit Modal --}}
+    <x-Admin.blog.projects.project_edit_modal x-show="showProjectEditModal" :project="$projects" @close-admin-project-edit-modal.window="showProjectEditModal = false;" style="display: none;"/>
 </div>
 
 <script>
