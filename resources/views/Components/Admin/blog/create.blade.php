@@ -1,7 +1,7 @@
 {{-- resources/views/Components/Admin/blog/create.blade.php --}}
 
 <div class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50"
-    x-show="showUploadModal" {{-- Control visibility with Alpine.js state --}}
+    x-show="showCreateModal" {{-- Changed from showUploadModal to showCreateModal --}}
     x-transition:enter="transition ease-out duration-300"
     x-transition:enter-start="opacity-0"
     x-transition:enter-end="opacity-100"
@@ -9,7 +9,7 @@
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0">
     <div class="bg-white rounded-lg shadow-xl p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto" {{-- CHANGED: max-w-3xl for wider, max-h-[90vh] for max height and overflow-y-auto for scrolling --}}
-        @click.away="showUploadModal = false" {{-- Closes modal on click outside --}}
+        @click.away="showCreateModal = false" {{-- Changed from showUploadModal to showCreateModal --}}
         x-transition:enter="transition ease-out duration-300 transform"
         x-transition:enter-start="opacity-0 scale-95"
         x-transition:enter-end="opacity-100 scale-100"
@@ -164,7 +164,7 @@
 
             {{-- Action Buttons --}}
             <div class="flex justify-end gap-4 mt-6"> {{-- Adjusted margin-top --}}
-                <button type="button" @click="showUploadModal = false" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded">Cancel</button>
+                <button type="button" @click="showCreateModal = false" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded">Cancel</button>
                 <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-white py-2 px-4 rounded">Submit</button>
             </div>
         </form>

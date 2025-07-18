@@ -3,13 +3,32 @@
 
 {{-- Add x-data for modal state. Re-open modal if there are errors or a session flag. --}}
 <div class="bg-neutral-100 rounded-xl shadow-inner p-4 md:p-6 lg:p-8 mt-4 mx-4 md:mx-8 lg:mx-12 overflow-y-auto"
-     x-data="{ showUploadModal: {{ $errors->any() || session('showCreateBlogModal') ? 'true' : 'false' }}, imageUrl: null, iconUrl: null }"> {{-- Added iconUrl --}}
+     x-data="{
+        showCreateModal: {{ $errors->any() || session('showCreateBlogModal') ? 'true' : 'false' }},
+        showEditModal: false, // New state for edit modal
+        editingBlog: {}, // New property to hold the blog data for editing
+        imageUrl: null,
+        iconUrl: null
+     }"
+     @open-admin-blog-edit-modal.window="editingBlog = $event.detail; showEditModal = true;"
+     @close-admin-blog-edit-modal.window="showEditModal = false;"
+     @blog-post-updated.window="() => {
+        // Optionally, re-fetch blogfeeds or update the specific card in the list
+        // For simplicity, you might just close the modal and rely on a page refresh
+        // or a more sophisticated Alpine.js data update.
+        // For now, we'll just close the modal and let the user see the change on next load/refresh.
+        showEditModal = false;
+        // You might want to dispatch a success message here or handle it in the modal itself
+        // alert('Blog post updated successfully!'); // Use a custom notification system instead of alert
+        window.location.reload(); // Simple reload to reflect changes
+     }"
+>
     <main class="p-4 md:p-8 lg:p-12 bg-white rounded-lg shadow-sm">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 mt-4 md:ml-8 gap-4">
             <h1 class="text-[#D4AF37] text-3xl font-semibold font-montserrat w-full md:w-auto">Manage Blog Posts</h1>
             {{-- CHANGED: Button now triggers the modal --}}
             <button type="button" class="flex items-center justify-center gap-2 px-6 py-2 bg-[#D4AF37] hover:bg-amber-500 text-white text-lg font-normal rounded-lg transition-colors shadow-md w-full md:w-auto"
-                    @click="showUploadModal = true; imageUrl = null; iconUrl = null;"> {{-- Reset image/icon preview on open --}}
+                    @click="showCreateModal = true; imageUrl = null; iconUrl = null;"> {{-- Reset image/icon preview on open --}}
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -50,8 +69,10 @@
         </div>
     </main>
 
-    {{-- INCLUDE THE MODAL HERE (the content of create.blade.php) --}}
+    {{-- INCLUDE THE CREATE MODAL HERE --}}
     @include('Components.Admin.blog.create')
+
+    {{-- INCLUDE THE EDIT MODAL HERE (the content of edit.blade.php) --}}
+    <x-Admin.blog.edit x-show="showEditModal" :blogfeed="$blogfeed" @close-admin-blog-edit-modal.window="showEditModal = false;" style="display: none;"/>
     
-</div>
 </div>

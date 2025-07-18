@@ -1,4 +1,5 @@
-@props(['project', 'indexContent']) <!--resources\views\Components\Admin\blog\projects\project_cards.blade.php-->
+{{-- resources/views/Components/Admin/Blog/projects/project_cards.blade.php --}}
+@props(['project', 'indexContent'])
 
 <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col justify-between transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
     {{-- Image --}}
@@ -17,7 +18,7 @@
         <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-xl text-gray-500 text-sm">No Image Available</div>
     @endif
 
-    <div class="p-6 flex flex-col flex-grow​">
+    <div class="p-6 flex flex-col flex-grow">
         {{-- Title --}}
         <h2 class="text-2xl font-bold font-['Merriweather'] text-gray-800 mb-2 truncate leading-tight">
             {{ $project->title }}
@@ -35,9 +36,12 @@
             <a href="{{ $project->url }}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-amber-500 text-white font-semibold rounded-md hover:bg-amber-600 transition-colors shadow-sm w-auto text-center whitespace-nowrap">
                 Read More
             </a>
-            <a href="{{ route('projects.edit', $project->id) }}" class="px-4 py-2 text-sm border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-md transition-colors shadow-sm w-auto text-center whitespace-nowrap">
+            {{-- Edit Button: Changed to a button that dispatches an Alpine.js event --}}
+            <button type="button"
+               @click="$dispatch('open-admin-project-edit-modal', {{ json_encode($project) }})"
+               class="px-4 py-2 text-sm border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-md transition-colors shadow-sm w-auto text-center whitespace-nowrap">
                 Edit
-            </a>
+            </button>
 
             <form action="{{ route('projects.destroy', $project->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this project?');" class="w-auto">
                 @csrf

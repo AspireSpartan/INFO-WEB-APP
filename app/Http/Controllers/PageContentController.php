@@ -9,10 +9,7 @@ namespace App\Http\Controllers;
 
         class PageContentController extends Controller
         {
-            /**
-             * Display all page content.
-             * This will return all key-value pairs stored in the database.
-             */
+
             public function show()
             {
                 $contents = PageContent::all()->pluck('value', 'key')->toArray();
@@ -20,10 +17,6 @@ namespace App\Http\Controllers;
                 return response()->json($contents);
             }
 
-            /**
-             * Update specified page content.
-             * Handles both text and image updates.
-             */
             public function update(Request $request)
             {
                 Log::info('PageContentController@update: Request received', $request->all());
@@ -40,7 +33,7 @@ namespace App\Http\Controllers;
                 if ($request->hasFile('file')) {
                     $file = $request->file('file');
                     $path = $file->store('page_images', 'public');
-                    $value = $path; // Only 'page_images/filename.png'
+                    $value = $path; 
                 }
 
                 $pageContent = PageContent::updateOrCreate(['key' => $key], ['value' => $value]);
@@ -50,15 +43,10 @@ namespace App\Http\Controllers;
                 return response()->json(['key' => $key, 'value' => $value]);
             }
 
-            public function index() // Or whatever your method name is, e.g., 'showDashboard', 'manage'
+            public function index() 
             {
-                // Fetch all page content from the database and pluck into an associative array
                 $pageContent = PageContent::pluck('value', 'key')->toArray();
-
-                // Return the admin dashboard view, passing the $pageContent array
-                // Make sure this path ('Admin_Side_Screen.Admin-Dashboard') matches how you call the view in your route
                 return view('Components.Admin.Ad-Header.Ad-Header', compact('pageContent'));
             }
-            // The initializeDefaultContent() method has been removed and moved to PageContentSeeder.php
         }
         

@@ -11,14 +11,6 @@ use Illuminate\View\View;
  */
 class AnnouncementController extends Controller
 {
-    /**
-     * Display a dedicated page listing all announcements.
-     *
-     * This can be used for a future "View All Announcements" page.
-     * For the component on the homepage, data is supplied via the Component Class.
-     *
-     * @return View
-     */
     public function index(): View
     {
         // Fetch announcements with pagination for a full-page view

@@ -110,19 +110,14 @@ Route::prefix('admin')->group(function () {
     Route::post('/teamdev/update', [PublicOfficialCaptionController::class, 'update'])->name('teamdev.update');
     Route::get('/teamdev', [PublicOfficialCaptionController::class, 'index'])->name('teamdev.index');
 
-    // NEW: CRUD Routes for individual Public Officials (name, position, picture, icon)
-    // This will provide:
-    // POST   /admin/public-officials          -> PublicOfficialController@store
-    // PUT    /admin/public-officials/{id}     -> PublicOfficialController@update
-    // DELETE /admin/public-officials/{id}     -> PublicOfficialController@destroy
     Route::resource('public-officials', PublicOfficialController::class)->except(['create', 'show', 'edit', 'index']);
-    // Note: 'index' is excluded because your 'teamdev.index' already serves the view
-    // with all officials data. The JS will get all data through the initial render.
 
     Route::resource('news', NewsController::class);
     Route::delete('news', [NewsController::class, 'hulkDestroy'])->name('news.hulkDestroy');
-    Route::resource('projects', ProjectController::class);
+    
     Route::get('projects', [ProjectController::class, 'indexAdmin'])->name('projects.indexAdmin');
+    Route::resource('projects', ProjectController::class)->except(['index']);
+
     Route::post('/project-description/update', [ProjectDescriptionController::class, 'update'])->name('project-description.update');
     Route::post('/logos', [PreviewSection2LogoController::class, 'store'])->name('logos.store');
     Route::delete('/logos/{id}', [PreviewSection2LogoController::class, 'destroy'])->name('logos.destroy');
