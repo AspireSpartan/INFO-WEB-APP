@@ -18,10 +18,9 @@ class PreviewSection2CaptionController extends Controller
     {
         $request->validate(['caption' => 'required|string']);
 
-        // Since there's only one caption, we can update it like this.
-        // This will update the first record, or create one if it doesn't exist.
+
         $caption = PreviewSection2Caption::updateOrCreate(
-            ['id' => 1], // Assuming the ID is always 1, or use a known condition
+            ['id' => 1],
             ['caption' => $request->input('caption')]
         );
 
