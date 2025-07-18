@@ -1,7 +1,7 @@
 {{-- resources/views/Components/Admin/dashboard_content.blade.php --}}
 @props(['concerns', 'reports', 'applications'])
 
-<div class="p-4 md:p-6 lg:p-8"> {{-- Outer container for consistent padding --}}
+<div class="p-4 md:p-6 lg:p-8 "> {{-- Outer container for consistent padding --}}
     <!-- Dashboard Header Area -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
         <h1 class="text-[#37474F] text-3xl font-semibold font-montserrat mb-4 sm:mb-0">LGU Dashboard</h1>
@@ -186,6 +186,8 @@
             </div>
         </div>
     </section>
+
+    <!--Tables -->
     <section class="mb-8">
         <x-Admin.dashboard.tables
         :concerns="$concerns"
