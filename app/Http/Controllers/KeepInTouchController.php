@@ -9,10 +9,9 @@ class KeepInTouchController extends Controller
 {
     public function edit()
     {
-        //$keepInTouch = KeepInTouch::with('socialLinks')->firstOrFail();
-        // Eager load socialLinks with the 'icon' column
+
         $keepInTouch = KeepInTouch::with(['socialLinks' => function($query) {
-            $query->select('id', 'platform', 'url', 'icon'); // Select specific columns including 'icon'
+            $query->select('id', 'platform', 'url', 'icon'); 
         }])->firstOrFail();
         return view('Components.Admin.Ad-Header.Ad-Header', compact('keepInTouch'));
     }
@@ -26,7 +25,7 @@ class KeepInTouchController extends Controller
                 'social_links' => 'array',
                 'social_links.*.platform' => 'required|string|max:255',
                 'social_links.*.url' => 'required|url|max:255',
-                'social_links.*.icon' => 'nullable|string|max:255', // Added validation for icon
+                'social_links.*.icon' => 'nullable|string|max:255', 
             ]);
 
             $keepInTouch = KeepInTouch::firstOrFail();
@@ -35,9 +34,6 @@ class KeepInTouchController extends Controller
                 'text_content' => $data['text_content'],
             ]);
 
-            // Sync social links: delete existing and re-create
-            // This approach is simple but re-creates all links.
-            // For large numbers of links, consider syncWithoutDetaching or upsert.
             $keepInTouch->socialLinks()->delete();
             foreach ($data['social_links'] as $link) {
                 $keepInTouch->socialLinks()->create($link);

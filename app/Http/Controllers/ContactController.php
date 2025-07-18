@@ -4,27 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ContactFormMail; // Import your Mailable class
-use App\Models\ContactMessage; // Ensure this is imported if you're saving to DB
-use Illuminate\Support\Facades\Log; // For logging errors
+use App\Mail\ContactFormMail; 
+use App\Models\ContactMessage; 
+use Illuminate\Support\Facades\Log; 
 
 class ContactController extends Controller
 {
     public function submit(Request $request)
     {
-        // 1. Validate the incoming request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'subject' => 'required|string|max:255',
-            'message_description' => 'required|string', // Your original variable name for message content
+            'message_description' => 'required|string', 
         ]);
 
         // 2. Extract data
         $name = $validatedData['name'];
         $email = $validatedData['email'];
         $subject = $validatedData['subject'];
-        $messageContent = $validatedData['message_description']; // Your original variable for content
+        $messageContent = $validatedData['message_description']; 
 
         $emailSentSuccessfully = false;
         $messageSavedSuccessfully = false;
@@ -32,30 +31,26 @@ class ContactController extends Controller
 
         // --- Attempt to send the email first ---
         try {
-            // Ensure your Mailable (ContactFormMail) constructor accepts these parameters correctly.
+
             Mail::to('grocksilem@gmail.com')->send(new ContactFormMail($name, $email, $subject, $messageContent));
             $emailSentSuccessfully = true;
             Log::info('Contact form email sent successfully to grocksilem@gmail.com.');
         } catch (\Exception $e) {
-            // Log the email sending failure, but don't stop the process
             Log::error('Failed to send contact form email via Mailtrap: ' . $e->getMessage());
-            // You might want to check for specific Mailtrap errors here if needed,
-            // e.g., by inspecting $e->getMessage() for "50 messages limit"
         }
 
         // --- Always attempt to save the message to the database ---
         try {
             ContactMessage::create([
-                'user_name' => $name,                // Maps 'name' from form to 'user_name' in DB
-                'user_email' => $email,              // Maps 'email' from form to 'user_email' in DB
+                'user_name' => $name,                
+                'user_email' => $email,              
                 'subject' => $subject,
-                'message' => $messageContent,        // Maps 'message_description' from form to 'message' in DB
-                'is_read' => false,                  // Default to unread for new messages
+                'message' => $messageContent,       
+                'is_read' => false,                 
             ]);
             $messageSavedSuccessfully = true;
             Log::info('Contact message saved to database successfully.');
         } catch (\Exception $e) {
-            // Log the database saving failure
             Log::error('Failed to save contact message to database: ' . $e->getMessage());
         }
 

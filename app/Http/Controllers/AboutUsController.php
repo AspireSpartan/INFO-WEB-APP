@@ -17,10 +17,10 @@ use App\Models\AboutUsContentManager;
 use App\Models\ContactUsSectionTitle;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ContentManagerLogosImage;
-use App\Models\CommunityContent; // Import the CommunityContent model
-use App\Models\CommunityCarouselImage; // Import the CommunityCarouselImage model
-use App\Models\Developer; // Import the Developer model
-use App\Models\AboutUsSection4Content; // Import the AboutUsSection4Content model
+use App\Models\CommunityContent;
+use App\Models\CommunityCarouselImage; 
+use App\Models\Developer; 
+use App\Models\AboutUsSection4Content; 
 
 class AboutUsController extends Controller
 {
@@ -46,11 +46,6 @@ class AboutUsController extends Controller
         return view('Components.Admin.Ad-Header.Ad-Header', compact('contentManager', 'contentOffer'));
     }
 
-    /**
-     * Display the user-facing About Us page with dynamic content.
-     *
-     * @return \Illuminate\View\View
-     */
     public function showUserAboutUs()
     {
         $contentManager = AboutUsContentManager::pluck('content', 'key')->toArray();
@@ -122,12 +117,6 @@ class AboutUsController extends Controller
         return view('User_Side_Screen.about-us', compact('contentManager', 'contentOffer', 'communityContent', 'carouselImages', 'contentMlogos', 'strategicPlans', 'vmgEditableContentData','keepInTouch', 'footerLogo', 'aboutGovph', 'govphLinks', 'governmentlinks', 'footertitle', 'contactUsTitle', 'contactUsDetails', 'initialContactUsData','developers'));
     }
 
-    /**
-     * Store or update a piece of About Us content.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function updateContent(Request $request)
     {
         $request->validate([
@@ -141,13 +130,6 @@ class AboutUsController extends Controller
         return response()->json(['message' => 'Content updated successfully.', 'data' => $content]);
     }
 
-    /**
-     * Store a new About Us offer or update an existing one.
-     * This function is modified to only accept image uploads (Base64 strings) for icons.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function storeOffer(Request $request)
     {
         $request->validate([
@@ -222,13 +204,6 @@ class AboutUsController extends Controller
         return response()->json(['message' => $message, 'data' => $offer]);
     }
 
-    /**
-     * Delete an About Us offer.
-     * This function is modified to only consider locally stored image files for deletion.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function deleteOffer($id)
     {
         $offer = AboutUsOffer::findOrFail($id);
@@ -244,12 +219,6 @@ class AboutUsController extends Controller
         return response()->json(['message' => 'Offer deleted successfully.']);
     }
 
-    /**
-     * Returns all About Us offers as JSON.
-     * This is a new method to support the Alpine.js frontend logic for offer comparison.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getOffersJson()
     {
         return response()->json(AboutUsOffer::all());

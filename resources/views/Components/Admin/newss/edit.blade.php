@@ -1,8 +1,8 @@
-{{-- resources/views/Components/Admin/blog/edit.blade.php --}}
-@props(['blogfeed'])
+{{-- resources/views/Components/Admin/newss/edit.blade.php --}}
+@props(['newsItem'])
 
 <div
-    x-show="showEditModal" {{-- This x-show is controlled by the parent blog_content.blade.php --}}
+    x-show="showEditModal" {{-- This x-show is controlled by the parent news_content.blade.php --}}
     x-transition:enter="transition ease-out duration-200"
     x-transition:enter-start="opacity-0 scale-95"
     x-transition:enter-end="opacity-100 scale-100"
@@ -10,20 +10,20 @@
     x-transition:leave-start="opacity-100 scale-100"
     x-transition:leave-end="opacity-0 scale-95"
     class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 p-4"
-    @click.self="$dispatch('close-admin-blog-edit-modal')" {{-- Close modal when clicking outside --}}
+    @click.self="$dispatch('close-admin-news-edit-modal')" {{-- Close modal when clicking outside --}}
     x-cloak {{-- Hide until Alpine is initialized --}}
-    x-data="blogEditModalComponent()" {{-- Initialize with no data, will be populated by event --}}
-    @keydown.escape.window="$dispatch('close-admin-blog-edit-modal')" {{-- Close on Escape key --}}
-    @open-admin-blog-edit-modal.window="initModal($event.detail)" {{-- Listen for event to populate data --}}
+    x-data="newsEditModalComponent()" {{-- Initialize with no data, will be populated by event --}}
+    @keydown.escape.window="$dispatch('close-admin-news-edit-modal')" {{-- Close on Escape key --}}
+    @open-admin-news-edit-modal.window="initModal($event.detail)" {{-- Listen for event to populate data --}}
     x-trap.noscroll {{-- Prevent scrolling on body when modal is open --}}
 >
     <div
-        class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full m-4 relative flex flex-col max-h-[90vh]"
+        class="bg-white rounded-2xl shadow-2xl max-w-lg w-full m-4 relative flex flex-col max-h-[90vh]"
     >
         <div class="flex items-center justify-between p-6 pb-4 border-b border-gray-200">
-            <h2 class="text-xl font-medium text-gray-900">Edit Blog Post</h2>
+            <h2 class="text-xl font-medium text-gray-900">Edit News Item</h2>
             <button
-                @click="$dispatch('close-admin-blog-edit-modal')"
+                @click="$dispatch('close-admin-news-edit-modal')"
                 class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full p-1 transition-colors duration-200"
                 aria-label="Close"
             >
@@ -33,7 +33,7 @@
             </button>
         </div>
 
-        <form @submit.prevent="updateBlogPost" enctype="multipart/form-data" class="flex-grow overflow-y-auto p-6">
+        <form @submit.prevent="updateNewsItem" enctype="multipart/form-data" class="flex-grow overflow-y-auto p-6">
             @csrf
             @method('PUT') {{-- Essential for update method --}}
 
@@ -67,57 +67,49 @@
             </div>
 
             <div class="mb-4">
-                <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content:</label>
-                <textarea name="content" id="content" rows="10" x-model="content" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
-            </div>
-
-            <div class="mb-4">
                 <label for="author" class="block text-gray-700 text-sm font-bold mb-2">Author:</label>
                 <input type="text" name="author" id="author" x-model="author" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
 
             <div class="mb-4">
-                <label for="authortitle" class="block text-gray-700 text-sm font-bold mb-2">Author Title:</label>
-                <input type="text" name="authortitle" id="authortitle" x-model="authortitle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="date" class="block text-gray-700 text-sm font-bold mb-2">Date:</label>
+                <input type="date" name="date" id="date" x-model="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
 
             <div class="mb-4">
-                <label for="published_at" class="block text-gray-700 text-sm font-bold mb-2">Published Date:</label>
-                <input type="date" name="published_at" id="published_at" x-model="published_at" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <label for="url" class="block text-gray-700 text-sm font-bold mb-2">URL:</label>
+                <input type="url" name="url" id="url" x-model="url" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+
+            <div class="mb-4 flex items-center">
+                <input type="checkbox" name="sponsored" id="sponsored" x-model="sponsored" class="mr-2 leading-tight">
+                <label for="sponsored" class="text-sm text-gray-700">Sponsored</label>
             </div>
 
             <div class="mb-4">
-                <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Main Image (Current):</label>
-                <template x-if="currentImagePath">
-                    <img :src="currentImagePath" alt="Current Blog Image" class="mb-2 max-w-xs h-auto">
+                <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Image (Current):</label>
+                <template x-if="currentPicturePath">
+                    <img :src="currentPicturePath" alt="Current News Image" class="mb-2 max-w-xs h-auto">
                 </template>
-                <template x-if="!currentImagePath">
-                    <p>No current main image.</p>
+                <template x-if="!currentPicturePath">
+                    <p>No current image.</p>
                 </template>
-                <label for="image" class="block text-gray-700 text-sm font-bold mb-2 mt-2">Upload New Main Image (Optional):</label>
+                <label for="image" class="block text-gray-700 text-sm font-bold mb-2 mt-2">Upload New Image (Optional):</label>
                 <input type="file" name="image" id="image" @change="handleImageUpload" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <p class="text-xs text-gray-500 mt-1">Max file size: 8MB. Allowed formats: jpeg, png, jpg, gif, svg.</p>
+                <p class="text-xs text-gray-500 mt-1">Max file size: 8MB. Allowed formats: jpeg, png, jpg, gif.</p>
             </div>
 
             <div class="mb-4">
-                <label for="icon" class="block text-gray-700 text-sm font-bold mb-2">Author Icon (Current):</label>
-                <template x-if="currentIconPath">
-                    <img :src="currentIconPath" alt="Current Icon" class="mb-2 w-16 h-16 rounded-full object-cover">
-                </template>
-                <template x-if="!currentIconPath">
-                    <p>No current icon.</p>
-                </template>
-                <label for="icon" class="block text-gray-700 text-sm font-bold mb-2 mt-2">Upload New Icon (Optional):</label>
-                <input type="file" name="icon" id="icon" @change="handleIconUpload" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <p class="text-xs text-gray-500 mt-1">Max file size: 999KB. Allowed formats: jpeg, png, jpg, gif, svg.</p>
+                <label for="views" class="block text-gray-700 text-sm font-bold mb-2">Views:</label>
+                <input type="number" name="views" id="views" x-model="views" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
 
             <div class="flex items-center justify-end gap-3 mt-6">
-                <button type="button" @click="$dispatch('close-admin-blog-edit-modal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+                <button type="button" @click="$dispatch('close-admin-news-edit-modal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
                     Cancel
                 </button>
                 <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
-                    Update Blog Post
+                    Update News
                 </button>
             </div>
         </form>
@@ -125,98 +117,82 @@
 </div>
 
 <script>
-    function blogEditModalComponent() { // No initial data passed here
+    function newsEditModalComponent() {
         return {
-            blogId: null, // Initialize as null
+            newsId: null,
             title: '',
-            content: '',
             author: '',
-            authortitle: '',
-            published_at: '',
-            currentImagePath: null,
-            currentIconPath: null,
-            newImageFile: null,
-            newIconFile: null,
+            date: '',
+            url: '',
+            sponsored: false,
+            currentPicturePath: null,
+            newPictureFile: null,
+            views: 0,
             showNotification: false,
             notificationMessage: '',
             notificationType: '',
 
-            initModal(blogfeed) {
-                // This function is called when the 'open-admin-blog-edit-modal' event is dispatched
-                this.blogId = blogfeed.id;
-                this.title = blogfeed.title;
-                this.content = blogfeed.content;
-                this.author = blogfeed.author;
-                this.authortitle = blogfeed.authortitle;
-                this.published_at = blogfeed.published_at ? new Date(blogfeed.published_at).toISOString().split('T')[0] : '';
-                this.currentImagePath = blogfeed.image_path ? '{{ asset('storage') }}/' + blogfeed.image_path : null;
-                this.currentIconPath = blogfeed.icon_path ? '{{ asset('storage') }}/' + blogfeed.icon_path : null;
-                this.newImageFile = null; // Reset file inputs
-                this.newIconFile = null; // Reset file inputs
+            initModal(newsItem) {
+                this.newsId = newsItem.id;
+                this.title = newsItem.title;
+                this.author = newsItem.author;
+                // Format date to YYYY-MM-DD for input type="date"
+                this.date = newsItem.date ? new Date(newsItem.date).toISOString().split('T')[0] : '';
+                this.url = newsItem.url;
+                this.sponsored = newsItem.sponsored == 1 ? true : false; // Convert to boolean
+                this.currentPicturePath = newsItem.picture ? '{{ asset('storage') }}/' + newsItem.picture : null;
+                this.newPictureFile = null; // Reset file input
+                this.views = newsItem.views;
                 this.showNotification = false; // Hide any previous notifications
             },
 
             handleImageUpload(event) {
                 const file = event.target.files[0];
                 if (file) {
-                    this.newImageFile = file;
+                    this.newPictureFile = file;
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        this.currentImagePath = e.target.result; // Update preview
+                        this.currentPicturePath = e.target.result; // Update preview
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    this.newImageFile = null;
-                    // When clearing input, revert to original image if available
-                    this.currentImagePath = this.blogId ? '{{ asset('storage') }}/' + this.blogfeed.image_path : null;
+                    this.newPictureFile = null;
+                    // Revert to original image if available (needs access to original newsItem data)
+                    // This is tricky without passing original newsItem into x-data or fetching it.
+                    // For now, it will just clear the preview if no new file is selected.
+                    // A more robust solution might involve re-fetching the original newsItem on modal close/reopen
+                    // or storing the original path in a separate Alpine.js variable.
+                    // For simplicity, we'll rely on initModal to set it correctly on open.
+                    this.currentPicturePath = this.newsId ? '{{ asset('storage') }}/' + this.newsItem.picture : null;
                 }
             },
 
-            handleIconUpload(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    this.newIconFile = file;
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.currentIconPath = e.target.result; // Update preview
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    this.newIconFile = null;
-                    // When clearing input, revert to original icon if available
-                    this.currentIconPath = this.blogId ? '{{ asset('storage') }}/' + this.blogfeed.icon_path : null;
-                }
-            },
-
-            async updateBlogPost() {
+            async updateNewsItem() {
                 this.showNotification = false; // Hide previous notification
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
                 const formData = new FormData();
                 formData.append('_method', 'PUT'); // Laravel requires this for PUT requests
                 formData.append('title', this.title);
-                formData.append('content', this.content);
                 formData.append('author', this.author);
-                formData.append('authortitle', this.authortitle || ''); // Handle nullable
-                formData.append('published_at', this.published_at);
-                if (this.newImageFile) {
-                    formData.append('image', this.newImageFile);
-                }
-                if (this.newIconFile) {
-                    formData.append('icon', this.newIconFile);
+                formData.append('date', this.date);
+                formData.append('url', this.url);
+                formData.append('sponsored', this.sponsored ? 1 : 0); // Convert boolean to 1 or 0
+                formData.append('views', this.views);
+                if (this.newPictureFile) {
+                    formData.append('image', this.newPictureFile); // Use 'image' as the field name for the controller
                 }
 
                 try {
-                    // Ensure blogId is valid before making the fetch request
-                    if (!this.blogId) {
+                    if (!this.newsId) {
                         this.notificationType = 'error';
-                        this.notificationMessage = 'Error: Blog ID is missing. Cannot update.';
+                        this.notificationMessage = 'Error: News ID is missing. Cannot update.';
                         this.showNotification = true;
                         setTimeout(() => { this.showNotification = false; }, 5000);
                         return;
                     }
 
-                    const response = await fetch(`/admin/blogs/${this.blogId}`, { // Use dynamic route
+                    const response = await fetch(`/admin/news/${this.newsId}`, { // Use dynamic route
                         method: 'POST', // Fetch API uses POST for FormData with _method PUT
                         headers: {
                             'X-CSRF-TOKEN': csrfToken,
@@ -228,15 +204,15 @@
                     if (response.ok) {
                         const result = await response.json();
                         this.notificationType = 'success';
-                        this.notificationMessage = result.message || 'Blog post updated successfully!';
+                        this.notificationMessage = result.message || 'News item updated successfully!';
                         this.showNotification = true;
 
                         // Dispatch event to parent to update list or refresh
-                        window.dispatchEvent(new CustomEvent('blog-post-updated', { detail: result }));
+                        window.dispatchEvent(new CustomEvent('news-item-updated', { detail: result }));
 
                         setTimeout(() => {
                             this.showNotification = false;
-                            this.$dispatch('close-admin-blog-edit-modal'); // Close modal after success
+                            this.$dispatch('close-admin-news-edit-modal'); // Close modal after success
                         }, 2000);
 
                     } else {
