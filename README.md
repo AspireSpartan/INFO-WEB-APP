@@ -111,6 +111,15 @@ php artisan view:clear           # Clear compiled view files
 php artisan optimize:clear       # Clear all caches (config, route, view)
 php artisan optimize             # Cache config and routes for optimization
 
+(Just in case)
+composer dump-autoload
+
+(check if there classes not called and found)
+php artisan config:clear
+
+(laravel composer update)
+composer update
+
 *************************************************************************
 
 ▶️ Running the Application

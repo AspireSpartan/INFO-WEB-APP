@@ -212,7 +212,7 @@
                             </template>
 
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-blue-600"
-                             @click.prevent="switchScreen('notifications'); open = false; resetNotifications();">View All Notifications</a>
+                             @click.prevent="switchScreen('notifications'); open = false; resetNotifications();">Contact Us</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                              @click.prevent="switchScreen('reported_concerns'); open = false">Manage Reported Concerns</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
