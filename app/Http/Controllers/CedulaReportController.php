@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CedulaReport;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CedulaReportController extends Controller
 {
@@ -30,7 +31,10 @@ class CedulaReportController extends Controller
         $validated['cedula_declaration_consent'] = $request->has('cedula_declaration_consent');
         CedulaReport::create($validated);
 
-        return back()->with('success', 'Your cedula application has been submitted successfully!');
+        $pdf = Pdf::loadView('pdf.cedula', ['data' => $validated]);
+        return back()
+            ->with('success', 'Your cedula application has been submitted successfully!')
+            ->with('pdf', $pdf->output());
     }
     
     public function update(Request $request, CedulaReport $cedulaReport)
