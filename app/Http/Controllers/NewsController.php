@@ -119,6 +119,7 @@ class NewsController extends Controller
             'emailAddresses' => $contactUsDetails->email_addresses,
             'contactAddress' => $contactUsDetails->contact_address,
         ];
+        session()->flash('activeAdminScreen', 'news');
         $reports = CedulaReport::orderBy('created_at', 'desc')->paginate(15);
         $applications = BusinessPermit::orderBy('created_at', 'desc')->paginate(15);
         return view('Components.Admin.Ad-Header.Ad-Header', compact('newsItems', 'request', 'contactMessages', 'blogfeeds', 'pageContent', 'projects', 'description', 'logos', 'caption', 'contentMlogos', 'publicOfficialCaption', 'officials', 'strategicPlans', 'vmgEditableContentData', 'keepInTouch' , 'aboutGovph' , 'footerLogo', 'govphLinks',
@@ -275,7 +276,8 @@ class NewsController extends Controller
             // Return JSON response for AJAX success
             return response()->json([
                 'message' => 'News item updated successfully!',
-                'newsItem' => $newsItem->fresh() // Return the fresh model data
+                'newsItem' => $newsItem->fresh(), // Return the fresh model data
+                'activeAdminScreen' => 'news',
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -293,6 +295,7 @@ class NewsController extends Controller
                 'error' => $e->getMessage()
             ], 500); // HTTP 500 Internal Server Error
         }
+        session()->flash('activeAdminScreen', 'news');
     }
 
     /**
