@@ -6,6 +6,14 @@
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
+                @if(session('pdf'))
+                    <div class="mt-2">
+                        <a href="data:application/pdf;base64,{{ base64_encode(session('pdf')) }}" download="business_permit.pdf" 
+                           class="text-blue-600 hover:text-blue-800 font-medium">
+                            Download your business permit
+                        </a>
+                    </div>
+                @endif
             </div>
         @endif
 
@@ -198,10 +206,6 @@
 
             <!-- Submit Button -->
             <div class="flex justify-end pt-4 gap-2">
-                <a href=" https://drive.google.com/file/d/1bKmYKh4XnEJBLkfYPUYQ40txjq-dAbeW/view?usp=sharing" target="_blank"
-                    class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700">
-                        Download Form
-                </a>
                 <button type="submit"
                     class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
                     Submit Application

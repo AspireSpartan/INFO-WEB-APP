@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BusinessPermit;
 use Illuminate\Http\Request;
+use App\Models\BusinessPermit;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 
 class BusinessPermitController extends Controller
@@ -32,9 +34,13 @@ class BusinessPermitController extends Controller
             'declaration_consent' => 'required|accepted'
         ]);
 
-        BusinessPermit::create($validated);
-
-        return redirect()->route('businesspermit')->with('success', 'Application submitted successfully!');
+        $permit = BusinessPermit::create($validated);
+        
+        $pdf = Pdf::loadView('pdf.business_permit', ['permit' => $permit]);
+        
+        return redirect()->route('businesspermit')
+            ->with('success', 'Application submitted successfully!')
+            ->with('pdf', $pdf->output());
     }
 
     public function adminIndex()
