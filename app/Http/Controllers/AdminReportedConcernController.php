@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ReportedConcern;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminReportedConcernController extends Controller
 {
@@ -57,8 +58,13 @@ class AdminReportedConcernController extends Controller
 
         $validatedData['status'] = 'pending';
 
-        ReportedConcern::create($validatedData);
+        $concern = ReportedConcern::create($validatedData);
+        
+        $pdf = Pdf::loadView('Components.User.reportconcern.pdf', ['concern' => $concern]);
+        $pdfData = $pdf->output();
 
-        return redirect()->back()->with('success', 'Your concern has been reported successfully.');
+        return redirect()->back()
+            ->with('success', 'Your concern has been reported successfully.')
+            ->with('pdf', $pdfData);
     }
 }
