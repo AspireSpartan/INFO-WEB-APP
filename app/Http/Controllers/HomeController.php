@@ -24,17 +24,11 @@ use App\Models\ContactUsSectionTitle;
 use App\Models\PublicOfficialCaption;
 use App\Models\PreviewSection2Caption;
 use App\Models\ContentManagerLogosImage;
-use App\Models\Announcement; // Import the Announcement model
+use App\Models\Announcement; 
 
 class HomeController extends Controller
 {
-    /**
-     * Show the application's user-facing home dashboard.
-     * This method fetches all content from the 'page_contents' table
-     * and passes it to the home view.
-     *
-     * @return \Illuminate\View\View
-     */
+
     public function index()
     {
         $publicOfficialCaption = PublicOfficialCaption::find(1);
@@ -64,7 +58,6 @@ class HomeController extends Controller
         $contactUsDetails = ContactUsDetail::first(); 
         $initialContactUsData = [
             'contactUsTitle' => $contactUsTitle->title,
-            // These are now single strings
             'phoneNumbers' => $contactUsDetails->phone_numbers,
             'emailAddresses' => $contactUsDetails->email_addresses,
             'contactAddress' => $contactUsDetails->contact_address,
@@ -104,12 +97,6 @@ class HomeController extends Controller
 
     }
 
-    /**
-     * Show the application's blog page.
-     * This method fetches data relevant to the blog page.
-     *
-     * @return \Illuminate\View\View
-     */
     public function blogIndex()
     {
         // Fetch data relevant to the blog page

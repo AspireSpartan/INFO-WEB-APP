@@ -30,10 +30,8 @@ class PreviewSection2LogoController extends Controller
             'logo' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:8049',
         ]);
 
-        // Store the file in storage/app/public/logos using the 'public' disk explicitly
         $path = $request->file('logo')->store('logos', 'public');
 
-        // Save the path relative to 'storage' URL (prefix with 'storage/')
         $logo = PreviewSection2Logo::create([
             'logo' => 'storage/' . $path
         ]);
@@ -46,7 +44,6 @@ class PreviewSection2LogoController extends Controller
     {
         $logo = PreviewSection2Logo::findOrFail($id);
         
-        // Convert stored logo path back to storage path for deletion
         $path = str_replace('storage/', '', $logo->logo);
 
         if (Storage::disk('public')->exists($path)) {

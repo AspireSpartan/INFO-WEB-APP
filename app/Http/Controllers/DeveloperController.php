@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class DeveloperController extends Controller
 {
-    /**
-     * Display a listing of the developers.
-     */
     public function index()
     {
         // This method will be used to display the main page with developers
@@ -19,9 +16,6 @@ class DeveloperController extends Controller
         return view('components.admin.about-us.section-4', compact('developers'));
     }
 
-    /**
-     * Store a newly created developer in storage.
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -55,8 +49,6 @@ class DeveloperController extends Controller
     public function showUserAboutUs()
     {
         $developers = Developer::all();
-
-        // Fetch community content and set default values for section 4 header
         $communityContent = CommunityContent::pluck('content', 'key')->toArray();
         $section4Content = array_merge([
             'main_title_part1' => 'Meet',
@@ -68,14 +60,9 @@ class DeveloperController extends Controller
         return view('Components.User_Side_Screen.about-us', compact(
             'developers',
             'section4Content'
-            // Add other data needed for other sections of about-us page here
-            // Example: 'contentManager', 'contentOffer', 'contentMlogos', 'vmgEditableContentData', 'strategicPlans', 'carouselImages'
         ));
     }
 
-    /**
-     * Update the specified developer in storage.
-     */
     public function update(Request $request, Developer $developer)
     {
         $validator = Validator::make($request->all(), [
@@ -92,7 +79,6 @@ class DeveloperController extends Controller
 
         $imagePath = $developer->image_url;
         if ($request->hasFile('image')) {
-            // Delete old image if it exists
             if ($imagePath && Storage::disk('public')->exists($imagePath)) {
                 Storage::disk('public')->delete($imagePath);
             }
@@ -110,9 +96,6 @@ class DeveloperController extends Controller
         return response()->json(['message' => 'Developer updated successfully!', 'developer' => $developer], 200);
     }
 
-    /**
-     * Remove the specified developer from storage.
-     */
     public function destroy(Developer $developer)
     {
         // Delete image from storage

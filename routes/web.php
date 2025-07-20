@@ -26,13 +26,13 @@ use App\Http\Controllers\AdminAnnouncementController;
 use App\Http\Controllers\ProjectDescriptionController;
 use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\AdminReportedConcernController;
-use App\Http\Controllers\PublicOfficialCaptionController;
+use App\Http\Controllers\PublicOfficialCaptionController; // For header caption
+use App\Http\Controllers\PublicOfficialController;      // <-- ADD THIS FOR INDIVIDUAL OFFICIALS
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\CedulaReportController;
 use App\Http\Controllers\BusinessPermitController;
 use App\Http\Controllers\DeveloperController;
-
 
 
 Route::get('/', function () {
@@ -105,12 +105,19 @@ Route::prefix('admin')->group(function () {
     Route::get('/keep-in-touch/edit', [KeepInTouchController::class, 'edit'])->name('keep-in-touch.edit');
     Route::post('/keep-in-touch/update', [KeepInTouchController::class, 'update'])->name('keep-in-touch.update');
     Route::post('/footer-logo/update', [FooterLogoController::class, 'update'])->name('footer.logo.update');
+
+    // Existing header update route (for title, caption of the officials page)
     Route::post('/teamdev/update', [PublicOfficialCaptionController::class, 'update'])->name('teamdev.update');
     Route::get('/teamdev', [PublicOfficialCaptionController::class, 'index'])->name('teamdev.index');
+
+    Route::resource('public-officials', PublicOfficialController::class)->except(['create', 'show', 'edit', 'index']);
+
     Route::resource('news', NewsController::class);
     Route::delete('news', [NewsController::class, 'hulkDestroy'])->name('news.hulkDestroy');
-    Route::resource('projects', ProjectController::class);
+    
     Route::get('projects', [ProjectController::class, 'indexAdmin'])->name('projects.indexAdmin');
+    Route::resource('projects', ProjectController::class)->except(['index']);
+
     Route::post('/project-description/update', [ProjectDescriptionController::class, 'update'])->name('project-description.update');
     Route::post('/logos', [PreviewSection2LogoController::class, 'store'])->name('logos.store');
     Route::delete('/logos/{id}', [PreviewSection2LogoController::class, 'destroy'])->name('logos.destroy');
@@ -166,5 +173,4 @@ Route::prefix('admin')->group(function () {
     Route::get('/business-permits', [BusinessPermitController::class, 'adminIndex'])->name('admin.business-permits');
     Route::post('/business-permits/{application}/update-status', [BusinessPermitController::class, 'updateStatus'])->name('admin.business-permits.update-status');
     Route::get('/admin/business-permits/{application}/details', [BusinessPermitController::class, 'showDetails'])->name('admin.business-permits.details');
-    });
-
+});

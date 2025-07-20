@@ -69,8 +69,10 @@
                 class="fixed z-[9999] right-8 top-auto mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                 <div class="py-1" role="none">
-                    {{-- Update Link --}}
-                    <a href="{{ route('news.edit', $newsItem->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update</a>
+                    {{-- Update Button: Changed to a button that dispatches an Alpine.js event --}}
+                    <button type="button"
+                       @click="$dispatch('open-admin-news-edit-modal', {{ json_encode($newsItem) }}); open = false;"
+                       class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Update</button>
 
                     {{-- Delete Form (using a form for DELETE request) --}}
                     <form action="{{ route('news.destroy', $newsItem->id) }}" method="POST" class="block" onsubmit="return confirm('Are you sure you want to delete this news item?');" role="none">
