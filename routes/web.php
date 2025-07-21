@@ -26,8 +26,8 @@ use App\Http\Controllers\AdminAnnouncementController;
 use App\Http\Controllers\ProjectDescriptionController;
 use App\Http\Controllers\PreviewSection2LogoController;
 use App\Http\Controllers\AdminReportedConcernController;
-use App\Http\Controllers\PublicOfficialCaptionController; // For header caption
-use App\Http\Controllers\PublicOfficialController;      // <-- ADD THIS FOR INDIVIDUAL OFFICIALS
+use App\Http\Controllers\PublicOfficialCaptionController; 
+use App\Http\Controllers\PublicOfficialController;      
 use App\Http\Controllers\PreviewSection2CaptionController;
 use App\Http\Controllers\ContentManagerLogosImageController;
 use App\Http\Controllers\CedulaReportController;
