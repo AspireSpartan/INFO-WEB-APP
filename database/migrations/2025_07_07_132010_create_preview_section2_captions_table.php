@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('preview_section2_captions', function (Blueprint $table) {
             $table->id();
-            $table->string('caption');
+            $table->text('caption');
             $table->timestamps();
         });
     }
