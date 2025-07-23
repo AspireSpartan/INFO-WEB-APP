@@ -37,7 +37,7 @@
         </div>
 
         {{-- Search Bar (keep as is, for future implementation) --}}
-        <div class="flex flex-col md:flex-row justify-between items-center bg-transparent gap-4 mb-8">
+        <!--<div class="flex flex-col md:flex-row justify-between items-center bg-transparent gap-4 mb-8">
             <div class="relative w-full md:w-auto flex-grow max-w-xl">
                 <input type="text" placeholder="Search blog posts"
                        class="w-full pl-12 pr-4 py-2 border border-[#D4AF37] rounded-[30px] bg-white focus:outline-none focus:ring-1 focus:ring-amber-500 text-gray-700 placeholder-zinc-400 font-montserrat">
@@ -45,7 +45,7 @@
                     <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                 </svg>
             </div>
-        </div>
+        </div>-->
 
         {{-- Success/Error Messages for LISTING (can be from creation or update/delete) --}}
         @if (session('success'))
