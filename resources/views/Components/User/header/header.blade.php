@@ -52,7 +52,7 @@
                         role="menu" aria-orientation="vertical" aria-labelledby="services-menu-button" tabindex="-1">
                     <div class="py-1" role="none">
                         <a href="/home" data-scroll-percent="0" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Hero</a>
-                        <a href="/home" data-scroll-percent="24.9" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Latest News</a>
+                        <a href="/home" data-scroll-percent="20" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Latest News</a>
                         <a href="/home" data-scroll-percent="38" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Announcements</a>
                         <a href="/home" data-scroll-percent="56.8" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Projects</a>
                         <a href="/home" data-scroll-percent="83.5" class="scroll-link block px-4 py-2 text-sm text-white hover:bg-gray-700 font-['Questrial'] whitespace-nowrap" role="menuitem" tabindex="-1" @click="open = false; mobileMenuOpen = false">Officials</a>
