@@ -176,12 +176,6 @@ public function index() // user side
         return redirect()->back()->with('success', 'Project deleted successfully.');
     }
 
-    public function edit(Project $project)
-    {
-    session()->flash('activeAdminScreen', 'projects'); 
-    return view('Components.Admin.blog.projects.projEdit_modal', compact('project'));
-    }
-
     public function update(Request $request, Project $project)
     {
         try {
@@ -210,7 +204,8 @@ public function index() // user side
 
             return response()->json([
                 'message' => 'Project updated successfully!',
-                'project' => $project->fresh() 
+                'project' => $project->fresh(),
+                'activeAdminScreen' => 'projects', 
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {

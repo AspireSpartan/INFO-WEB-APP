@@ -6,6 +6,14 @@
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
+                @if(session('pdf'))
+                    <div class="mt-4">
+                        <a href="data:application/pdf;base64,{{ base64_encode(session('pdf')) }}" download="cedula.pdf"
+                           style="color: blue; text-decoration: underline;">
+                            Download Cedula PDF
+                        </a>
+                    </div>
+                @endif
             </div>
         @endif
 
