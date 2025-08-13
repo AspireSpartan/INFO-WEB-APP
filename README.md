@@ -120,6 +120,8 @@ php artisan config:clear
 (laravel composer update)
 composer update
 
+*PROJECT DOCUMENTATION (GOOGLE DOCS)*
+https://docs.google.com/document/d/1jaPzIJCGOEq2QWXnAhsrEkRBirlglWSCgyqjLlmO82k/edit?usp=sharing
 *************************************************************************
 
 ▶️ Running the Application
